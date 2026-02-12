@@ -1,10 +1,10 @@
-# Local RAG: Private Document Search Engine 🧠
+# Local RAG: Private Document Search Engine
 
 A high-performance, local **Retrieval Augmented Generation (RAG)** system that allows users to query information from their PDF documents.
 
 Built with **Python**, **LangChain**, **Ollama (Llama 3)**, and **FastAPI**, this project implements a full data ingestion pipeline and a semantic search API.
 
-## 🏗 Architecture
+## Architecture
 
 The system follows a standard RAG architecture:
 1.  **Ingestion:** PDFs are loaded, split into chunks, and embedded into vectors.
