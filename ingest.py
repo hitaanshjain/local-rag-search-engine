@@ -1,8 +1,8 @@
 import os
 from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings
 from langchain_chroma import Chroma
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 # CONFIGURATION
 # ---------------------------------------------------------
@@ -32,11 +32,19 @@ def main():
     # Overlap ensures we don't cut a sentence in half and lose context.
     print("Step 2: Chunking text...")
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=800,       # Characters per chunk
-        chunk_overlap=80,     # Overlap to keep context between chunks
-        length_function=len,
-        is_separator_regex=False,
+        chunk_size=800,        # Smaller chunks for precise retrieval
+        chunk_overlap=150,     # Preserves context between cuts
+        separators=["\n\n", "\n", ".", "!", "?", ",", " "], # Prioritize paragraph breaks
+        length_function=len
     )
+    
+    # Metadata Injection
+    docs = []
+    for page in pdf_pages:
+        chunks = text_splitter.split_text(page.content)
+        for chunk in chunks:
+            enriched_content = f"Source: {page.metadata['source']} | Section: {page.metadata.get('page')}\n{chunk}"
+            docs.append(Document(page_content=enriched_content, metadata=page.metadata))
     chunks = text_splitter.split_documents(raw_documents)
     print(f"Split into {len(chunks)} chunks.")
 
