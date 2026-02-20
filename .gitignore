@@ -7,3 +7,8 @@ venv/
 chroma_db/
 
 .DS_Store
+
+ollama_data/
+chroma_db/
+.venv/
+__pycache__/

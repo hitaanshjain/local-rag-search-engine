@@ -1,0 +1,17 @@
+[project]
+name = "local-rag-search-engine"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.129.0",
+    "langchain>=1.2.10",
+    "langchain-chroma>=1.1.0",
+    "langchain-community>=0.4.1",
+    "langchain-core>=1.2.14",
+    "langchain-ollama>=1.0.1",
+    "pydantic>=2.12.5",
+    "pypdf>=6.7.1",
+    "uvicorn>=0.41.0",
+]
