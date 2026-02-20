@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from app.engine import get_vector_db, get_llm, get_rag_prompt
@@ -22,13 +23,15 @@ class QueryRequest(BaseModel):
 
 @app.post("/chat")
 async def chat(request: QueryRequest):
-    results = db.similarity_search(request.query, k=5)
+    results = db.similarity_search(request.query, k=2)
     if not results:
-        return {"answer": "I couldn't find any relevant information.", "sources": []}
-        
+        return {"answer": "I couldn't find any relevant information."}
+    
     context_text = "\n\n".join([doc.page_content for doc in results])
     
-    chain = prompt_template | llm
-    response = chain.invoke({"context": context_text, "question": request.query})
-    
-    return {"answer": response.content, "sources": [doc.metadata for doc in results]}
+    async def stream_generator():
+        chain = prompt_template | llm
+        async for chunk in chain.astream({"context": context_text, "question": request.query}):
+            yield chunk.content
+
+    return StreamingResponse(stream_generator(), media_type="text/event-stream")

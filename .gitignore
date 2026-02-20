@@ -1,14 +1,15 @@
+# Python Artifacts
 __pycache__/
 *.py[cod]
 
+# Environments & Secrets
 venv/
+.venv/
 .env
 
+# Data & Models
 chroma_db/
-
-.DS_Store
-
 ollama_data/
-chroma_db/
-.venv/
-__pycache__/
+
+# OS Files
+.DS_Store
