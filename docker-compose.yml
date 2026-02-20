@@ -1,5 +1,4 @@
 services:
-  # The UI Layer (Nginx serving React)
   frontend:
     build: ./frontend
     ports:
@@ -7,7 +6,6 @@ services:
     depends_on:
       - backend
 
-  # The API Layer (FastAPI)
   backend:
     build: .
     ports:
@@ -19,7 +17,6 @@ services:
     depends_on:
       - ollama
 
-  # The Inference Engine (Ollama + Llama 3.2)
   ollama:
     image: ollama/ollama
     ports:
