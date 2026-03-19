@@ -40,7 +40,7 @@ graph TD
 
 **Full-Stack Containerization:** Engineered a multi-stage Docker build for the React frontend, compiling the Vite application down to static assets served by a lightweight Nginx web server, networked securely to the API layer.
 
-**Quantifiable Accuracy Gains:** Engineered a synthetic benchmarking suite (`/benchmarks/accuracy_eval.py`) comparing standard BM25 keyword search against ChromaDB vector embeddings. The vector pipeline demonstrated an **80% improvement** in retrieval hit rate on complex contextual queries.
+**Quantifiable Accuracy Gains:** Engineered a synthetic benchmarking suite (`/benchmarks/accuracy_eval.py`) comparing standard BM25 keyword search against ChromaDB vector embeddings. The vector pipeline demonstrated an **improvement from 40% to 80%** in retrieval hit rate on complex contextual queries.
 
 **Optimized Inference Latency:** Achieved sub-200ms vector retrieval times from the local ChromaDB instance. Configured NVIDIA GPU passthrough in Docker Compose and right-sized the LLM to Llama 3.2 (1B), reducing median full-cycle generation latency by over 60% compared to baseline 8B models.
 
