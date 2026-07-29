@@ -168,6 +168,5 @@ def hybrid_search(
     for source, data in sorted_results[:k]:
         if "doc" in data:
             result_docs.append(data["doc"])
-        # Note: We skip keyword-only results since we need actual Document objects
 
     return result_docs
