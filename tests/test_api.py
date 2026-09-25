@@ -46,6 +46,9 @@ class ChatEventsTests(unittest.TestCase):
             events = asyncio.run(response_events(response))
 
         self.assertEqual(response.media_type, "text/event-stream")
+        retrieval_timing = response.headers.get("server-timing", "")
+        self.assertTrue(retrieval_timing.startswith("retrieval;dur="))
+        self.assertGreaterEqual(float(retrieval_timing.split("=", 1)[1]), 0)
         self.assertEqual(
             events,
             [

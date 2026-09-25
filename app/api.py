@@ -1,4 +1,5 @@
 import json
+from time import perf_counter
 
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
@@ -31,7 +32,9 @@ def sse_event(name: str, data: dict) -> str:
 
 @app.post("/chat")
 async def chat(request: QueryRequest):
+    retrieval_started = perf_counter()
     results = hybrid_search(request.query, db, k=3)
+    retrieval_ms = (perf_counter() - retrieval_started) * 1000
 
     async def stream_generator():
         sources = [
@@ -55,5 +58,8 @@ async def chat(request: QueryRequest):
     return StreamingResponse(
         stream_generator(),
         media_type="text/event-stream",
-        headers={"Cache-Control": "no-cache"},
+        headers={
+            "Cache-Control": "no-cache",
+            "Server-Timing": f"retrieval;dur={retrieval_ms:.3f}",
+        },
     )

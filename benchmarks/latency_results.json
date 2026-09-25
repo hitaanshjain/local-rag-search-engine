@@ -1,0 +1,110 @@
+{
+  "run_at_utc": "2026-09-25T01:41:41.996448+00:00",
+  "git_head_at_run": "6e7b760268da3573a1c3a2f1722fc59a6c05a7bc",
+  "models": {
+    "embedding": "nomic-embed-text",
+    "llm": "llama3.2:1b"
+  },
+  "hardware": {
+    "mode": "GPU",
+    "llm_size_vram_bytes": 1514584145,
+    "llm_name": "llama3.2:1b"
+  },
+  "corpus_pages": 1070,
+  "query_count": 5,
+  "query_ids": [
+    "iss_03",
+    "sum_04",
+    "urb_03",
+    "uni_02",
+    "cha_02"
+  ],
+  "iterations": 2,
+  "warmup_requests": 1,
+  "samples": [
+    {
+      "query_id": "iss_03",
+      "iteration": 1,
+      "retrieval_ms": 1217.49,
+      "ttft_ms": 1349.289999998291,
+      "full_response_ms": 1750.5055000001448
+    },
+    {
+      "query_id": "iss_03",
+      "iteration": 2,
+      "retrieval_ms": 994.2,
+      "ttft_ms": 1130.7534000006854,
+      "full_response_ms": 1335.1064000016777
+    },
+    {
+      "query_id": "sum_04",
+      "iteration": 1,
+      "retrieval_ms": 1739.618,
+      "ttft_ms": 2009.5130000008794,
+      "full_response_ms": 2242.893999999069
+    },
+    {
+      "query_id": "sum_04",
+      "iteration": 2,
+      "retrieval_ms": 1296.708,
+      "ttft_ms": 1429.4278000015765,
+      "full_response_ms": 1669.6866000020236
+    },
+    {
+      "query_id": "urb_03",
+      "iteration": 1,
+      "retrieval_ms": 888.342,
+      "ttft_ms": 6499.727099999291,
+      "full_response_ms": 6792.827900000702
+    },
+    {
+      "query_id": "urb_03",
+      "iteration": 2,
+      "retrieval_ms": 1582.075,
+      "ttft_ms": 1715.2095999990706,
+      "full_response_ms": 1990.2794000008726
+    },
+    {
+      "query_id": "uni_02",
+      "iteration": 1,
+      "retrieval_ms": 1357.796,
+      "ttft_ms": 1562.1202000002086,
+      "full_response_ms": 1807.2863000015786
+    },
+    {
+      "query_id": "uni_02",
+      "iteration": 2,
+      "retrieval_ms": 953.691,
+      "ttft_ms": 1074.6619999990799,
+      "full_response_ms": 1271.2696999988111
+    },
+    {
+      "query_id": "cha_02",
+      "iteration": 1,
+      "retrieval_ms": 1602.274,
+      "ttft_ms": 1807.7763999972376,
+      "full_response_ms": 1949.1161999976612
+    },
+    {
+      "query_id": "cha_02",
+      "iteration": 2,
+      "retrieval_ms": 1953.632,
+      "ttft_ms": 2098.4731999997166,
+      "full_response_ms": 2414.4688000014867
+    }
+  ],
+  "summary": {
+    "retrieval_ms": {
+      "median": 1327.252,
+      "p90": 1739.618
+    },
+    "ttft_ms": {
+      "median": 1638.6648999996396,
+      "p90": 2098.4731999997166
+    },
+    "full_response_ms": {
+      "median": 1878.20124999962,
+      "p90": 2414.4688000014867
+    }
+  }
+}

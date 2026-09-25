@@ -971,6 +971,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "pypdf" },
     { name = "rank-bm25" },
+    { name = "requests" },
     { name = "uvicorn" },
 ]
 
@@ -985,6 +986,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pypdf", specifier = ">=6.7.1" },
     { name = "rank-bm25", specifier = ">=0.2.2" },
+    { name = "requests", specifier = ">=2.32.5" },
     { name = "uvicorn", specifier = ">=0.41.0" },
 ]
 
