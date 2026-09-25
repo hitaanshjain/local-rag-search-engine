@@ -1,5 +1,8 @@
 venv/
+.venv/
 chroma_db/
+ollama_data/
+frontend/
 __pycache__/
 .git/
-.env    
+.env

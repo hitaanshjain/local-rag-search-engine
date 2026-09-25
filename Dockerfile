@@ -1,5 +1,5 @@
 # 1. Use a lightweight Python Linux image
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 # 2. Set the working directory inside the container
 WORKDIR /app

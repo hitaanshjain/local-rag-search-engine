@@ -1,4 +1,5 @@
 import json
+import os
 from time import perf_counter
 
 from fastapi import FastAPI
@@ -11,10 +12,10 @@ app = FastAPI(title="Local RAG API", version="1.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=[os.getenv("FRONTEND_ORIGIN", "http://localhost:3000")],
+    allow_credentials=False,
+    allow_methods=["POST"],
+    allow_headers=["Content-Type"],
 )
 
 db = get_vector_db()

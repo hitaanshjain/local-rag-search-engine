@@ -49,7 +49,7 @@ graph TD
 | Layer | Technology |
 |---|---|
 | Frontend | React, Vite, TailwindCSS, Nginx |
-| Backend | Python 3.11, FastAPI, LangChain |
+| Backend | Python 3.13, FastAPI, LangChain |
 | Database | ChromaDB (Local Vector Store) |
 | Inference | Ollama (Llama 3.2 1B, nomic-embed-text) |
 | Infrastructure | Docker, Docker Compose (Multi-stage builds, GPU acceleration) |
@@ -60,9 +60,9 @@ graph TD
 
 Make sure the following are installed before proceeding:
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (with GPU passthrough enabled if you have an NVIDIA GPU)
-- [Ollama](https://ollama.com/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) with NVIDIA GPU passthrough
 - [uv](https://github.com/astral-sh/uv) (Python package manager)
+- Python 3.13
 
 ### 1. Clone the repository
 
@@ -72,30 +72,31 @@ cd local-rag-search-engine
 uv sync
 ```
 
-### 2. Pull the required Ollama models
+### 2. Start Ollama and pull models into its container
 
 ```bash
-ollama pull llama3.2:1b
-ollama pull nomic-embed-text
+docker compose up -d ollama
+docker compose exec ollama ollama pull llama3.2:1b
+docker compose exec ollama ollama pull nomic-embed-text
 ```
 
 ### 3. Add your documents
 
 Place any PDF files you want to query into the `/data` directory.
 
-### 4. Boot the full-stack engine
+### 4. Ingest and vectorize your documents
+
+```bash
+uv run python -m app.ingest
+```
+
+### 5. Boot the full-stack engine
 
 ```bash
 docker compose up -d --build
 ```
 
-> **No NVIDIA GPU?** The stack will automatically fall back to CPU inference. Response generation will be slower (expect 10–30s per query depending on your hardware), but everything will still work.
-
-### 5. Ingest and vectorize your documents
-
-```bash
-uv run python -m app.ingest
-```
+The current Compose configuration reserves an NVIDIA GPU. CPU-only deployment is not configured.
 
 ### 6. Open the Web UI
 
