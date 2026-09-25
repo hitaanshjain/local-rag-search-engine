@@ -1,385 +1,240 @@
-import sys
-import os
+"""Evaluate source and page retrieval against excerpt-verified PDF labels."""
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import json
+import subprocess
+from datetime import datetime, timezone
+from pathlib import Path
 
-from app.engine import get_vector_db
+from pypdf import PdfReader
 
-TEST_QUERIES = [
-    "zoning regulations",
-    "commercial lease terms",
-    "property maintenance responsibility",
-    "late rent penalty",
-    "sublease permission",
-    "tenant deposit requirements",
-    "landlord insurance obligations",
-    "lease renewal process",
-    "eviction procedures",
-    "damage liability clause",
-    "utility payment responsibility",
-    "noise complaint resolution",
-    "pet policy restrictions",
-    "parking space allocation",
-    "renovation approval",
-    "termination notice period",
-    "security deposit return",
-    "property inspection rights",
-    "rent increase limits",
-    "breach of contract remedies",
-    "common area maintenance",
-    "HOA fees and charges",
-    "property tax assessment",
-    "mortgage payment schedule",
-    "boundary line disputes",
-    "easement agreements",
-    "lien enforcement procedures",
-    "title insurance coverage",
-    "escrow account management",
-    "closing cost breakdown",
-    "appraisal contingency",
-    "home inspection requirements",
-    "lead paint disclosure",
-    "radon testing procedures",
-    "flood zone certification",
-    "code violation remediation",
-    "accessibility compliance",
-    "fire safety standards",
-    "environmental hazards",
-    "asbestos disclosure",
-    "mold remediation requirements",
-    "foundation repair warranty",
-    "roof repair obligations",
-    "plumbing maintenance responsibility",
-    "electrical system safety",
-    "HVAC maintenance schedule",
-    "appliance warranty terms",
-    "pest control procedures",
-    "lawn and landscape maintenance",
-    "snow removal liability",
-]
-
-# Ground truth mapping: query -> expected source document
-# All queries map to zoning documents since that's what we have
-GROUND_TRUTH = {
-    "zoning regulations": "zoning.pdf",
-    "commercial lease terms": "zoning.pdf",
-    "property maintenance responsibility": "zoning.pdf",
-    "late rent penalty": "zoning.pdf",
-    "sublease permission": "zoning.pdf",
-    "tenant deposit requirements": "zoning.pdf",
-    "landlord insurance obligations": "zoning.pdf",
-    "lease renewal process": "zoning.pdf",
-    "eviction procedures": "zoning.pdf",
-    "damage liability clause": "zoning.pdf",
-    "utility payment responsibility": "zoning.pdf",
-    "noise complaint resolution": "zoning.pdf",
-    "pet policy restrictions": "zoning.pdf",
-    "parking space allocation": "zoning.pdf",
-    "renovation approval": "zoning.pdf",
-    "termination notice period": "zoning.pdf",
-    "security deposit return": "zoning.pdf",
-    "property inspection rights": "zoning.pdf",
-    "rent increase limits": "zoning.pdf",
-    "breach of contract remedies": "zoning.pdf",
-    "common area maintenance": "zoning.pdf",
-    "HOA fees and charges": "zoning.pdf",
-    "property tax assessment": "zoning.pdf",
-    "mortgage payment schedule": "zoning.pdf",
-    "boundary line disputes": "zoning.pdf",
-    "easement agreements": "zoning.pdf",
-    "lien enforcement procedures": "zoning.pdf",
-    "title insurance coverage": "zoning.pdf",
-    "escrow account management": "zoning.pdf",
-    "closing cost breakdown": "zoning.pdf",
-    "appraisal contingency": "zoning.pdf",
-    "home inspection requirements": "zoning.pdf",
-    "lead paint disclosure": "zoning.pdf",
-    "radon testing procedures": "zoning.pdf",
-    "flood zone certification": "zoning.pdf",
-    "code violation remediation": "zoning.pdf",
-    "accessibility compliance": "zoning.pdf",
-    "fire safety standards": "zoning.pdf",
-    "environmental hazards": "zoning.pdf",
-    "asbestos disclosure": "zoning.pdf",
-    "mold remediation requirements": "zoning.pdf",
-    "foundation repair warranty": "zoning.pdf",
-    "roof repair obligations": "zoning.pdf",
-    "plumbing maintenance responsibility": "zoning.pdf",
-    "electrical system safety": "zoning.pdf",
-    "HVAC maintenance schedule": "zoning.pdf",
-    "appliance warranty terms": "zoning.pdf",
-    "pest control procedures": "zoning.pdf",
-    "lawn and landscape maintenance": "zoning.pdf",
-    "snow removal liability": "zoning.pdf",
-}
+from app.engine import (
+    EMBEDDING_MODEL,
+    LLM_MODEL,
+    bm25_search,
+    build_search_index,
+    fuse_results,
+    get_vector_db,
+    hybrid_search,
+)
 
 
-def keyword_search_simulation(query, db):
-    """
-    Simulates a basic keyword search by pulling all docs and doing a crude string match.
-    In a real scenario, this would be Elasticsearch or BM25.
-    Returns top-k results with their metadata.
-    """
-    docs = db.get()["documents"]
-    metadatas = db.get()["metadatas"]
-
-    query_words = set(query.lower().split())
-    scored_docs = []
-
-    for idx, doc in enumerate(docs):
-        score = sum(1 for word in query_words if word in doc.lower())
-        scored_docs.append(
-            (idx, score, doc, metadatas[idx] if idx < len(metadatas) else {})
-        )
-
-    # Sort by score descending, return top-k
-    scored_docs.sort(key=lambda x: x[1], reverse=True)
-    return scored_docs
+ROOT = Path(__file__).resolve().parents[1]
+BENCHMARK_DIR = Path(__file__).resolve().parent
+DATA_DIR = ROOT / "data"
+METHODS = (
+    "vector_only",
+    "substring_keyword",
+    "bm25_keyword",
+    "hybrid_substring",
+    "hybrid_bm25",
+)
+LEVELS = ("source", "page")
+METRICS = ("hit@3", "hit@5", "mrr")
 
 
-def hybrid_search(query, db, k=5, vector_weight=0.5, keyword_weight=0.5):
-    """
-    Hybrid search combining vector and keyword search with re-ranking.
+def keyword_search_substring(query, index, k=5):
+    """The former production scorer, retained only as a benchmark baseline."""
+    words = set(query.lower().split())
+    ranked = [
+        (doc, sum(1 for word in words if word in doc.page_content.lower()))
+        for doc in index.documents
+    ]
+    ranked.sort(key=lambda item: item[1], reverse=True)
+    return ranked[:k]
 
-    Returns combined results ranked by normalized score fusion.
-    """
-    # Get vector search results
-    vector_raw_results = db.similarity_search_with_score(
-        query, k=k * 2
-    )  # Get more for fusion
 
-    # Normalize vector scores (0-1, where 1 is best)
-    # ChromaDB returns distances, lower is better
-    vector_results_dict = {}
-    if vector_raw_results:
-        max_distance = (
-            max([score for _, score in vector_raw_results]) if vector_raw_results else 1
-        )
-        for doc, distance in vector_raw_results:
-            # Convert distance to similarity (invert and normalize)
-            normalized_score = 1 - (distance / max(max_distance, 1))
-            source = doc.metadata.get("source", "unknown")
-            # Use source as key for merging
-            if source not in vector_results_dict:
-                vector_results_dict[source] = {
-                    "doc": doc,
-                    "metadata": doc.metadata,
-                    "vector_score": normalized_score,
-                }
-            else:
-                # Keep highest scoring result per source
-                if normalized_score > vector_results_dict[source]["vector_score"]:
-                    vector_results_dict[source] = {
-                        "doc": doc,
-                        "metadata": doc.metadata,
-                        "vector_score": normalized_score,
-                    }
-
-    # Get keyword search results
-    keyword_raw_results = keyword_search_simulation(query, db)
-
-    # Normalize keyword scores
-    keyword_results_dict = {}
-    if keyword_raw_results:
-        max_keyword_score = (
-            max([score for _, score, _, _ in keyword_raw_results])
-            if keyword_raw_results
-            else 1
-        )
-        for idx, score, doc, metadata in keyword_raw_results[: k * 2]:
-            normalized_score = score / max(max_keyword_score, 1)
-            source = metadata.get("source", "unknown")
-            if source not in keyword_results_dict:
-                keyword_results_dict[source] = {
-                    "doc_text": doc,
-                    "metadata": metadata,
-                    "keyword_score": normalized_score,
-                }
-            else:
-                # Keep highest scoring result per source
-                if normalized_score > keyword_results_dict[source]["keyword_score"]:
-                    keyword_results_dict[source] = {
-                        "doc_text": doc,
-                        "metadata": metadata,
-                        "keyword_score": normalized_score,
-                    }
-
-    # Fuse results: combine by source document
-    fused_results = {}
-
-    for source, data in vector_results_dict.items():
-        fused_results[source] = {
-            "doc": data["doc"],
-            "metadata": data["metadata"],
-            "vector_score": data.get("vector_score", 0),
-            "keyword_score": keyword_results_dict.get(source, {}).get(
-                "keyword_score", 0
-            ),
-        }
-
-    for source, data in keyword_results_dict.items():
-        if source not in fused_results:
-            fused_results[source] = {
-                "doc_text": data["doc_text"],
-                "metadata": data["metadata"],
-                "vector_score": 0,
-                "keyword_score": data.get("keyword_score", 0),
-            }
-
-    # Re-rank by combined score
-    for source in fused_results:
-        combined = (
-            fused_results[source]["vector_score"] * vector_weight
-            + fused_results[source]["keyword_score"] * keyword_weight
-        )
-        fused_results[source]["combined_score"] = combined
-
-    # Sort by combined score and return top-k
-    sorted_results = sorted(
-        fused_results.items(), key=lambda x: x[1]["combined_score"], reverse=True
+def score_ranking(documents, relevant):
+    expected_sources = {item["source"] for item in relevant}
+    expected_pages = {(item["source"], item["page"]) for item in relevant}
+    first_source = next(
+        (
+            rank
+            for rank, doc in enumerate(documents, start=1)
+            if doc.metadata.get("source") in expected_sources
+        ),
+        None,
     )
+    first_page = next(
+        (
+            rank
+            for rank, doc in enumerate(documents, start=1)
+            if (doc.metadata.get("source"), doc.metadata.get("page")) in expected_pages
+        ),
+        None,
+    )
+    return {
+        level: {
+            "hit@3": int(rank is not None and rank <= 3),
+            "hit@5": int(rank is not None and rank <= 5),
+            "mrr": 1 / rank if rank is not None else 0.0,
+        }
+        for level, rank in (("source", first_source), ("page", first_page))
+    }
 
-    # Convert back to tuple format for check_hit compatibility
-    hybrid_results = []
-    for source, data in sorted_results[:k]:
-        if "doc" in data:
-            hybrid_results.append((data["doc"].page_content, data["metadata"]))
-        else:
-            # For keyword-only results, use doc_text
-            hybrid_results.append((data["doc_text"], data["metadata"]))
 
-    return hybrid_results
+def load_and_validate_queries():
+    queries = json.loads((BENCHMARK_DIR / "eval_queries.json").read_text(encoding="utf-8"))
+    old_queries = json.loads((BENCHMARK_DIR / "previous_queries.json").read_text(encoding="utf-8"))
+    pdf_paths = sorted(DATA_DIR.glob("*.pdf"))
+    readers = {path.name: PdfReader(str(path)) for path in pdf_paths}
+    page_counts = {source: len(reader.pages) for source, reader in readers.items()}
+    seen_ids = set()
+    for item in queries:
+        if not item["query"].strip() or item["id"] in seen_ids:
+            raise ValueError(f"Blank query or duplicate ID: {item['id']}")
+        seen_ids.add(item["id"])
+        if len(item["relevant"]) != 1:
+            raise ValueError(f"Expected one excerpt-backed page for {item['id']}")
+        label = item["relevant"][0]
+        source, page = label["source"], label["page"]
+        if source not in readers or not 1 <= page <= page_counts[source]:
+            raise ValueError(f"Invalid source or page for {item['id']}: {label}")
+        page_text = " ".join((readers[source].pages[page - 1].extract_text() or "").split())
+        evidence = " ".join(item["evidence"].split())
+        if evidence.casefold() not in page_text.casefold():
+            raise ValueError(f"Evidence is absent from labeled page for {item['id']}")
+    return queries, old_queries, page_counts
 
 
-def check_hit(results, ground_truth_source, k=3):
-    """
-    Check if the ground truth source document appears in top-k results.
-    Returns True if found, False otherwise.
-    """
-    for i, result in enumerate(results[:k]):
-        # result can be tuple (doc_text, metadata) or (idx, score, doc, metadata)
-        if isinstance(result, tuple) and len(result) >= 4:
-            metadata = result[3]
-        elif isinstance(result, tuple) and len(result) >= 2:
-            metadata = result[1]
-        else:
-            metadata = {}
+def check_index_corpus(index, page_counts):
+    observed = {(doc.metadata.get("source"), doc.metadata.get("page")) for doc in index.documents}
+    sources = {source for source, _ in observed}
+    if sources != set(page_counts):
+        raise ValueError(f"Chroma sources {sources} do not match data PDFs {set(page_counts)}")
+    for source, page in observed:
+        if not isinstance(page, int) or not 1 <= page <= page_counts[source]:
+            raise ValueError(f"Invalid stored source/page: {source}, {page}")
+    if len(observed) != sum(page_counts.values()):
+        raise ValueError("Chroma does not contain chunks for every PDF page; re-run ingestion")
 
-        source = metadata.get("source", "")
-        if source == ground_truth_source:
-            return True
-    return False
+
+def evaluate_query(query, db, index):
+    text = query["query"]
+    vector_candidates = db.similarity_search_with_score(text, k=10)
+    substring_candidates = keyword_search_substring(text, index, k=10)
+    bm25_candidates = bm25_search(text, index, k=10)
+    rankings = {
+        "vector_only": [doc for doc, _ in vector_candidates[:5]],
+        "substring_keyword": [doc for doc, _ in substring_candidates[:5]],
+        "bm25_keyword": [doc for doc, _ in bm25_candidates[:5]],
+        "hybrid_substring": fuse_results(vector_candidates, substring_candidates, k=5),
+        "hybrid_bm25": hybrid_search(text, db, k=5, index=index),
+    }
+    return {
+        method: {
+            "metrics": score_ranking(documents, query["relevant"]),
+            "top5": [
+                {"source": doc.metadata.get("source"), "page": doc.metadata.get("page")}
+                for doc in documents
+            ],
+        }
+        for method, documents in rankings.items()
+    }
+
+
+def summarize(per_query):
+    count = len(per_query)
+    return {
+        method: {
+            level: {
+                metric: sum(row["results"][method]["metrics"][level][metric] for row in per_query) / count
+                for metric in METRICS
+            }
+            for level in LEVELS
+        }
+        for method in METHODS
+    }
+
+
+def results_table(summary):
+    lines = [
+        "| Method | Source hit@3 | Source hit@5 | Source MRR | Page hit@3 | Page hit@5 | Page MRR |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+    ]
+    for method in METHODS:
+        source, page = summary[method]["source"], summary[method]["page"]
+        lines.append(
+            f"| {method} | {source['hit@3']:.1%} | {source['hit@5']:.1%} | {source['mrr']:.3f} | "
+            f"{page['hit@3']:.1%} | {page['hit@5']:.1%} | {page['mrr']:.3f} |"
+        )
+    return "\n".join(lines)
+
+
+def write_results(result, old_queries):
+    json_path = BENCHMARK_DIR / "results.json"
+    markdown_path = BENCHMARK_DIR / "results.md"
+    json_path.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    lines = [
+        "# Retrieval accuracy benchmark",
+        "",
+        f"Run at: {result['run_at_utc']}",
+        f"Git HEAD at run: `{result['git_head_at_run']}` (task 4 worktree changes were uncommitted during the run).",
+        f"Models: `{result['models']['embedding']}` embeddings; `{result['models']['llm']}` configured for answers (not used in retrieval scoring).",
+        f"Corpus: {result['corpus']['pages']} PDF pages, {result['corpus']['chunks']} indexed chunks, {len(result['corpus']['files'])} files.",
+        f"Queries: {result['query_count']} excerpt-verified questions.",
+        "",
+        "## Results",
+        "",
+        results_table(result["summary"]),
+        "",
+        "Hit@k and reciprocal rank inspect the top k *chunks*. Source metrics match their file name; page metrics match file name and physical PDF page. MRR is the mean reciprocal rank of the first match. Each method returns at most five chunks. Hybrid candidate pools contain ten vector and ten keyword chunks with 0.5/0.5 weights.",
+        "",
+        "## Query changes",
+        "",
+        "All 50 old queries were removed because their labels all pointed to `zoning.pdf` regardless of answer location. The 20 new questions below were written from the cited PDF passages. None of the old labels was carried forward.",
+        "",
+        "### Removed queries",
+        "",
+        "| Old # | Removed query |",
+        "|---:|---|",
+    ]
+    lines.extend(f"| {i} | {query} |" for i, query in enumerate(old_queries, start=1))
+    lines.extend([
+        "",
+        "### Added queries and label evidence",
+        "",
+        "Each label was set by reading the specified physical PDF page; the benchmark checks that its evidence excerpt occurs on that page before scoring.",
+        "",
+        "| ID | Query | Source | PDF page | Evidence excerpt |",
+        "|---|---|---|---:|---|",
+    ])
+    for item in result["queries"]:
+        label = item["relevant"][0]
+        lines.append(
+            f"| {item['id']} | {item['query']} | {label['source']} | {label['page']} | {item['evidence']} |"
+        )
+    markdown_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def run_accuracy_benchmark():
-    print("Initializing Database connection...")
+    queries, old_queries, page_counts = load_and_validate_queries()
     db = get_vector_db()
-
-    if not db.get()["documents"]:
-        print("Database is empty. Run `uv run python -m app.ingest` first.")
-        return
-
-    print("\n" + "=" * 80)
-    print("GROUND TRUTH ACCURACY BENCHMARK: Vector vs Keyword vs Hybrid Search")
-    print("=" * 80)
-
-    # Metrics storage
-    vector_hits_k3 = 0
-    vector_hits_k5 = 0
-    keyword_hits_k3 = 0
-    keyword_hits_k5 = 0
-    hybrid_hits_k3 = 0
-    hybrid_hits_k5 = 0
-    total_queries = len(TEST_QUERIES)
-
-    for query in TEST_QUERIES:
-        ground_truth_source = GROUND_TRUTH.get(query, "zoning.pdf")
-
-        # Vector search
-        vector_results = db.similarity_search_with_score(query, k=5)
-        vector_results_with_meta = [
-            (doc.page_content, doc.metadata) for doc, score in vector_results
-        ]
-
-        # Keyword search
-        keyword_results = keyword_search_simulation(query, db)
-
-        # Hybrid search
-        hybrid_results = hybrid_search(query, db, k=5)
-
-        # Check hits at k=3 and k=5
-        vector_hit_k3 = check_hit(vector_results_with_meta, ground_truth_source, k=3)
-        vector_hit_k5 = check_hit(vector_results_with_meta, ground_truth_source, k=5)
-        keyword_hit_k3 = check_hit(keyword_results, ground_truth_source, k=3)
-        keyword_hit_k5 = check_hit(keyword_results, ground_truth_source, k=5)
-        hybrid_hit_k3 = check_hit(hybrid_results, ground_truth_source, k=3)
-        hybrid_hit_k5 = check_hit(hybrid_results, ground_truth_source, k=5)
-
-        if vector_hit_k3:
-            vector_hits_k3 += 1
-        if vector_hit_k5:
-            vector_hits_k5 += 1
-        if keyword_hit_k3:
-            keyword_hits_k3 += 1
-        if keyword_hit_k5:
-            keyword_hits_k5 += 1
-        if hybrid_hit_k3:
-            hybrid_hits_k3 += 1
-        if hybrid_hit_k5:
-            hybrid_hits_k5 += 1
-
-    # Calculate hit rates
-    vector_hit_rate_k3 = (vector_hits_k3 / total_queries) * 100
-    vector_hit_rate_k5 = (vector_hits_k5 / total_queries) * 100
-    keyword_hit_rate_k3 = (keyword_hits_k3 / total_queries) * 100
-    keyword_hit_rate_k5 = (keyword_hits_k5 / total_queries) * 100
-    hybrid_hit_rate_k3 = (hybrid_hits_k3 / total_queries) * 100
-    hybrid_hit_rate_k5 = (hybrid_hits_k5 / total_queries) * 100
-
-    # Report results
-    print("\n" + "-" * 80)
-    print("VECTOR SEARCH RESULTS")
-    print("-" * 80)
-    print(
-        f"Hit Rate @ k=3: {vector_hit_rate_k3:.1f}% ({vector_hits_k3}/{total_queries})"
-    )
-    print(
-        f"Hit Rate @ k=5: {vector_hit_rate_k5:.1f}% ({vector_hits_k5}/{total_queries})"
-    )
-
-    print("\n" + "-" * 80)
-    print("KEYWORD SEARCH RESULTS")
-    print("-" * 80)
-    print(
-        f"Hit Rate @ k=3: {keyword_hit_rate_k3:.1f}% ({keyword_hits_k3}/{total_queries})"
-    )
-    print(
-        f"Hit Rate @ k=5: {keyword_hit_rate_k5:.1f}% ({keyword_hits_k5}/{total_queries})"
-    )
-
-    print("\n" + "-" * 80)
-    print("HYBRID SEARCH RESULTS (Vector + Keyword Fusion)")
-    print("-" * 80)
-    print(
-        f"Hit Rate @ k=3: {hybrid_hit_rate_k3:.1f}% ({hybrid_hits_k3}/{total_queries})"
-    )
-    print(
-        f"Hit Rate @ k=5: {hybrid_hit_rate_k5:.1f}% ({hybrid_hits_k5}/{total_queries})"
-    )
-
-    print("\n" + "-" * 80)
-    print("COMPARATIVE ANALYSIS")
-    print("-" * 80)
-    hybrid_vs_vector_k3 = hybrid_hit_rate_k3 - vector_hit_rate_k3
-    hybrid_vs_keyword_k3 = hybrid_hit_rate_k3 - keyword_hit_rate_k3
-    hybrid_vs_vector_k5 = hybrid_hit_rate_k5 - vector_hit_rate_k5
-    hybrid_vs_keyword_k5 = hybrid_hit_rate_k5 - keyword_hit_rate_k5
-
-    print(f"Hybrid vs Vector @ k=3:  {hybrid_vs_vector_k3:+.1f}%")
-    print(f"Hybrid vs Keyword @ k=3: {hybrid_vs_keyword_k3:+.1f}%")
-    print(f"Hybrid vs Vector @ k=5:  {hybrid_vs_vector_k5:+.1f}%")
-    print(f"Hybrid vs Keyword @ k=5: {hybrid_vs_keyword_k5:+.1f}%")
-    print("=" * 80 + "\n")
+    index = build_search_index(db)
+    check_index_corpus(index, page_counts)
+    per_query = [
+        {**query, "results": evaluate_query(query, db, index)}
+        for query in queries
+    ]
+    git_head = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+    ).strip()
+    result = {
+        "run_at_utc": datetime.now(timezone.utc).isoformat(),
+        "git_head_at_run": git_head,
+        "models": {"embedding": EMBEDDING_MODEL, "llm": LLM_MODEL},
+        "corpus": {
+            "files": page_counts,
+            "pages": sum(page_counts.values()),
+            "chunks": len(index.documents),
+        },
+        "query_count": len(queries),
+        "summary": summarize(per_query),
+        "queries": per_query,
+    }
+    write_results(result, old_queries)
+    print(results_table(result["summary"]))
+    print(f"Wrote {BENCHMARK_DIR / 'results.md'} and {BENCHMARK_DIR / 'results.json'}")
+    return result
 
 
 if __name__ == "__main__":
