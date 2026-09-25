@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Send, Bot, User, Loader2 } from "lucide-react";
+import { createSSEParser } from "./sse";
 
 export default function App() {
   const [messages, setMessages] = useState([
@@ -9,12 +10,23 @@ export default function App() {
   const [loading, setLoading] = useState(false);
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (loading || !input.trim()) return;
 
     const userMessage = { role: "user", text: input };
-    setMessages((prev) => [...prev, userMessage]);
+    const replyId = crypto.randomUUID();
+    setMessages((prev) => [
+      ...prev,
+      userMessage,
+      { id: replyId, role: "bot", text: "", sources: [] },
+    ]);
     setInput("");
     setLoading(true);
+
+    const updateReply = (update) => {
+      setMessages((prev) => prev.map((msg) => (
+        msg.id === replyId ? { ...msg, ...update(msg) } : msg
+      )));
+    };
 
     try {
       const response = await fetch("http://localhost:8000/chat", {
@@ -22,30 +34,26 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: userMessage.text }),
       });
-
-      // Placeholder for streaming text
-      setMessages((prev) => [...prev, { role: "bot", text: "", sources: [] }]);
-      setLoading(false);
+      if (!response.ok || !response.body) throw new Error("Chat request failed");
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
-      let completeResponse = "";
+      const parser = createSSEParser((event, data) => {
+        if (event === "sources") updateReply(() => ({ sources: data.sources }));
+        if (event === "token") updateReply((msg) => ({ text: msg.text + data.text }));
+        if (event === "done") setLoading(false);
+      });
 
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
-
-        completeResponse += decoder.decode(value, { stream: true });
-
-        setMessages((prev) => {
-          const newMessages = [...prev];
-          newMessages[newMessages.length - 1].text = completeResponse;
-          return newMessages;
-        });
+        parser.push(decoder.decode(value, { stream: true }));
       }
+      parser.push(decoder.decode());
     } catch (error) {
       console.error("Error:", error);
-      setMessages((prev) => [...prev, { role: "bot", text: "Error connecting to server." }]);
+      updateReply(() => ({ text: "Error connecting to server." }));
+    } finally {
       setLoading(false);
     }
   };
@@ -68,6 +76,16 @@ export default function App() {
               </div>
               <div className={`max-w-[80%] rounded-2xl px-5 py-3 ${msg.role === "user" ? "bg-purple-600 text-white rounded-br-none" : "bg-gray-700 text-gray-100 rounded-bl-none"}`}>
                 <p className="leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+                {msg.sources?.length > 0 && (
+                  <div className="mt-3 pt-3 border-t border-gray-600 text-xs text-gray-300">
+                    <p className="font-semibold mb-1">Sources</p>
+                    {msg.sources.map((src, i) => (
+                      <div key={`${src.source}-${src.page}-${i}`}>
+                        {src.source}, page {src.page}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           ))}

@@ -1,3 +1,5 @@
+import json
+
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
@@ -23,20 +25,35 @@ class QueryRequest(BaseModel):
     query: str
 
 
+def sse_event(name: str, data: dict) -> str:
+    return f"event: {name}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
+
+
 @app.post("/chat")
 async def chat(request: QueryRequest):
-    # Use hybrid search instead of pure vector search
     results = hybrid_search(request.query, db, k=3)
-    if not results:
-        return {"answer": "I couldn't find any relevant information."}
-
-    context_text = "\n\n".join([doc.page_content for doc in results])
 
     async def stream_generator():
+        sources = [
+            {"source": doc.metadata.get("source"), "page": doc.metadata.get("page")}
+            for doc in results
+        ]
+        yield sse_event("sources", {"sources": sources})
+        if not results:
+            yield sse_event("token", {"text": "I couldn't find any relevant information."})
+            yield sse_event("done", {})
+            return
+
+        context_text = "\n\n".join(doc.page_content for doc in results)
         chain = prompt_template | llm
         async for chunk in chain.astream(
             {"context": context_text, "question": request.query}
         ):
-            yield chunk.content
+            yield sse_event("token", {"text": chunk.content})
+        yield sse_event("done", {})
 
-    return StreamingResponse(stream_generator(), media_type="text/event-stream")
+    return StreamingResponse(
+        stream_generator(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache"},
+    )
