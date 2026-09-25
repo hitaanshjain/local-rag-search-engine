@@ -13,3 +13,4 @@ ollama_data/
 
 # OS Files
 .DS_Store
+.gstack/
