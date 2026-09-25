@@ -12,7 +12,6 @@ def process_documents(data_dir=DATA_DIR, db=None):
     if not data_dir.exists():
         data_dir.mkdir(parents=True)
         print(f"Created {data_dir} directory. Add your PDF files here.")
-        return
 
     all_docs = []
     print("Step 1: Loading documents...")
@@ -30,7 +29,12 @@ def process_documents(data_dir=DATA_DIR, db=None):
             all_docs.extend(docs)
     
     if not all_docs:
-        print("Error: No PDFs found in the /data directory.")
+        if db is None:
+            db = get_vector_db()
+        ids = db.get(include=[])["ids"]
+        for start in range(0, len(ids), 100):
+            db.delete(ids=ids[start : start + 100])
+        print(f"No PDFs found in {data_dir}; cleared the stored corpus.")
         return
 
     print("Step 2: Chunking text...")

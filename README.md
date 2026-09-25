@@ -1,107 +1,106 @@
 # Local RAG Search Engine
 
-An offline, air-gapped Retrieval-Augmented Generation (RAG) pipeline with a real-time streaming UI. Designed to enable semantic querying over sensitive documents without risking data egress to external cloud providers.
+This project answers questions about PDFs using local Ollama models. FastAPI retrieves relevant chunks from Chroma, streams generated text, and sends the file and PDF page of each chunk used as context to a React chat UI.
 
-Built to run entirely locally using **Llama 3.2**, **FastAPI**, **React**, and **ChromaDB**, with hardware-accelerated inference containerized via Docker.
+The model and embedding requests are configured for a local Ollama service. Initial image and model downloads require network access; the application does not enforce network isolation or prove that a deployment is air-gapped.
 
----
-
-<!-- Add a screenshot or demo GIF here. Example:
-![Demo](./assets/demo.gif)
--->
-
-## 🏗 System Architecture
+## How it works
 
 ```mermaid
-graph TD
-    A[PDF Documents] -->|PyPDF Loader| B(Context-Aware Text Splitter)
-    B -->|nomic-embed-text| C[(ChromaDB Vector Store)]
-    D[Web Browser] -->|React UI| E[Nginx Frontend Container]
-    E -->|User Query| F[FastAPI Backend]
-    F -->|Embedding| C
-    C -->|Top-K Context| F
-    F -->|Prompt + Context| G{Llama 3.2 LLM via Ollama}
-    G -->|Asynchronous Token Stream| F
-    F -->|Server-Sent Events| D
-
-    classDef database fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef llm fill:#bbf,stroke:#333,stroke-width:2px;
-    classDef ui fill:#bfb,stroke:#333,stroke-width:2px;
-    class C database;
-    class G llm;
-    class D,E ui;
+flowchart LR
+    PDFs[PDF files in data/] --> Load[PyPDFLoader]
+    Load --> Stamp[Source and one-based page metadata]
+    Stamp --> Split[Text chunks]
+    Split --> Embed[nomic-embed-text via Ollama]
+    Embed --> DB[(Chroma)]
+    Browser[React chat] -->|POST /chat| API[FastAPI]
+    API -->|vector query| DB
+    DB -->|stored chunks| BM25[BM25 index]
+    DB -->|vector candidates| Fuse[Weighted fusion]
+    BM25 -->|keyword candidates| Fuse
+    Fuse -->|top context chunks| LLM[llama3.2:1b via Ollama]
+    Fuse -->|file and page| SSE[SSE stream]
+    LLM -->|tokens| SSE
+    SSE -->|sources, token, done events| Browser
 ```
 
-## 🚀 Key Engineering Decisions & Metrics
+Ingestion reads the PDFs in `data/`, assigns `source` and one-based `page` metadata, splits each page, and stores the chunks in Chroma. Re-running ingestion uses stable chunk IDs, updates changed chunks, and removes chunks absent from the current PDFs. The generated `chroma_db/` directory is ignored by Git.
 
-**100% Data Sovereignty:** Decoupled the inference engine to run Llama locally via Ollama. Zero data leaves the host machine, ensuring absolute compliance for sensitive property and legal documents.
+For a chat query, Chroma supplies vector candidates and `rank-bm25` scores the stored chunk corpus. Retrieval combines normalized vector and BM25 scores with configurable weights (both default to 0.5), ranks **chunks**, and keeps keyword-only hits. `/chat` uses up to three retrieved chunks as context. The BM25 index is currently rebuilt from Chroma for each chat request; the retrieval timings below include that work.
 
-**Asynchronous Token Streaming:** Overhauled the FastAPI backend and React client to utilize `StreamingResponse` and the native `TextDecoder` API. This eliminated the LLM pre-fill latency block, reducing Time-To-First-Token (TTFT) to milliseconds and dramatically improving perceived performance.
+The API sends valid server-sent event frames over its POST response:
 
-**Full-Stack Containerization:** Engineered a multi-stage Docker build for the React frontend, compiling the Vite application down to static assets served by a lightweight Nginx web server, networked securely to the API layer.
+```text
+event: sources
+data: {"sources":[{"source":"zoning.pdf","page":4}]}
 
-**Quantifiable Accuracy Gains:** Engineered a synthetic benchmarking suite (`/benchmarks/accuracy_eval.py`) comparing standard BM25 keyword search against ChromaDB vector embeddings. The vector pipeline demonstrated an **improvement from 40% to 80%** in retrieval hit rate on complex contextual queries.
+event: token
+data: {"text":"Answer text"}
 
-**Optimized Inference Latency:** Achieved sub-200ms vector retrieval times from the local ChromaDB instance. Configured NVIDIA GPU passthrough in Docker Compose and right-sized the LLM to Llama 3.2 (1B), reducing median full-cycle generation latency by over 60% compared to baseline 8B models.
+event: done
+data: {}
 
-## 🛠 Tech Stack
+```
 
-| Layer | Technology |
-|---|---|
-| Frontend | React, Vite, TailwindCSS, Nginx |
-| Backend | Python 3.13, FastAPI, LangChain |
-| Database | ChromaDB (Local Vector Store) |
-| Inference | Ollama (Llama 3.2 1B, nomic-embed-text) |
-| Infrastructure | Docker, Docker Compose (Multi-stage builds, GPU acceleration) |
+An empty search sends the same event types, with an empty sources array and an explanatory token. The React client reads the response with `fetch`, `ReadableStream.getReader()`, and `TextDecoder`; it parses the events and shows the retrieved file/page list below the answer. These are citations to the chunks supplied as context, not verified sentence-level citations in generated prose. The response also includes a `Server-Timing` retrieval duration.
 
-## ⚙️ Quick Start
+## Measured retrieval accuracy
 
-### Prerequisites
+The [accuracy results](benchmarks/results.md) and [raw results](benchmarks/results.json) come from a run over the five checked-in PDFs: **1,070 physical pages and 3,639 stored chunks**. The set has **20 questions**, each tied to a source, physical PDF page, and excerpt checked against that page. The [query-change record](benchmarks/results.md#query-changes) lists all 50 removed queries from the earlier mislabeled set and all 20 replacements. Labels identify one verified answer page per question; they do not claim to enumerate every relevant page.
 
-Make sure the following are installed before proceeding:
+| Method | Source hit@3 | Source hit@5 | Source MRR | Page hit@3 | Page hit@5 | Page MRR |
+|---|---:|---:|---:|---:|---:|---:|
+| Vector only | 95.0% | 100.0% | 0.935 | 80.0% | 90.0% | 0.739 |
+| Substring keyword baseline | 80.0% | 90.0% | 0.770 | 70.0% | 75.0% | 0.610 |
+| BM25 keyword only | 100.0% | 100.0% | 1.000 | 95.0% | 100.0% | 0.938 |
+| Hybrid with substring | 90.0% | 95.0% | 0.885 | 75.0% | 80.0% | 0.685 |
+| Hybrid with BM25 | 100.0% | 100.0% | 1.000 | 95.0% | 100.0% | 0.871 |
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) with NVIDIA GPU passthrough
-- [uv](https://github.com/astral-sh/uv) (Python package manager)
-- Python 3.13
+Here, hybrid BM25 improved source and page hit@3 over vector-only. BM25 alone had the higher page MRR (0.938 versus 0.871 for hybrid). Hit@k checks the first k retrieved chunks against either the labeled file or its labeled file/page pair; MRR uses the first matching rank. This small, excerpt-derived set does not establish performance on other documents or questions.
 
-### 1. Clone the repository
+## Measured streaming latency
 
-```bash
-git clone https://github.com/hitaanshjain/local-rag-search-engine.git
-cd local-rag-search-engine
+The [latency results](benchmarks/latency_results.md) and [raw samples](benchmarks/latency_results.json) record five fixed questions with two measured requests each, after one excluded warmup request. Ollama reported the loaded `llama3.2:1b` model running on a **GPU**. Times below are measured from the HTTP client; retrieval time is measured inside the API for the same request.
+
+| Metric | Median | P90 |
+|---|---:|---:|
+| Retrieval | 1,327.3 ms | 1,739.6 ms |
+| Time to first token | 1,638.7 ms | 2,098.5 ms |
+| Full response | 1,878.2 ms | 2,414.5 ms |
+
+The per-request table includes a slower first-token outlier. No 8B model comparison was run.
+
+## Requirements and setup
+
+- Python 3.13 and [uv](https://docs.astral.sh/uv/)
+- Docker Desktop with NVIDIA GPU support for the supplied Compose file
+
+```powershell
 uv sync
-```
-
-### 2. Start Ollama and pull models into its container
-
-```bash
 docker compose up -d ollama
 docker compose exec ollama ollama pull llama3.2:1b
 docker compose exec ollama ollama pull nomic-embed-text
 ```
 
-### 3. Add your documents
+Place PDFs in `data/`, then ingest them from the host while the Compose Ollama service is running. Start the API and UI after ingestion:
 
-Place any PDF files you want to query into the `/data` directory.
-
-### 4. Ingest and vectorize your documents
-
-```bash
+```powershell
 uv run python -m app.ingest
-```
-
-### 5. Boot the full-stack engine
-
-```bash
 docker compose up -d --build
 ```
 
-The current Compose configuration reserves an NVIDIA GPU. CPU-only deployment is not configured.
+Open `http://localhost:3000`. The frontend, backend, and Ollama ports bind to `127.0.0.1` by default. The API permits the `http://localhost:3000` browser origin by default; another origin requires `FRONTEND_ORIGIN` in the backend container environment. There is no authentication or TLS, so this configuration is for local use. The supplied Compose file reserves an NVIDIA GPU; it has no automatic CPU fallback.
 
-### 6. Open the Web UI
+## Reproducing the checks
 
-Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
+```powershell
+uv run python -m unittest discover -s tests -v
+uv run python -m benchmarks.accuracy_eval
+uv run python -m benchmarks.latency_test
+```
 
-## 📄 License
+Run the latency command after `docker compose up -d --build`, since it calls the live `/chat` endpoint. For the frontend, run `npm ci`, `npm test`, `npm run lint`, and `npm run build` from `frontend/`.
 
-[MIT](./LICENSE)
+## License
+
+[MIT](LICENSE)

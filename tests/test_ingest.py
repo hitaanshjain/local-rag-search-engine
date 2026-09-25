@@ -12,6 +12,22 @@ from app.ingest import process_documents
 
 
 class IngestTests(unittest.TestCase):
+    def test_empty_data_directory_clears_the_previous_corpus(self):
+        with tempfile.TemporaryDirectory() as temporary_dir:
+            data_dir = Path(temporary_dir)
+            db = Chroma(
+                collection_name=f"ingest_test_{uuid4().hex}",
+                embedding_function=FakeEmbeddings(size=16),
+            )
+            db.add_documents(
+                [Document(page_content="old", metadata={"source": "removed.pdf", "page": 1})],
+                ids=["stale"],
+            )
+
+            process_documents(data_dir=data_dir, db=db)
+
+            self.assertEqual(db.get(include=[])["ids"], [])
+
     def test_reingest_replaces_stale_chunks_and_preserves_page_metadata(self):
         with tempfile.TemporaryDirectory() as temporary_dir:
             root = Path(temporary_dir)
