@@ -1,7 +1,13 @@
 import os
+import re
+from dataclasses import dataclass
+from typing import Any
+
 from langchain_chroma import Chroma
 from langchain_ollama import OllamaEmbeddings, ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.documents import Document
+from rank_bm25 import BM25Okapi
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 DB_PATH = "./chroma_db"
@@ -42,25 +48,72 @@ def get_rag_prompt() -> ChatPromptTemplate:
     """)
 
 
-def keyword_search(query: str, db: Chroma, k: int = 5):
-    """
-    Keyword search using simple string matching.
-    Returns top-k results with metadata.
-    """
-    docs = db.get()["documents"]
-    metadatas = db.get()["metadatas"]
+def tokenize(text: str) -> list[str]:
+    return re.findall(r"\b\w+\b", text.lower())
 
-    query_words = set(query.lower().split())
-    scored_docs = []
 
-    for idx, doc in enumerate(docs):
-        score = sum(1 for word in query_words if word in doc.lower())
-        scored_docs.append(
-            (idx, score, doc, metadatas[idx] if idx < len(metadatas) else {})
+@dataclass
+class SearchIndex:
+    documents: list[Document]
+    bm25: Any | None
+
+
+def build_search_index(db: Chroma) -> SearchIndex:
+    stored = db.get(include=["documents", "metadatas"])
+    documents = [
+        Document(id=chunk_id, page_content=content, metadata=metadata or {})
+        for chunk_id, content, metadata in zip(
+            stored["ids"], stored["documents"], stored["metadatas"]
         )
+        if content is not None
+    ]
+    bm25 = BM25Okapi([tokenize(doc.page_content) for doc in documents]) if documents else None
+    return SearchIndex(documents=documents, bm25=bm25)
 
-    scored_docs.sort(key=lambda x: x[1], reverse=True)
-    return scored_docs[:k]
+
+def bm25_search(query: str, index: SearchIndex, k: int = 5) -> list[tuple[Document, float]]:
+    if index.bm25 is None or not tokenize(query):
+        return []
+    scores = index.bm25.get_scores(tokenize(query))
+    ranked = sorted(enumerate(scores), key=lambda item: item[1], reverse=True)
+    return [(index.documents[i], float(score)) for i, score in ranked[:k] if score > 0]
+
+
+def fuse_results(
+    vector_results: list[tuple[Document, float]],
+    keyword_results: list[tuple[Document, float]],
+    k: int = 5,
+    vector_weight: float = 0.5,
+    keyword_weight: float = 0.5,
+) -> list[Document]:
+    if vector_weight < 0 or keyword_weight < 0 or vector_weight + keyword_weight == 0:
+        raise ValueError("Retrieval weights must be nonnegative and at least one must be positive")
+
+    fused: dict[str, dict[str, Any]] = {}
+    max_distance = max((distance for _, distance in vector_results), default=1)
+    for doc, distance in vector_results:
+        key = doc.id or f"{doc.metadata}:{doc.page_content}"
+        fused[key] = {
+            "doc": doc,
+            "vector_score": 1 - distance / max(max_distance, 1),
+            "keyword_score": 0.0,
+        }
+
+    max_keyword_score = max((score for _, score in keyword_results), default=0)
+    for doc, score in keyword_results:
+        key = doc.id or f"{doc.metadata}:{doc.page_content}"
+        item = fused.setdefault(
+            key, {"doc": doc, "vector_score": 0.0, "keyword_score": 0.0}
+        )
+        item["keyword_score"] = score / max_keyword_score if max_keyword_score > 0 else 0.0
+
+    ranked = sorted(
+        fused.values(),
+        key=lambda item: item["vector_score"] * vector_weight
+        + item["keyword_score"] * keyword_weight,
+        reverse=True,
+    )
+    return [item["doc"] for item in ranked[:k]]
 
 
 def hybrid_search(
@@ -69,104 +122,15 @@ def hybrid_search(
     k: int = 5,
     vector_weight: float = 0.5,
     keyword_weight: float = 0.5,
-):
-    """
-    Hybrid search combining vector and keyword search with score fusion and re-ranking.
-
-    Args:
-        query: Search query string
-        db: ChromaDB instance
-        k: Number of results to return
-        vector_weight: Weight for vector search scores (0-1)
-        keyword_weight: Weight for keyword search scores (0-1)
-
-    Returns:
-        List of Document objects, ordered by combined score
-    """
-    # Get vector search results
-    vector_raw_results = db.similarity_search_with_score(query, k=k * 2)
-
-    # Normalize and index vector results by source
-    vector_results_dict = {}
-    if vector_raw_results:
-        max_distance = (
-            max([score for _, score in vector_raw_results]) if vector_raw_results else 1
-        )
-        for doc, distance in vector_raw_results:
-            normalized_score = 1 - (distance / max(max_distance, 1))
-            source = doc.metadata.get("source", "unknown")
-            if source not in vector_results_dict:
-                vector_results_dict[source] = {
-                    "doc": doc,
-                    "vector_score": normalized_score,
-                }
-            elif normalized_score > vector_results_dict[source]["vector_score"]:
-                vector_results_dict[source]["doc"] = doc
-                vector_results_dict[source]["vector_score"] = normalized_score
-
-    # Get keyword search results
-    keyword_raw_results = keyword_search(query, db, k=k * 2)
-
-    # Normalize and index keyword results by source
-    keyword_results_dict = {}
-    if keyword_raw_results:
-        max_keyword_score = (
-            max([score for _, score, _, _ in keyword_raw_results])
-            if keyword_raw_results
-            else 1
-        )
-        for idx, score, doc_text, metadata in keyword_raw_results:
-            normalized_score = score / max(max_keyword_score, 1)
-            source = metadata.get("source", "unknown")
-            if source not in keyword_results_dict:
-                keyword_results_dict[source] = {
-                    "doc_text": doc_text,
-                    "metadata": metadata,
-                    "keyword_score": normalized_score,
-                }
-            elif normalized_score > keyword_results_dict[source]["keyword_score"]:
-                keyword_results_dict[source]["doc_text"] = doc_text
-                keyword_results_dict[source]["metadata"] = metadata
-                keyword_results_dict[source]["keyword_score"] = normalized_score
-
-    # Fuse results by source document
-    fused_results = {}
-
-    for source, data in vector_results_dict.items():
-        fused_results[source] = {
-            "doc": data["doc"],
-            "vector_score": data.get("vector_score", 0),
-            "keyword_score": keyword_results_dict.get(source, {}).get(
-                "keyword_score", 0
-            ),
-        }
-
-    for source, data in keyword_results_dict.items():
-        if source not in fused_results:
-            fused_results[source] = {
-                "doc_text": data["doc_text"],
-                "metadata": data["metadata"],
-                "vector_score": 0,
-                "keyword_score": data.get("keyword_score", 0),
-            }
-
-    # Re-rank by combined score
-    for source in fused_results:
-        combined = (
-            fused_results[source].get("vector_score", 0) * vector_weight
-            + fused_results[source].get("keyword_score", 0) * keyword_weight
-        )
-        fused_results[source]["combined_score"] = combined
-
-    # Sort by combined score
-    sorted_results = sorted(
-        fused_results.items(), key=lambda x: x[1]["combined_score"], reverse=True
+    index: SearchIndex | None = None,
+) -> list[Document]:
+    index = index if index is not None else build_search_index(db)
+    vector_results = db.similarity_search_with_score(query, k=k * 2)
+    keyword_results = bm25_search(query, index, k=k * 2)
+    return fuse_results(
+        vector_results,
+        keyword_results,
+        k=k,
+        vector_weight=vector_weight,
+        keyword_weight=keyword_weight,
     )
-
-    # Convert to Document objects for compatibility
-    result_docs = []
-    for source, data in sorted_results[:k]:
-        if "doc" in data:
-            result_docs.append(data["doc"])
-
-    return result_docs
