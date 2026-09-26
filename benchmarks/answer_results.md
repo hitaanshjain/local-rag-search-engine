@@ -1,0 +1,108 @@
+# Final holdout answer evaluation
+
+Run at: 2026-09-26T18:51:04.583498+00:00
+Git HEAD at run: `0eed7423ebf992265f2b0d1d70451fae7e1fd92e` (worktree changes may have been present).
+Dataset: `heldout_queries.json`.
+Models: `llama3.2:3b` and `nomic-embed-text`.
+Queries: 10 (7 answerable, 2 unanswerable, 1 ambiguous).
+
+Automated checks passed: 9/10.
+
+Answerable items pass when the answer contains an accepted phrase and cites the labeled physical PDF page. Unanswerable items require the exact abstention. The ambiguous item requires a clarification question. These are screening checks, not proof that every sentence is factually supported. The no-answer and ambiguity labels are task expectations, not exhaustive corpus proofs.
+
+## Per-query results
+
+| ID | Kind | Fact/behavior | Labeled page citation | Valid refs | Pass |
+|---|---|---:|---:|---:|---:|
+| final_iss_01 | answerable | True | True | True | True |
+| final_urb_01 | answerable | True | True | True | True |
+| final_urb_02 | answerable | True | True | True | True |
+| final_uni_01 | answerable | False | False | True | False |
+| final_uni_02 | answerable | True | True | True | True |
+| final_cha_01 | answerable | True | True | True | True |
+| final_cha_02 | answerable | True | True | True | True |
+| final_absent_01 | unanswerable | True | True | True | True |
+| final_absent_02 | unanswerable | True | True | True | True |
+| final_ambiguous_01 | ambiguous | True | True | True | True |
+
+## Answers for review
+
+### final_iss_01
+
+Question: For an Issaquah mixed-use development with different FAR limits, which use sets the project's FAR?
+
+Answer: The use with the majority square footage sets the project's FAR [1].
+
+Sources: [{"source": "zoning.pdf", "page": 12, "excerpt": "limits, the FAR will be the use with the majority square footage.  For example, if 50.6 % of the \nbuilding area is residential, then the whole project will use the residential FAR. \n \nC. Base FAR. The base FAR is what is allowable by right in each district.  The base FAR may not \nbe exceeded without providing significant amenities as defined in Chapter 5.0 Density Bonus \nProgram. \n \nD. Minimum FAR. The minimum FAR listed on the District Standards Table is required for new \nDevelopment and Redeve"}, {"source": "zoning.pdf", "page": 12, "excerpt": "contiguous acres or more outside the Urban Core zone. \n1. Intent: The intent of the standards for sites which require a residential minimum FAR is to \nincrease the number of units (density) on mixed use and residential developments. \n2. Exception: Redevelopment of existing Automobile Service Stations on the date of adoption \nof these Standards in the Urban Core zone. \n3. The minimum FAR may be reduced for the first phase, or early phases, of multi-phase \ndevelopment through an Administrative Adj"}, {"source": "zoning.pdf", "page": 14, "excerpt": "2. Those properties required to meet a minimum FAR, and which are located in the Urban Core zone must also meet a minimum \ndensity for residential and mixed use developments of 36 units/Developable Acre, the requirement for Urban Center/Regional \nGrowth Center development. \n3. See Chapter 4.0, Section 4.4.B, C, D for FAR requirements.  The process to increase FAR and Building Height from the Base to \nthe Maximum height is through a Fee for Open Space or Affordable Housing payment.  See Chapter 5"}]
+
+### final_urb_01
+
+Question: How many vehicle visits per day may an Urbana Type A home occupation have?
+
+Answer: For an Urbana Type A home occupation, no more than five vehicle visits per day are permitted. [2]
+
+Sources: [{"source": "article_v_-_use_regulations.pdf", "page": 7, "excerpt": "Return to Article Heading  Return to Table of Contents \nSection V-12. Regulation of Home Occupation. 45 Article V. Use Regulations \n \n4. Vehicles and Customer Visits - No more than two commercial or business vehicles used in \nconjunction with the home occupation may be on the premises at any one time; and no more \nthan five vehicle visits per day. \n5. Parking - No more than two commercial or business vehicles, trucks, or trailers used in \nconjunction with the home occupation may be parked on the"}, {"source": "article_v_-_use_regulations.pdf", "page": 7, "excerpt": "the use, location of the home occupation, and on-street parking supply. No exterior storage of \nvehicles, other than those owned by members of the household residing on the premises, is \npermitted. \n3. Customer/Client Visits - No more than 10 visits per day from customers, clients, or home \ndeliveries are permitted, with no more than three visitors present at any given time,  excluding \nDay Care Home pick-ups and drop-offs. The Zoning Administrator may require a drop-off \nzone as a condition of "}, {"source": "article_v_-_use_regulations.pdf", "page": 6, "excerpt": "Section V-12. Regulation of Home Occupation. \nIn recognition of the growing importance of home-based businesses in the local economy, the Urbana \nZoning Ordinance permits certain such activities at different intensities and subject to varying \nrequirements as set forth below. \n \nAny person seeking a home occupation shall submit an application to the Zoning Administrator. Upon \napproval, home occupations shall be permitted as follows: \n Home Occupation, Type A – A home-based occupation that has m"}]
+
+### final_urb_02
+
+Question: Under Urbana's common-lot-line dwelling rules, how many such units may each lot contain?
+
+Answer: Each lot shall contain no more than one common-lot-line dwelling unit [1].
+
+Sources: [{"source": "article_v_-_use_regulations.pdf", "page": 4, "excerpt": "provisions of Section 21-19 in Chapter 21 of the Urbana City Code. Each lot shall contain no \nmore than one common-lot-line dwelling unit. \n2. After a common-lot-line subdivision has been recorded, the lots shall be developed \nexclusively for common-lot-line dwelling units and for no other type of development. Any \nchange in the type of development on said platted lot(s) may require approval of a new \nsubdivision plat. \n General Provisions  \n1. All common-lot-line dwelling units shall have an Ow"}, {"source": "article_v_-_use_regulations.pdf", "page": 4, "excerpt": "common-lot-line dwelling units as specified in Section 21-19-D of Chapter 21 of the Urbana \nCity Code. \n2. All fee simple transfers of ownership that were approved by the City of Urbana prior to May 1, \n1993 shall be deemed to be legal and conforming uses and shall not require any further \napproval of a subdivision plat to be established as common-lot-line dwelling units."}, {"source": "article_v_-_use_regulations.pdf", "page": 4, "excerpt": "Return to Article Heading  Return to Table of Contents \nArticle V. Use Regulations 42 Section V-7. (Reserved) \n \nSection V-7. (Reserved) \nSection V-8. (Reserved) \nSection V-9. Regulations for Common-Lot-Line Dwelling Units \nCommon-lot-line dwelling units, as defined in Article II and as permitted in Table V-1 of this Ordinance, \nshall be allowed in conformance with Section VI-3.E and the following restrictions: \n Subdivision of Land \n1. The fee simple transfer of ownership of a portion of a lot "}]
+
+### final_uni_01
+
+Question: In Union City's R-2 district, how large may a guest house be?
+
+Answer: According to the context, a freestanding guest house shall not exceed 700 square feet of heated and finished floor area. [1]
+
+Sources: [{"source": "zoning-ordinance-082024-rev.pdf", "page": 38, "excerpt": "August 20, 2024, Rev. Page 29 \n \n5-11 Guest houses. \n \nA. Number. Guest houses are accessory structures which are allowed in the \nresidential zoning districts. Only one (1) guesthouse is allowed per parcel lot. Any \nliving area included in a detached garage or swimming pool cabana is a guest \nhouse. \n \nB. Size. A freestanding guest house shall not exceed 700 square feet of heated \nand finished floor area. When a guest house is combined with a detached garage or \ncabana, said total structure shal"}, {"source": "zoning-ordinance-082024-rev.pdf", "page": 58, "excerpt": "August 20, 2024, Rev. Page 49 \n \nb. Lighting shall be established in such a way that no direct light shall cast over any \nproperty line nor adversely affect neighboring properties. \n \n3. Guest house, provided: \n \na. The main dwelling is located on a lot containing at least one (1) acre; \n \nb. No more than one (1) shall be permitted on a lot with another dwelling; \n \nc. Said guest house shall not be used for rental purposes; \n \nd. Said guest house shall be located in the rear yard; and \n \ne. Said"}, {"source": "zoning-ordinance-082024-rev.pdf", "page": 62, "excerpt": "August 20, 2024, Rev. Page 53 \n \nb. Lighting shall be established in such a way that no direct light shall cast over any \nproperty line nor adversely affect neighboring properties. \n \n3. Guest house, provided: \n \na. The main dwelling is located on a lot containing at least one (1) acre; \n \nb. No more than one (1) shall be permitted on a lot with another dwelling; \n \nc. Said guest house shall not be used for rental purposes; \n \nd. Said guest house shall be located in the rear yard; and \n \ne. Said"}]
+
+### final_uni_02
+
+Question: What front-yard setback applies to cottage home courts in Union City?
+
+Answer: For cottage home courts in Union City, the front-yard setback, as measured from the right-of-way, is 15 feet [1].
+
+Sources: [{"source": "zoning-ordinance-082024-rev.pdf", "page": 80, "excerpt": "August 20, 2024, Rev. Page 71 \n \nd. Cottage home courts (setbacks shall apply to the entire development as a whole): \n(Adopted 8/20/24; Ordinance 2024-Z-03) \n \n i. Minimum floor area per dwelling unit:  900 square feet; \n \nii. Front yard setback, as measured from the right-of-way: 15 feet; \n \niii. Rear yard setback:  10 feet; \n \niv. Side yard setback:  6 feet; \n \nv. Height:  up to 27 feet. \n  \ne. Multifamily dwellings: \n \ni. Lot width and frontage: 100 feet; \n \nii. Minimum floor area per dwellin"}, {"source": "zoning-ordinance-082024-rev.pdf", "page": 80, "excerpt": "iii. Front yard setback, as measured from the right-of-way: 40 feet; \n \niv. Rear yard setback: 20 feet; \n \nv. Side yard setback: 20 feet; and \n \nvi. Height: up to 35 feet. \n \n12. Public streets within or adjoining a townhouse, cottage home court or multifamily \ndevelopment shall have sidewalks not less than four (4) feet in width. Where a \ndevelopment uses an access strip for development access, the minimum length of \nsidewalks provided along a public street shall be 450 feet. (Amended 8/20/24; "}, {"source": "zoning-ordinance-082024-rev.pdf", "page": 77, "excerpt": "1. The development area shall contain no less than five (5) contiguous acres with \nexception of single and two family dwellings. Single family dwellings must be \nsituated on a lot no less than 15,000 square feet and two family dwellings must be \nsituated on a lot no less than 25,000 square feet.  Cottage home courts must be \nsituated on a lot no less than one (1) acre. (Amended 8/20/24; Ordinance 2024-Z-03) \n \n2. The development shall abut an arterial or collector thoroughfare as classified in t"}]
+
+### final_cha_01
+
+Question: How many nonresident employees may work at a Charleston home occupation?
+
+Answer: For a Charleston home occupation, no more than one full-time or part-time nonresident employee who works at the residence is allowed [1].
+
+Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 201, "excerpt": "who works at the residence used for the home occupation. The h ome occupation\nmay have other employees who are not working at the residence, b ut work at other\noff-site locations, if applicable. For the purpose of this s ection, the term \"nonresident\nemployee\" includes an employee, business partner, co-owner, or other person\naffiliated with the home occupation, who does not live at the site, but who may\nwork at the site as a part of the home occupation.\n9. Display of products shall not be visibl"}, {"source": "article_v_-_use_regulations.pdf", "page": 8, "excerpt": "to be repaired may not queue outside the garage. Additionally, the garage must  meet all \napplicable building and fire safety codes, and any such work may not violate any of the City’s \nnuisance codes and ordinances. Only minor automobile repairs as defined in Article II are \npermitted. Additionally, no major automobile repairs as defined in Article II are permitted as a \nhome-based occupation. \n More than one home occupation at a single premises may be permitted provided that the \ncumulative nu"}, {"source": "article_v_-_use_regulations.pdf", "page": 6, "excerpt": "occupations include, but are not limited to, private consulting, non-retail based arts and crafts \nstudios, internet-based business, telecommunication-based commuting, and Day Care Homes \nwith fewer than three children or adults. Type A Home Occupations do not require a Certificate of \nOccupancy or Conditional Use Permit and are permitted with the following criteria:  \n1. Employees - No persons other than members of the household, residing in the dwelling unit \nare engaged in the home occupation"}]
+
+### final_cha_02
+
+Question: What fraction of a Charleston building facade may sign faces occupy?
+
+Answer: Sign faces shall not occupy more than ten (10) percent per façade of the building [1].
+
+Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 506, "excerpt": "2. With the exception of public schools, reader boards shall not exceed\nfifty (50) percent of the allowable sign face area.\n3. Reader boards are not to be internally illuminated.\nb. Façade Signs shall be permitted as follows:\n1. Sign faces shall not occupy more than ten (10) percent per f açade of the\nbuilding.\n2. Where more than one (1) business or use occupies a single bu ilding, each\nseparate business occupying a space which includes an exter ior façade may\nerect signage whose sign faces shal"}, {"source": "Charleston, SC Zoning.pdf", "page": 496, "excerpt": "1. One double-faced monument style shall be allowed per lot w ith a maximum\nof twelve (12) square feet in area per side and not exceeding f ive (5) feet in\nheight.\n2. Monument signs may be illuminated internally or with a shie lded spot light\nlocated at the base of the sign. The use of plastic sign faces i s prohibited.\nb. Façade signs shall be permitted as follows:\n1. Façade signs for businesses or uses occupying the ground f loor of a\nmulti-story building shall be permitted as follows:\n(a) Sig"}, {"source": "Charleston, SC Zoning.pdf", "page": 512, "excerpt": "(c) Monument signs may be illuminated internally or with a shi elded spot\nlight located at the base of the sign. Plastic face signs shal l have opaque\nbackgrounds allowing only the text and logos to illuminate.\n(d) Reader boards are allowed as a part of a monument sign only and are\nnot to be used as façade signs.\n(e) With the exception of public schools, reader boards shal l not exceed fifty\n(50) percent of the allowable freestanding sign face area.\n(f) Reader boards are not to be illuminated.\n2"}]
+
+### final_absent_01
+
+Question: What was Issaquah's median household income in 2024?
+
+Answer: I don't know based on these documents.
+
+Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 318, "excerpt": "median income (AMI) for rental units.\nc. Qualified household: Households where occupants have, in the aggregate, (1) a\nhousehold income less than or equal to one hundred twenty (12 0%) percent of the\narea median income (AMI) for owner occupied workforce housi ng units; (2) a\nhousehold income less than or equal to eighty (80%) percent o f the area median\nincome (AMI) for rental workforce housing units; or (3) a hou sehold income less\nthan or equal to sixty (60%) percent of the area median income "}, {"source": "Charleston, SC Zoning.pdf", "page": 95, "excerpt": "or sixty (60) percent of area median income for rental units. Area median income shall \nbe determined annually by the U.S. Department of Housing and Urban Development as \nadjusted by the City of Charleston Department of Housing and Community Develop-\nment, or its successor. Household income shall include all s ources of financial support, \nboth cash and in kind, of adult members of the household, to in clude wages, salaries, \ntips, commissions, all forms of self-employment income, in terest, div"}, {"source": "Charleston, SC Zoning.pdf", "page": 95, "excerpt": "Area Median Income. \"Area Median Income\" or \"AMI\" shall mean and have reference \nto the median family income, based upon applicable family si ze of a qualified household \nfor the Charleston-North Charleston metropolitan statist ical area as published by the \nUnited States Department of Housing and Urban Development ( together with its \nsuccessors, \"HUD\"), as adjusted for household size by the City of Charleston De part-\nment of Housing and Community Development (together with it s successors, \"D"}]
+
+### final_absent_02
+
+Question: Which medication should be prescribed for pneumonia?
+
+Answer: I don't know based on these documents.
+
+Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 421, "excerpt": "b. Change in use. Should any of the approved uses as indicated in the approved \nshared parking analysis change, or should the Zoning Direct or or Department of \nTraffic and Transportation, or its successor, find that any of the conditions \n§ 54-319.1  § 54-319.1SITE REGULATIONS\n3-31Supp. No. 25"}, {"source": "Charleston, SC Zoning.pdf", "page": 421, "excerpt": "iv. The shared parking analysis shall provide a plan to conve rt reserved space to \nrequired spaces; \nv. The shared parking analysis shall be approved by TRC prior to submittal, \nbased on the feasibility and observations of the uses to shar e the parking due \nto their particular peak parking and trip generation charac teristics; \nvi. Shared use parking approval shall only be valid for those uses as indicated in \nthe study; and \nvii. If a parking reduction is approved under the provisions of this"}, {"source": "zoning-ordinance-082024-rev.pdf", "page": 126, "excerpt": "urban design regulations.  Residential development should emphasize connectivity by \naccommodating a mix of housing types and sizes, including small-lot single-family, \ntownhomes, and live/work units.  Higher intensity residential uses should be located at \nkey intersections and along higher traffic streets to create a transition to less intense \nresidential uses.  Access to nearby corridors and centers should be supported with \npedestrian and bicycle infrastructure. \n \nWhere a development inclu"}]
+
+### final_ambiguous_01
+
+Question: What is the minimum front-yard setback?
+
+Answer: Which city or document do you mean?
+
+Sources: []

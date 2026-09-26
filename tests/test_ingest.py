@@ -8,10 +8,26 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_core.embeddings import FakeEmbeddings
 
-from app.ingest import process_documents
+from app.ingest import process_documents, publish_index_version
 
 
 class IngestTests(unittest.TestCase):
+    def test_ingestion_publishes_new_index_version_after_corpus_change(self):
+        with tempfile.TemporaryDirectory() as temporary_dir:
+            root = Path(temporary_dir)
+            marker = root / "index.version"
+            db = Chroma(
+                collection_name=f"ingest_test_{uuid4().hex}",
+                embedding_function=FakeEmbeddings(size=16),
+            )
+            process_documents(data_dir=root, db=db, marker_path=marker)
+            first_version = marker.read_text(encoding="utf-8")
+            self.assertTrue(first_version)
+
+            db.add_documents([Document(page_content="temporary")], ids=["temporary"])
+            process_documents(data_dir=root, db=db, marker_path=marker)
+            self.assertNotEqual(marker.read_text(encoding="utf-8"), first_version)
+
     def test_empty_data_directory_clears_the_previous_corpus(self):
         with tempfile.TemporaryDirectory() as temporary_dir:
             data_dir = Path(temporary_dir)
@@ -65,6 +81,25 @@ class IngestTests(unittest.TestCase):
                 {("sample.pdf", 1), ("sample.pdf", 2)},
             )
             self.assertNotIn("stale", stored["ids"])
+
+    def test_version_publish_retries_while_marker_is_briefly_locked(self):
+        with tempfile.TemporaryDirectory() as temporary_dir:
+            marker = Path(temporary_dir) / "index.version"
+            real_replace = Path.replace
+            calls = []
+
+            def flaky_replace(self, target):
+                calls.append(target)
+                if len(calls) < 3:
+                    raise PermissionError("marker is open in another process")
+                return real_replace(self, target)
+
+            with patch.object(Path, "replace", flaky_replace), patch("app.ingest.sleep"):
+                publish_index_version(marker)
+
+            self.assertEqual(len(calls), 3)
+            self.assertTrue(marker.read_text(encoding="utf-8"))
+            self.assertEqual(list(Path(temporary_dir).glob("*.tmp")), [])
 
 
 if __name__ == "__main__":

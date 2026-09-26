@@ -4,7 +4,7 @@ from benchmarks.latency_test import measure_stream
 
 
 class FakeResponse:
-    headers = {"Server-Timing": "retrieval;dur=12.5"}
+    headers = {"Server-Timing": "retrieval;dur=12.5, index;dur=1.5, vector;dur=8.0, keyword;dur=2.0, fusion;dur=0.5"}
 
     def __enter__(self):
         return self
@@ -37,6 +37,10 @@ class LatencyTests(unittest.TestCase):
         )
 
         self.assertAlmostEqual(result["retrieval_ms"], 12.5)
+        self.assertAlmostEqual(result["index_ms"], 1.5)
+        self.assertAlmostEqual(result["vector_ms"], 8.0)
+        self.assertAlmostEqual(result["keyword_ms"], 2.0)
+        self.assertAlmostEqual(result["fusion_ms"], 0.5)
         self.assertAlmostEqual(result["ttft_ms"], 100.0)
         self.assertAlmostEqual(result["full_response_ms"], 300.0)
 

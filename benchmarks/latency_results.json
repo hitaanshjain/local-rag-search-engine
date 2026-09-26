@@ -1,14 +1,14 @@
 {
-  "run_at_utc": "2026-09-25T01:41:41.996448+00:00",
-  "git_head_at_run": "6e7b760268da3573a1c3a2f1722fc59a6c05a7bc",
+  "run_at_utc": "2026-09-25T05:09:05.362898+00:00",
+  "git_head_at_run": "0eed7423ebf992265f2b0d1d70451fae7e1fd92e",
   "models": {
     "embedding": "nomic-embed-text",
-    "llm": "llama3.2:1b"
+    "llm": "llama3.2:3b"
   },
   "hardware": {
     "mode": "GPU",
-    "llm_size_vram_bytes": 1514584145,
-    "llm_name": "llama3.2:1b"
+    "llm_size_vram_bytes": 2554708622,
+    "llm_name": "llama3.2:3b"
   },
   "corpus_pages": 1070,
   "query_count": 5,
@@ -25,86 +25,142 @@
     {
       "query_id": "iss_03",
       "iteration": 1,
-      "retrieval_ms": 1217.49,
-      "ttft_ms": 1349.289999998291,
-      "full_response_ms": 1750.5055000001448
+      "retrieval_ms": 173.043,
+      "index_ms": 0.866,
+      "vector_ms": 111.392,
+      "keyword_ms": 22.316,
+      "fusion_ms": 0.031,
+      "ttft_ms": 294.63810000015656,
+      "full_response_ms": 756.9516000003205
     },
     {
       "query_id": "iss_03",
       "iteration": 2,
-      "retrieval_ms": 994.2,
-      "ttft_ms": 1130.7534000006854,
-      "full_response_ms": 1335.1064000016777
+      "retrieval_ms": 186.201,
+      "index_ms": 0.842,
+      "vector_ms": 127.681,
+      "keyword_ms": 20.697,
+      "fusion_ms": 0.034,
+      "ttft_ms": 303.48310000044876,
+      "full_response_ms": 646.4790999998513
     },
     {
       "query_id": "sum_04",
       "iteration": 1,
-      "retrieval_ms": 1739.618,
-      "ttft_ms": 2009.5130000008794,
-      "full_response_ms": 2242.893999999069
+      "retrieval_ms": 186.247,
+      "index_ms": 0.896,
+      "vector_ms": 141.56,
+      "keyword_ms": 16.432,
+      "fusion_ms": 0.047,
+      "ttft_ms": 502.0671999991464,
+      "full_response_ms": 846.2829000018246
     },
     {
       "query_id": "sum_04",
       "iteration": 2,
-      "retrieval_ms": 1296.708,
-      "ttft_ms": 1429.4278000015765,
-      "full_response_ms": 1669.6866000020236
+      "retrieval_ms": 168.49,
+      "index_ms": 0.951,
+      "vector_ms": 127.061,
+      "keyword_ms": 14.36,
+      "fusion_ms": 0.031,
+      "ttft_ms": 321.2046000007831,
+      "full_response_ms": 666.9390999995812
     },
     {
       "query_id": "urb_03",
       "iteration": 1,
-      "retrieval_ms": 888.342,
-      "ttft_ms": 6499.727099999291,
-      "full_response_ms": 6792.827900000702
+      "retrieval_ms": 167.59,
+      "index_ms": 0.907,
+      "vector_ms": 126.066,
+      "keyword_ms": 14.163,
+      "fusion_ms": 0.045,
+      "ttft_ms": 428.06449999989127,
+      "full_response_ms": 950.2638000012666
     },
     {
       "query_id": "urb_03",
       "iteration": 2,
-      "retrieval_ms": 1582.075,
-      "ttft_ms": 1715.2095999990706,
-      "full_response_ms": 1990.2794000008726
+      "retrieval_ms": 166.656,
+      "index_ms": 0.714,
+      "vector_ms": 123.566,
+      "keyword_ms": 13.824,
+      "fusion_ms": 0.038,
+      "ttft_ms": 276.6300000002957,
+      "full_response_ms": 793.1457999984559
     },
     {
       "query_id": "uni_02",
       "iteration": 1,
-      "retrieval_ms": 1357.796,
-      "ttft_ms": 1562.1202000002086,
-      "full_response_ms": 1807.2863000015786
+      "retrieval_ms": 185.118,
+      "index_ms": 0.748,
+      "vector_ms": 145.477,
+      "keyword_ms": 14.463,
+      "fusion_ms": 0.051,
+      "ttft_ms": 537.5072999995609,
+      "full_response_ms": 664.1239000018686
     },
     {
       "query_id": "uni_02",
       "iteration": 2,
-      "retrieval_ms": 953.691,
-      "ttft_ms": 1074.6619999990799,
-      "full_response_ms": 1271.2696999988111
+      "retrieval_ms": 175.791,
+      "index_ms": 0.826,
+      "vector_ms": 132.411,
+      "keyword_ms": 15.579,
+      "fusion_ms": 0.035,
+      "ttft_ms": 305.60870000044815,
+      "full_response_ms": 420.06880000189994
     },
     {
       "query_id": "cha_02",
       "iteration": 1,
-      "retrieval_ms": 1602.274,
-      "ttft_ms": 1807.7763999972376,
-      "full_response_ms": 1949.1161999976612
+      "retrieval_ms": 224.545,
+      "index_ms": 0.872,
+      "vector_ms": 187.866,
+      "keyword_ms": 12.419,
+      "fusion_ms": 0.031,
+      "ttft_ms": 705.132400002185,
+      "full_response_ms": 1247.4363000001176
     },
     {
       "query_id": "cha_02",
       "iteration": 2,
-      "retrieval_ms": 1953.632,
-      "ttft_ms": 2098.4731999997166,
-      "full_response_ms": 2414.4688000014867
+      "retrieval_ms": 146.57,
+      "index_ms": 0.651,
+      "vector_ms": 112.632,
+      "keyword_ms": 11.787,
+      "fusion_ms": 0.033,
+      "ttft_ms": 265.56889999847044,
+      "full_response_ms": 796.301799997309
     }
   ],
   "summary": {
     "retrieval_ms": {
-      "median": 1327.252,
-      "p90": 1739.618
+      "median": 174.417,
+      "p90": 186.247
+    },
+    "index_ms": {
+      "median": 0.854,
+      "p90": 0.907
+    },
+    "vector_ms": {
+      "median": 127.37100000000001,
+      "p90": 145.477
+    },
+    "keyword_ms": {
+      "median": 14.4115,
+      "p90": 20.697
+    },
+    "fusion_ms": {
+      "median": 0.0345,
+      "p90": 0.047
     },
     "ttft_ms": {
-      "median": 1638.6648999996396,
-      "p90": 2098.4731999997166
+      "median": 313.4066500006156,
+      "p90": 537.5072999995609
     },
     "full_response_ms": {
-      "median": 1878.20124999962,
-      "p90": 2414.4688000014867
+      "median": 775.0486999993882,
+      "p90": 950.2638000012666
     }
   }
 }

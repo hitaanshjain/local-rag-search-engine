@@ -3,10 +3,16 @@ import unittest
 from langchain_core.documents import Document
 
 from app.engine import SearchIndex
-from benchmarks.accuracy_eval import keyword_search_substring, score_ranking
+from benchmarks.accuracy_eval import keyword_search_substring, load_and_validate_queries, score_ranking
 
 
 class AccuracyMetricTests(unittest.TestCase):
+    def test_retrieval_eval_includes_verified_additional_questions(self):
+        queries, _, _ = load_and_validate_queries()
+        self.assertEqual(len(queries), 28)
+        self.assertEqual(len({query["id"] for query in queries}), 28)
+        self.assertIn("held_cha_02", {query["id"] for query in queries})
+
     def test_source_and_page_metrics_use_the_first_relevant_rank(self):
         results = [
             Document(page_content="other", metadata={"source": "other.pdf", "page": 1}),

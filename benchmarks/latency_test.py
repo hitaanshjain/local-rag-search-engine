@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BENCHMARK_DIR = Path(__file__).resolve().parent
 API_URL = os.getenv("RAG_API_URL", "http://127.0.0.1:8000/chat")
 QUERY_IDS = ("iss_03", "sum_04", "urb_03", "uni_02", "cha_02")
-METRICS = ("retrieval_ms", "ttft_ms", "full_response_ms")
+METRICS = ("retrieval_ms", "index_ms", "vector_ms", "keyword_ms", "fusion_ms", "ttft_ms", "full_response_ms")
 
 
 def measure_stream(query, session=requests, url=API_URL, clock=time.perf_counter):
@@ -31,10 +31,12 @@ def measure_stream(query, session=requests, url=API_URL, clock=time.perf_counter
     with session.post(url, json={"query": query}, stream=True, timeout=(10, 300)) as response:
         response.raise_for_status()
         timing = response.headers.get("Server-Timing", "")
-        match = re.search(r"(?:^|,)\s*retrieval;dur=([0-9.]+)", timing)
-        if not match:
-            raise ValueError("Chat response did not report retrieval time")
-        retrieval_ms = float(match.group(1))
+        stage_times = {
+            name: float(duration)
+            for name, duration in re.findall(r"(?:^|,)\s*(\w+);dur=([0-9.]+)", timing)
+        }
+        if any(stage not in stage_times for stage in ("retrieval", "index", "vector", "keyword", "fusion")):
+            raise ValueError("Chat response did not report all retrieval stages")
         for chunk in response.iter_content(chunk_size=None, decode_unicode=True):
             buffer = (buffer + chunk).replace("\r\n", "\n")
             boundary = buffer.find("\n\n")
@@ -60,7 +62,7 @@ def measure_stream(query, session=requests, url=API_URL, clock=time.perf_counter
     if first_token_ms is None or full_response_ms is None:
         raise ValueError("Chat stream ended without a token and done event")
     return {
-        "retrieval_ms": retrieval_ms,
+        **{f"{stage}_ms": stage_times[stage] for stage in ("retrieval", "index", "vector", "keyword", "fusion")},
         "ttft_ms": first_token_ms,
         "full_response_ms": full_response_ms,
     }
@@ -109,7 +111,7 @@ def write_results(result):
         "# Streaming chat latency benchmark",
         "",
         f"Run at: {result['run_at_utc']}",
-        f"Git HEAD at run: `{result['git_head_at_run']}` (task 5 worktree changes were uncommitted during the run).",
+        f"Git HEAD at run: `{result['git_head_at_run']}` (worktree changes may have been present).",
         f"Models: `{result['models']['llm']}` LLM and `{result['models']['embedding']}` embeddings.",
         f"Hardware: {result['hardware']['mode']} for the loaded LLM (Ollama reports {result['hardware']['llm_size_vram_bytes']} bytes in VRAM).",
         f"Corpus: {result['corpus_pages']} checked-in PDF pages.",
@@ -119,17 +121,18 @@ def write_results(result):
         "",
         summary_table(result["summary"]),
         "",
-        "Time to first token (TTFT) starts before the POST and stops at the first nonempty SSE `token` event. Full response time stops at the SSE `done` event. Retrieval time is measured by the server around its production hybrid search for the *same request* and returned in the `Server-Timing` header. P90 uses the nearest-rank method. The warmup request is excluded from all statistics.",
+        "Time to first token (TTFT) starts before the POST and stops at the first nonempty SSE `token` event. Full response time stops at the SSE `done` event. The API reports retrieval and its index, vector, keyword, and fusion stages in `Server-Timing`; total retrieval also includes thread scheduling and other overhead. P90 uses the nearest-rank method. The warmup request is excluded from all statistics.",
         "",
         "## Measured requests",
         "",
-        "| Query ID | Run | Retrieval | TTFT | Full response |",
-        "|---|---:|---:|---:|---:|",
+        "| Query ID | Run | Retrieval | Index | Vector | Keyword | Fusion | TTFT | Full response |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for sample in result["samples"]:
         lines.append(
             f"| {sample['query_id']} | {sample['iteration']} | {sample['retrieval_ms']:.1f} ms | "
-            f"{sample['ttft_ms']:.1f} ms | {sample['full_response_ms']:.1f} ms |"
+            f"{sample['index_ms']:.1f} ms | {sample['vector_ms']:.1f} ms | {sample['keyword_ms']:.1f} ms | "
+            f"{sample['fusion_ms']:.1f} ms | {sample['ttft_ms']:.1f} ms | {sample['full_response_ms']:.1f} ms |"
         )
     (BENCHMARK_DIR / "latency_results.md").write_text(
         "\n".join(lines) + "\n", encoding="utf-8"

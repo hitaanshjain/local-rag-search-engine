@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { Send, Bot, User, Loader2 } from "lucide-react";
-import { createSSEParser } from "./sse";
+import { useRef, useState } from "react";
+import { Send, Bot, User, Loader2, Square } from "lucide-react";
+import { citationParts, documentUrl, streamChat } from "./chatClient";
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
 export default function App() {
   const [messages, setMessages] = useState([
@@ -8,6 +10,7 @@ export default function App() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const requestController = useRef(null);
 
   const sendMessage = async () => {
     if (loading || !input.trim()) return;
@@ -21,6 +24,8 @@ export default function App() {
     ]);
     setInput("");
     setLoading(true);
+    const controller = new AbortController();
+    requestController.current = controller;
 
     const updateReply = (update) => {
       setMessages((prev) => prev.map((msg) => (
@@ -29,31 +34,18 @@ export default function App() {
     };
 
     try {
-      const response = await fetch("http://localhost:8000/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: userMessage.text }),
-      });
-      if (!response.ok || !response.body) throw new Error("Chat request failed");
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      const parser = createSSEParser((event, data) => {
+      await streamChat(userMessage.text, (event, data) => {
         if (event === "sources") updateReply(() => ({ sources: data.sources }));
         if (event === "token") updateReply((msg) => ({ text: msg.text + data.text }));
-        if (event === "done") setLoading(false);
-      });
-
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        parser.push(decoder.decode(value, { stream: true }));
-      }
-      parser.push(decoder.decode());
+      }, { signal: controller.signal, apiBase: API_BASE });
     } catch (error) {
-      console.error("Error:", error);
-      updateReply(() => ({ text: "Error connecting to server." }));
+      if (error.name === "AbortError") {
+        updateReply((msg) => ({ text: `${msg.text}\n\nStopped.`.trim() }));
+      } else {
+        updateReply((msg) => ({ text: `${msg.text}\n\n${error.message}`.trim() }));
+      }
     } finally {
+      requestController.current = null;
       setLoading(false);
     }
   };
@@ -75,14 +67,21 @@ export default function App() {
                 {msg.role === "user" ? <User size={16} /> : <Bot size={16} />}
               </div>
               <div className={`max-w-[80%] rounded-2xl px-5 py-3 ${msg.role === "user" ? "bg-purple-600 text-white rounded-br-none" : "bg-gray-700 text-gray-100 rounded-bl-none"}`}>
-                <p className="leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+                <p className="leading-relaxed whitespace-pre-wrap">
+                  {citationParts(msg.text, msg.sources?.length ?? 0).map((part, i) => (
+                    part.number ? (
+                      <a key={i} href={documentUrl(API_BASE, msg.sources[part.number - 1])} target="_blank" rel="noopener noreferrer" className="text-blue-300 underline" aria-label={`Open source ${part.number} at its PDF page`}>[{part.number}]</a>
+                    ) : <span key={i}>{part.text}</span>
+                  ))}
+                </p>
                 {msg.sources?.length > 0 && (
                   <div className="mt-3 pt-3 border-t border-gray-600 text-xs text-gray-300">
                     <p className="font-semibold mb-1">Sources</p>
                     {msg.sources.map((src, i) => (
-                      <div key={`${src.source}-${src.page}-${i}`}>
-                        {src.source}, page {src.page}
-                      </div>
+                      <details key={`${src.source}-${src.page}-${i}`} className="mb-1">
+                        <summary><a href={documentUrl(API_BASE, src)} target="_blank" rel="noopener noreferrer" className="text-blue-300 underline" onClick={(event) => event.stopPropagation()}>[{i + 1}] {src.source}, page {src.page}</a></summary>
+                        <p className="mt-1 whitespace-pre-wrap text-gray-400">{src.excerpt}</p>
+                      </details>
                     ))}
                   </div>
                 )}
@@ -111,9 +110,11 @@ export default function App() {
               placeholder="Ask a question about your document..."
               className="flex-1 bg-gray-900 border border-gray-600 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500"
             />
-            <button onClick={sendMessage} disabled={loading} className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-              <Send size={20} />
-            </button>
+            {loading ? (
+              <button onClick={() => requestController.current?.abort()} aria-label="Stop response" className="bg-red-700 hover:bg-red-600 text-white p-3 rounded-xl transition-colors"><Square size={20} /></button>
+            ) : (
+              <button onClick={sendMessage} disabled={!input.trim()} aria-label="Send message" className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"><Send size={20} /></button>
+            )}
           </div>
         </div>
       </div>

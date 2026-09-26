@@ -1,13 +1,35 @@
 from collections import defaultdict
 from hashlib import sha256
 from pathlib import Path
+from time import sleep
+from uuid import uuid4
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from app.engine import get_vector_db
+from app.engine import INDEX_VERSION_PATH, get_vector_db
 
 DATA_DIR = "./data"
 
-def process_documents(data_dir=DATA_DIR, db=None):
+def publish_index_version(marker_path):
+    marker_path = Path(marker_path)
+    marker_path.parent.mkdir(parents=True, exist_ok=True)
+    version = uuid4().hex
+    temporary_path = marker_path.with_name(f"{marker_path.name}.{version}.tmp")
+    temporary_path.write_text(version, encoding="utf-8")
+    # On Windows, replacing fails while the API is reading the marker.
+    for attempt in range(10):
+        try:
+            temporary_path.replace(marker_path)
+            return
+        except PermissionError:
+            if attempt == 9:
+                temporary_path.unlink(missing_ok=True)
+                raise
+            sleep(0.05 * (attempt + 1))
+
+
+def process_documents(data_dir=DATA_DIR, db=None, marker_path=None):
+    if marker_path is None and db is None:
+        marker_path = INDEX_VERSION_PATH
     data_dir = Path(data_dir)
     if not data_dir.exists():
         data_dir.mkdir(parents=True)
@@ -34,6 +56,8 @@ def process_documents(data_dir=DATA_DIR, db=None):
         ids = db.get(include=[])["ids"]
         for start in range(0, len(ids), 100):
             db.delete(ids=ids[start : start + 100])
+        if marker_path is not None and (ids or not Path(marker_path).exists()):
+            publish_index_version(marker_path)
         print(f"No PDFs found in {data_dir}; cleared the stored corpus.")
         return
 
@@ -84,6 +108,8 @@ def process_documents(data_dir=DATA_DIR, db=None):
     stale_ids = sorted(stale_ids)
     for start in range(0, len(stale_ids), 100):
         db.delete(ids=stale_ids[start : start + 100])
+    if marker_path is not None and (changed_ids or stale_ids or not Path(marker_path).exists()):
+        publish_index_version(marker_path)
     print(f"Success! Stored {len(desired_ids)} chunks from {len(all_docs)} pages.")
 
 if __name__ == "__main__":

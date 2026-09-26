@@ -1,0 +1,96 @@
+[
+  {
+    "id": "held_iss_01",
+    "query": "In Issaquah's land use table, what does P2 tell an applicant about review?",
+    "kind": "answerable",
+    "source": "zoning.pdf",
+    "page": 5,
+    "evidence": "P(Number) = PERMITTED with Level of Review (0, 1, 2, 3)",
+    "accepted_answers": ["Level 2 Review", "Level two review"]
+  },
+  {
+    "id": "held_sum_01",
+    "query": "How much front yard does a surface parking zone need when it is combined with an agricultural or residential zone in the generalized summary?",
+    "kind": "answerable",
+    "source": "E Generalized Summary of Zoning Regulations.pdf",
+    "page": 6,
+    "evidence": "10 ft. in combination with an A or R Zone; otherwise none",
+    "accepted_answers": ["10 ft", "10 feet", "ten feet"]
+  },
+  {
+    "id": "held_urb_01",
+    "query": "In Urbana, how far must a proposed gaming hall be from another licensed gaming hall?",
+    "kind": "answerable",
+    "source": "article_v_-_use_regulations.pdf",
+    "page": 16,
+    "evidence": "a minimum of five hundred feet from any other licensed gaming hall",
+    "accepted_answers": ["500 feet", "five hundred feet"]
+  },
+  {
+    "id": "held_uni_01",
+    "query": "What minimum lot size does Union City require for a cemetery?",
+    "kind": "answerable",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 51,
+    "evidence": "Minimum lot area shall be ten (10) acres",
+    "accepted_answers": ["10 acres", "ten acres", "ten (10) acres"]
+  },
+  {
+    "id": "held_uni_02",
+    "query": "Does Union City's R-2 district list noncommercial agriculture among its permitted uses?",
+    "kind": "answerable",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 53,
+    "evidence": "Non-commercial agriculture",
+    "accepted_answers": ["yes", "permitted"],
+    "forbidden_answers": ["no", "not permitted"]
+  },
+  {
+    "id": "held_cha_01",
+    "query": "What is the minimum height for a principal structure in Charleston's 55/30 height district?",
+    "kind": "answerable",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 406,
+    "additional_relevant_pages": [405],
+    "evidence": "nor shall the principal structure be lower than thirty (30) feet",
+    "accepted_answers": ["30 feet", "thirty feet", "thirty (30) feet"]
+  },
+  {
+    "id": "held_cha_02",
+    "query": "For a Charleston development with at least twenty business units, what is the per-face area limit for its monument sign?",
+    "kind": "answerable",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 505,
+    "evidence": "No sign shall exceed one hundred (100) square feet per fac e",
+    "accepted_answers": ["100 square feet", "one hundred square feet", "one hundred (100) square feet"]
+  },
+  {
+    "id": "held_cha_03",
+    "query": "In Charleston, where does someone appeal an administrative decision about a sidewalk cafe permit?",
+    "kind": "answerable",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 205,
+    "evidence": "Board of Zoning Appeals Site Design",
+    "accepted_answers": ["Board of Zoning Appeals Site Design"]
+  },
+  {
+    "id": "held_absent_01",
+    "query": "What is the battery capacity of the 2025 Tesla Model 3?",
+    "kind": "unanswerable"
+  },
+  {
+    "id": "held_absent_02",
+    "query": "Who won the 2024 Nobel Prize in Physics?",
+    "kind": "unanswerable"
+  },
+  {
+    "id": "held_absent_03",
+    "query": "What is the recommended treatment for migraine headaches?",
+    "kind": "unanswerable"
+  },
+  {
+    "id": "held_ambiguous_01",
+    "query": "What is the maximum fence height?",
+    "kind": "ambiguous"
+  }
+]

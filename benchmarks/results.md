@@ -1,26 +1,28 @@
 # Retrieval accuracy benchmark
 
-Run at: 2026-09-25T01:36:15.592011+00:00
-Git HEAD at run: `539517fe1f9db0d4f65b493c9771b1c8709c1972` (task 4 worktree changes were uncommitted during the run).
-Models: `nomic-embed-text` embeddings; `llama3.2:1b` configured for answers (not used in retrieval scoring).
+Run at: 2026-09-25T05:04:25.465326+00:00
+Git HEAD at run: `0eed7423ebf992265f2b0d1d70451fae7e1fd92e` (worktree changes may have been present).
+Models: `nomic-embed-text` embeddings; `llama3.2:3b` configured for answers (not used in retrieval scoring).
 Corpus: 1070 PDF pages, 3639 indexed chunks, 5 files.
-Queries: 20 excerpt-verified questions.
+Queries: 28 excerpt-verified questions.
 
 ## Results
 
 | Method | Source hit@3 | Source hit@5 | Source MRR | Page hit@3 | Page hit@5 | Page MRR |
 |---|---:|---:|---:|---:|---:|---:|
-| vector_only | 95.0% | 100.0% | 0.935 | 80.0% | 90.0% | 0.739 |
-| substring_keyword | 80.0% | 90.0% | 0.770 | 70.0% | 75.0% | 0.610 |
-| bm25_keyword | 100.0% | 100.0% | 1.000 | 95.0% | 100.0% | 0.938 |
-| hybrid_substring | 90.0% | 95.0% | 0.885 | 75.0% | 80.0% | 0.685 |
-| hybrid_bm25 | 100.0% | 100.0% | 1.000 | 95.0% | 100.0% | 0.871 |
+| vector_only | 96.4% | 100.0% | 0.954 | 82.1% | 89.3% | 0.718 |
+| substring_keyword | 75.0% | 85.7% | 0.736 | 64.3% | 71.4% | 0.550 |
+| bm25_keyword | 100.0% | 100.0% | 1.000 | 89.3% | 92.9% | 0.848 |
+| hybrid_substring | 85.7% | 89.3% | 0.846 | 71.4% | 75.0% | 0.668 |
+| hybrid_bm25 | 100.0% | 100.0% | 1.000 | 92.9% | 92.9% | 0.833 |
+| hybrid_bm25_50 | 100.0% | 100.0% | 1.000 | 89.3% | 92.9% | 0.801 |
+| hybrid_bm25_75 | 100.0% | 100.0% | 1.000 | 85.7% | 92.9% | 0.798 |
 
-Hit@k and reciprocal rank inspect the top k *chunks*. Source metrics match their file name; page metrics match file name and physical PDF page. MRR is the mean reciprocal rank of the first match. Each method returns at most five chunks. Hybrid candidate pools contain ten vector and ten keyword chunks with 0.5/0.5 weights.
+Hit@k and reciprocal rank inspect the top k *chunks*. Source metrics match their file name; page metrics match file name and physical PDF page. MRR is the mean reciprocal rank of the first match. Each method returns at most five chunks. Hybrid candidate pools contain ten vector and ten keyword chunks. `hybrid_bm25` is the production 0.25 vector / 0.75 BM25 blend; the `_50` and `_75` variants use 0.50 and 0.75 vector weights. `hybrid_substring` retains the old 0.50/0.50 comparison.
 
 ## Query changes
 
-All 50 old queries were removed because their labels all pointed to `zoning.pdf` regardless of answer location. The 20 new questions below were written from the cited PDF passages. None of the old labels was carried forward.
+All 50 old queries were removed because their labels all pointed to `zoning.pdf` regardless of answer location. The first 20 replacement questions and eight additional questions below were written from cited PDF passages. None of the old labels was carried forward. The additional questions were also used during development, so this is not a blind test set.
 
 ### Removed queries
 
@@ -81,7 +83,7 @@ All 50 old queries were removed because their labels all pointed to `zoning.pdf`
 
 Each label was set by reading the specified physical PDF page; the benchmark checks that its evidence excerpt occurs on that page before scoring.
 
-| ID | Query | Source | PDF page | Evidence excerpt |
+| ID | Query | Source | PDF page(s) | Evidence excerpt |
 |---|---|---|---:|---|
 | iss_01 | What residential density does Issaquah's Village Residential district aim to preserve? | zoning.pdf | 2 | moderate density residential uses and compatible commercial uses |
 | iss_02 | How close to mineral resource land triggers a development permit notice in Issaquah? | zoning.pdf | 3 | within five hundred (500) feet of, lands designated as mineral resource lands |
@@ -103,3 +105,11 @@ Each label was set by reading the specified physical PDF page; the benchmark che
 | cha_02 | What maximum building height does Charleston Height District 8 permit? | Charleston, SC Zoning.pdf | 400 | Maximum building height shall not exceed 8 stories |
 | cha_03 | How many sandwich board signs may a single Charleston building have on private property? | Charleston, SC Zoning.pdf | 500 | Only one sandwich board sign shall be allowed for any sing le building |
 | cha_04 | How many watercraft slips define a Charleston community dock? | Charleston, SC Zoning.pdf | 620 | greater than or equal to 5 watercraft slips and less than or equal to 10 watercraft slips |
+| held_iss_01 | In Issaquah's land use table, what does P2 tell an applicant about review? | zoning.pdf | 5 | P(Number) = PERMITTED with Level of Review (0, 1, 2, 3) |
+| held_sum_01 | How much front yard does a surface parking zone need when it is combined with an agricultural or residential zone in the generalized summary? | E Generalized Summary of Zoning Regulations.pdf | 6 | 10 ft. in combination with an A or R Zone; otherwise none |
+| held_urb_01 | In Urbana, how far must a proposed gaming hall be from another licensed gaming hall? | article_v_-_use_regulations.pdf | 16 | a minimum of five hundred feet from any other licensed gaming hall |
+| held_uni_01 | What minimum lot size does Union City require for a cemetery? | zoning-ordinance-082024-rev.pdf | 51 | Minimum lot area shall be ten (10) acres |
+| held_uni_02 | Does Union City's R-2 district list noncommercial agriculture among its permitted uses? | zoning-ordinance-082024-rev.pdf | 53 | Non-commercial agriculture |
+| held_cha_01 | What is the minimum height for a principal structure in Charleston's 55/30 height district? | Charleston, SC Zoning.pdf | 406, 405 | nor shall the principal structure be lower than thirty (30) feet |
+| held_cha_02 | For a Charleston development with at least twenty business units, what is the per-face area limit for its monument sign? | Charleston, SC Zoning.pdf | 505 | No sign shall exceed one hundred (100) square feet per fac e |
+| held_cha_03 | In Charleston, where does someone appeal an administrative decision about a sidewalk cafe permit? | Charleston, SC Zoning.pdf | 205 | Board of Zoning Appeals Site Design |

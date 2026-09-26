@@ -27,6 +27,8 @@ METHODS = (
     "bm25_keyword",
     "hybrid_substring",
     "hybrid_bm25",
+    "hybrid_bm25_50",
+    "hybrid_bm25_75",
 )
 LEVELS = ("source", "page")
 METRICS = ("hit@3", "hit@5", "mrr")
@@ -74,6 +76,13 @@ def score_ranking(documents, relevant):
 
 def load_and_validate_queries():
     queries = json.loads((BENCHMARK_DIR / "eval_queries.json").read_text(encoding="utf-8"))
+    additional = json.loads((BENCHMARK_DIR / "development_queries.json").read_text(encoding="utf-8"))
+    queries.extend(
+        {"id": row["id"], "query": row["query"],
+         "relevant": [{"source": row["source"], "page": page} for page in [row["page"], *row.get("additional_relevant_pages", [])]],
+         "evidence": row["evidence"]}
+        for row in additional if row["kind"] == "answerable"
+    )
     old_queries = json.loads((BENCHMARK_DIR / "previous_queries.json").read_text(encoding="utf-8"))
     pdf_paths = sorted(DATA_DIR.glob("*.pdf"))
     readers = {path.name: PdfReader(str(path)) for path in pdf_paths}
@@ -83,16 +92,16 @@ def load_and_validate_queries():
         if not item["query"].strip() or item["id"] in seen_ids:
             raise ValueError(f"Blank query or duplicate ID: {item['id']}")
         seen_ids.add(item["id"])
-        if len(item["relevant"]) != 1:
-            raise ValueError(f"Expected one excerpt-backed page for {item['id']}")
-        label = item["relevant"][0]
-        source, page = label["source"], label["page"]
-        if source not in readers or not 1 <= page <= page_counts[source]:
-            raise ValueError(f"Invalid source or page for {item['id']}: {label}")
-        page_text = " ".join((readers[source].pages[page - 1].extract_text() or "").split())
-        evidence = " ".join(item["evidence"].split())
-        if evidence.casefold() not in page_text.casefold():
-            raise ValueError(f"Evidence is absent from labeled page for {item['id']}")
+        if not item["relevant"]:
+            raise ValueError(f"Missing excerpt-backed page for {item['id']}")
+        for label in item["relevant"]:
+            source, page = label["source"], label["page"]
+            if source not in readers or not 1 <= page <= page_counts[source]:
+                raise ValueError(f"Invalid source or page for {item['id']}: {label}")
+            page_text = " ".join((readers[source].pages[page - 1].extract_text() or "").split())
+            evidence = " ".join(item["evidence"].split())
+            if evidence.casefold() not in page_text.casefold():
+                raise ValueError(f"Evidence is absent from labeled page for {item['id']}")
     return queries, old_queries, page_counts
 
 
@@ -119,6 +128,8 @@ def evaluate_query(query, db, index):
         "bm25_keyword": [doc for doc, _ in bm25_candidates[:5]],
         "hybrid_substring": fuse_results(vector_candidates, substring_candidates, k=5),
         "hybrid_bm25": hybrid_search(text, db, k=5, index=index),
+        "hybrid_bm25_50": fuse_results(vector_candidates, bm25_candidates, k=5),
+        "hybrid_bm25_75": fuse_results(vector_candidates, bm25_candidates, k=5, vector_weight=0.75, keyword_weight=0.25),
     }
     return {
         method: {
@@ -168,7 +179,7 @@ def write_results(result, old_queries):
         "# Retrieval accuracy benchmark",
         "",
         f"Run at: {result['run_at_utc']}",
-        f"Git HEAD at run: `{result['git_head_at_run']}` (task 4 worktree changes were uncommitted during the run).",
+        f"Git HEAD at run: `{result['git_head_at_run']}` (worktree changes may have been present).",
         f"Models: `{result['models']['embedding']}` embeddings; `{result['models']['llm']}` configured for answers (not used in retrieval scoring).",
         f"Corpus: {result['corpus']['pages']} PDF pages, {result['corpus']['chunks']} indexed chunks, {len(result['corpus']['files'])} files.",
         f"Queries: {result['query_count']} excerpt-verified questions.",
@@ -177,11 +188,11 @@ def write_results(result, old_queries):
         "",
         results_table(result["summary"]),
         "",
-        "Hit@k and reciprocal rank inspect the top k *chunks*. Source metrics match their file name; page metrics match file name and physical PDF page. MRR is the mean reciprocal rank of the first match. Each method returns at most five chunks. Hybrid candidate pools contain ten vector and ten keyword chunks with 0.5/0.5 weights.",
+        "Hit@k and reciprocal rank inspect the top k *chunks*. Source metrics match their file name; page metrics match file name and physical PDF page. MRR is the mean reciprocal rank of the first match. Each method returns at most five chunks. Hybrid candidate pools contain ten vector and ten keyword chunks. `hybrid_bm25` is the production 0.25 vector / 0.75 BM25 blend; the `_50` and `_75` variants use 0.50 and 0.75 vector weights. `hybrid_substring` retains the old 0.50/0.50 comparison.",
         "",
         "## Query changes",
         "",
-        "All 50 old queries were removed because their labels all pointed to `zoning.pdf` regardless of answer location. The 20 new questions below were written from the cited PDF passages. None of the old labels was carried forward.",
+        "All 50 old queries were removed because their labels all pointed to `zoning.pdf` regardless of answer location. The first 20 replacement questions and eight additional questions below were written from cited PDF passages. None of the old labels was carried forward. The additional questions were also used during development, so this is not a blind test set.",
         "",
         "### Removed queries",
         "",
@@ -195,13 +206,14 @@ def write_results(result, old_queries):
         "",
         "Each label was set by reading the specified physical PDF page; the benchmark checks that its evidence excerpt occurs on that page before scoring.",
         "",
-        "| ID | Query | Source | PDF page | Evidence excerpt |",
+        "| ID | Query | Source | PDF page(s) | Evidence excerpt |",
         "|---|---|---|---:|---|",
     ])
     for item in result["queries"]:
         label = item["relevant"][0]
+        pages = ", ".join(str(relevant["page"]) for relevant in item["relevant"])
         lines.append(
-            f"| {item['id']} | {item['query']} | {label['source']} | {label['page']} | {item['evidence']} |"
+            f"| {item['id']} | {item['query']} | {label['source']} | {pages} | {item['evidence']} |"
         )
     markdown_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 

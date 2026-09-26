@@ -12,8 +12,10 @@ services:
       - "127.0.0.1:8000:8000"
     volumes:
       - ./chroma_db:/app/chroma_db
+      - ./data:/app/data:ro
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
+      - LLM_MODEL=${LLM_MODEL:-llama3.2:3b}
     depends_on:
       - ollama
 
