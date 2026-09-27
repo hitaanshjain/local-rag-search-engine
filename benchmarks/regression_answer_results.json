@@ -1,12 +1,12 @@
 {
-  "run_at_utc": "2026-09-27T00:24:00.918400+00:00",
-  "git_head_at_run": "b2eb89484e12925d5b0bbe08e6ef64ff7284b51b",
+  "run_at_utc": "2026-09-27T01:43:17.592709+00:00",
+  "git_head_at_run": "3f2fd87b8c608c3a90bcec28a7a4b045685b1e90",
   "models": {
     "embedding": "nomic-embed-text",
     "llm": "llama3.2:3b"
   },
-  "dataset_file": "heldout_queries.json",
-  "evaluation_set": "Final holdout",
+  "dataset_file": "regression_queries.json",
+  "evaluation_set": "Regression (former holdout)",
   "counts": {
     "answerable": 7,
     "unanswerable": 2,
@@ -49,6 +49,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 766.6978130000643,
+        "check_ms": 725.21880199929,
+        "conflict_ms": 438.86540200037416,
+        "drafts": 1,
+        "answer_ms": 1931.152541998017,
+        "check_calls": 2
       }
     },
     {
@@ -87,6 +95,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 812.650700998347,
+        "check_ms": 4632.104017000529,
+        "conflict_ms": 318.7278260011226,
+        "drafts": 1,
+        "answer_ms": 5763.971983000374,
+        "check_calls": 7
       }
     },
     {
@@ -124,6 +140,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 542.8310440001951,
+        "check_ms": 0.18497799828764983,
+        "conflict_ms": 394.5361469995987,
+        "drafts": 1,
+        "answer_ms": 937.764350001089,
+        "check_calls": 1
       }
     },
     {
@@ -156,6 +180,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 639.6010039970861,
+        "check_ms": 0.242887999775121,
+        "conflict_ms": 393.1049159982649,
+        "drafts": 1,
+        "answer_ms": 1033.1912719993852,
+        "check_calls": 1
       }
     },
     {
@@ -192,6 +224,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 804.9247279996052,
+        "check_ms": 1273.847914999351,
+        "conflict_ms": 319.6804389990575,
+        "drafts": 1,
+        "answer_ms": 2398.7236869979824,
+        "check_calls": 3
       }
     },
     {
@@ -208,7 +248,7 @@
         "1 nonresident",
         "1 non-resident"
       ],
-      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nAccording to Charleston, SC Zoning.pdf, page 201, section 54-213 subsection k. paragraph 2, no more than one full-time or part-time nonresident employee who works at the residence used for the home occupation may be present. [1]",
+      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nAccording to Sec. 54-211, a home occupation may have no more than one full-time or part-time nonresident employee who works at the residence used for the home occupation. [1]",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
@@ -231,6 +271,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 975.2983770013088,
+        "check_ms": 771.3920139976835,
+        "conflict_ms": 348.05796399814426,
+        "drafts": 1,
+        "answer_ms": 2094.995867999387,
+        "check_calls": 2
       }
     },
     {
@@ -246,7 +294,7 @@
         "10%",
         "ten (10) percent"
       ],
-      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nSign faces shall not occupy more than ten (10) percent per façade of the building [1] and [2].",
+      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nSign faces shall not occupy more than ten (10) percent per façade of the building [1], [2], and [3].",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
@@ -269,6 +317,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 755.1827579991368,
+        "check_ms": 742.4173430008523,
+        "conflict_ms": 399.61057400068967,
+        "drafts": 1,
+        "answer_ms": 1897.5648259984155,
+        "check_calls": 2
       }
     },
     {
@@ -298,6 +354,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 1019.5488579993253,
+        "check_ms": 0.0012130003597121686,
+        "conflict_ms": 0.0,
+        "drafts": 2,
+        "answer_ms": 1019.7556340026495,
+        "check_calls": 0
       }
     },
     {
@@ -327,6 +391,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 971.2233150021348,
+        "check_ms": 0.0014969991752877831,
+        "conflict_ms": 0.0,
+        "drafts": 2,
+        "answer_ms": 971.4157889975468,
+        "check_calls": 0
       }
     },
     {
@@ -340,7 +412,8 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
-      }
+      },
+      "timing": null
     }
   ]
 }

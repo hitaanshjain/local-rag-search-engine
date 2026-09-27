@@ -1,6 +1,6 @@
 {
-  "run_at_utc": "2026-09-27T00:25:21.729805+00:00",
-  "git_head_at_run": "b2eb89484e12925d5b0bbe08e6ef64ff7284b51b",
+  "run_at_utc": "2026-09-27T01:42:13.240794+00:00",
+  "git_head_at_run": "3f2fd87b8c608c3a90bcec28a7a4b045685b1e90",
   "models": {
     "embedding": "nomic-embed-text",
     "llm": "llama3.2:3b"
@@ -25,142 +25,240 @@
     {
       "query_id": "iss_03",
       "iteration": 1,
-      "retrieval_ms": 207.015,
-      "index_ms": 3.048,
-      "vector_ms": 150.301,
-      "keyword_ms": 20.287,
-      "fusion_ms": 0.078,
-      "ttft_ms": 2076.969400000962,
-      "full_response_ms": 2076.99539999885
+      "retrieval_ms": 229.469,
+      "index_ms": 6.886,
+      "vector_ms": 160.368,
+      "keyword_ms": 22.616,
+      "fusion_ms": 0.082,
+      "first_status_ms": 236.83570000139298,
+      "ttft_ms": 1393.8358999985212,
+      "full_response_ms": 1393.8727999993716,
+      "draft_ms": 739.4231309990573,
+      "check_ms": 0.2903140011767391,
+      "conflict_ms": 417.6815770006215,
+      "answer_ms": 1157.6271509984508,
+      "drafts": 1,
+      "check_calls": 1
     },
     {
       "query_id": "iss_03",
       "iteration": 2,
-      "retrieval_ms": 218.162,
-      "index_ms": 7.241,
-      "vector_ms": 154.533,
-      "keyword_ms": 19.409,
-      "fusion_ms": 0.079,
-      "ttft_ms": 1825.6765000005544,
-      "full_response_ms": 1825.6886999988637
+      "retrieval_ms": 198.187,
+      "index_ms": 6.013,
+      "vector_ms": 127.437,
+      "keyword_ms": 23.473,
+      "fusion_ms": 0.072,
+      "first_status_ms": 220.21849999873666,
+      "ttft_ms": 1163.6131999985082,
+      "full_response_ms": 1163.6491999997816,
+      "draft_ms": 605.7629990027635,
+      "check_ms": 0.2865750029741321,
+      "conflict_ms": 341.7423380014952,
+      "answer_ms": 948.0488199988031,
+      "drafts": 1,
+      "check_calls": 1
     },
     {
       "query_id": "sum_04",
       "iteration": 1,
-      "retrieval_ms": 212.977,
-      "index_ms": 6.658,
-      "vector_ms": 163.17,
-      "keyword_ms": 16.641,
-      "fusion_ms": 0.077,
-      "ttft_ms": 1943.9604000035615,
-      "full_response_ms": 1943.973300003563
+      "retrieval_ms": 219.085,
+      "index_ms": 21.603,
+      "vector_ms": 129.373,
+      "keyword_ms": 21.634,
+      "fusion_ms": 0.154,
+      "first_status_ms": 240.067500002624,
+      "ttft_ms": 2186.3172000012128,
+      "full_response_ms": 2186.3610000000335,
+      "draft_ms": 832.9910520005797,
+      "check_ms": 680.1139939998393,
+      "conflict_ms": 433.8642490001803,
+      "answer_ms": 1947.3571210000955,
+      "drafts": 1,
+      "check_calls": 2
     },
     {
       "query_id": "sum_04",
       "iteration": 2,
-      "retrieval_ms": 176.99,
-      "index_ms": 5.955,
-      "vector_ms": 119.026,
-      "keyword_ms": 19.369,
-      "fusion_ms": 0.088,
-      "ttft_ms": 1454.6225999984017,
-      "full_response_ms": 1454.6483999984048
-    },
-    {
-      "query_id": "urb_03",
-      "iteration": 1,
-      "retrieval_ms": 221.022,
-      "index_ms": 7.811,
-      "vector_ms": 173.45,
-      "keyword_ms": 15.114,
-      "fusion_ms": 0.082,
-      "ttft_ms": 2053.259299998899,
-      "full_response_ms": 2053.270699998393
-    },
-    {
-      "query_id": "urb_03",
-      "iteration": 2,
-      "retrieval_ms": 183.431,
-      "index_ms": 6.416,
-      "vector_ms": 131.557,
-      "keyword_ms": 15.188,
-      "fusion_ms": 0.102,
-      "ttft_ms": 1821.1314999971364,
-      "full_response_ms": 1821.1456999997608
-    },
-    {
-      "query_id": "uni_02",
-      "iteration": 1,
-      "retrieval_ms": 230.911,
-      "index_ms": 6.782,
-      "vector_ms": 180.967,
-      "keyword_ms": 16.477,
-      "fusion_ms": 0.08,
-      "ttft_ms": 1141.4059000017005,
-      "full_response_ms": 1141.4299000025494
-    },
-    {
-      "query_id": "uni_02",
-      "iteration": 2,
-      "retrieval_ms": 220.376,
-      "index_ms": 5.832,
-      "vector_ms": 170.566,
-      "keyword_ms": 16.852,
-      "fusion_ms": 0.085,
-      "ttft_ms": 963.6198000007425,
-      "full_response_ms": 963.6325999999826
-    },
-    {
-      "query_id": "cha_02",
-      "iteration": 1,
-      "retrieval_ms": 227.78,
-      "index_ms": 7.663,
-      "vector_ms": 184.903,
-      "keyword_ms": 13.682,
-      "fusion_ms": 0.075,
-      "ttft_ms": 4127.53739999971,
-      "full_response_ms": 4127.561799999967
-    },
-    {
-      "query_id": "cha_02",
-      "iteration": 2,
-      "retrieval_ms": 210.986,
-      "index_ms": 7.217,
-      "vector_ms": 168.567,
-      "keyword_ms": 12.551,
+      "retrieval_ms": 226.117,
+      "index_ms": 5.133,
+      "vector_ms": 156.231,
+      "keyword_ms": 21.087,
       "fusion_ms": 0.087,
-      "ttft_ms": 3587.1714999993856,
-      "full_response_ms": 3587.1983999968506
+      "first_status_ms": 231.516299998475,
+      "ttft_ms": 1744.6858000002976,
+      "full_response_ms": 1744.727299999795,
+      "draft_ms": 586.0985799990885,
+      "check_ms": 608.6521939978411,
+      "conflict_ms": 318.4487549988262,
+      "answer_ms": 1513.4845499997027,
+      "drafts": 1,
+      "check_calls": 2
+    },
+    {
+      "query_id": "urb_03",
+      "iteration": 1,
+      "retrieval_ms": 199.215,
+      "index_ms": 4.952,
+      "vector_ms": 152.386,
+      "keyword_ms": 15.263,
+      "fusion_ms": 0.084,
+      "first_status_ms": 224.15950000140583,
+      "ttft_ms": 1403.0157000015606,
+      "full_response_ms": 1403.050600001734,
+      "draft_ms": 813.912467998307,
+      "check_ms": 0.2755879977485165,
+      "conflict_ms": 365.34242299967445,
+      "answer_ms": 1179.7561540006427,
+      "drafts": 1,
+      "check_calls": 1
+    },
+    {
+      "query_id": "urb_03",
+      "iteration": 2,
+      "retrieval_ms": 194.405,
+      "index_ms": 5.658,
+      "vector_ms": 143.076,
+      "keyword_ms": 15.023,
+      "fusion_ms": 0.087,
+      "first_status_ms": 224.2082999982813,
+      "ttft_ms": 1241.9836000008218,
+      "full_response_ms": 1242.020699999557,
+      "draft_ms": 727.7923159999773,
+      "check_ms": 0.2417760006210301,
+      "conflict_ms": 290.3904120030347,
+      "answer_ms": 1018.6506619975262,
+      "drafts": 1,
+      "check_calls": 1
+    },
+    {
+      "query_id": "uni_02",
+      "iteration": 1,
+      "retrieval_ms": 226.67,
+      "index_ms": 5.51,
+      "vector_ms": 183.433,
+      "keyword_ms": 14.731,
+      "fusion_ms": 0.069,
+      "first_status_ms": 256.12030000047525,
+      "ttft_ms": 1370.336200001475,
+      "full_response_ms": 1370.3741999997874,
+      "draft_ms": 1114.479225998366,
+      "check_ms": 0.0013270000636111945,
+      "conflict_ms": 0.0,
+      "answer_ms": 1114.7434429985879,
+      "drafts": 2,
+      "check_calls": 0
+    },
+    {
+      "query_id": "uni_02",
+      "iteration": 2,
+      "retrieval_ms": 167.984,
+      "index_ms": 4.99,
+      "vector_ms": 117.824,
+      "keyword_ms": 15.077,
+      "fusion_ms": 0.074,
+      "first_status_ms": 190.862700001162,
+      "ttft_ms": 950.9386999998242,
+      "full_response_ms": 950.9846000000834,
+      "draft_ms": 760.5504609964555,
+      "check_ms": 0.0013090029824525118,
+      "conflict_ms": 0.0,
+      "answer_ms": 760.7423059998837,
+      "drafts": 2,
+      "check_calls": 0
+    },
+    {
+      "query_id": "cha_02",
+      "iteration": 1,
+      "retrieval_ms": 241.222,
+      "index_ms": 6.147,
+      "vector_ms": 198.736,
+      "keyword_ms": 13.008,
+      "fusion_ms": 0.083,
+      "first_status_ms": 268.0873999997857,
+      "ttft_ms": 4525.07969999715,
+      "full_response_ms": 4525.1150999974925,
+      "draft_ms": 900.9894320006424,
+      "check_ms": 2785.1968049981224,
+      "conflict_ms": 571.7147559989826,
+      "answer_ms": 4258.159092001733,
+      "drafts": 1,
+      "check_calls": 5
+    },
+    {
+      "query_id": "cha_02",
+      "iteration": 2,
+      "retrieval_ms": 181.119,
+      "index_ms": 5.592,
+      "vector_ms": 132.676,
+      "keyword_ms": 13.209,
+      "fusion_ms": 0.087,
+      "first_status_ms": 186.68529999922612,
+      "ttft_ms": 3948.893100001442,
+      "full_response_ms": 3948.931099999754,
+      "draft_ms": 1011.1150160009856,
+      "check_ms": 2374.8084010003367,
+      "conflict_ms": 377.4206870002672,
+      "answer_ms": 3763.591541999631,
+      "drafts": 1,
+      "check_calls": 5
     }
   ],
   "summary": {
     "retrieval_ms": {
-      "median": 215.5695,
-      "p90": 227.78
+      "median": 209.15,
+      "p90": 229.469
     },
     "index_ms": {
-      "median": 6.720000000000001,
-      "p90": 7.663
+      "median": 5.625,
+      "p90": 6.886
     },
     "vector_ms": {
-      "median": 165.86849999999998,
-      "p90": 180.967
+      "median": 147.731,
+      "p90": 183.433
     },
     "keyword_ms": {
-      "median": 16.558999999999997,
-      "p90": 19.409
+      "median": 15.17,
+      "p90": 22.616
     },
     "fusion_ms": {
-      "median": 0.081,
-      "p90": 0.088
+      "median": 0.0835,
+      "p90": 0.087
+    },
+    "first_status_ms": {
+      "median": 227.86229999837815,
+      "p90": 256.12030000047525
     },
     "ttft_ms": {
-      "median": 1884.818450002058,
-      "p90": 3587.1714999993856
+      "median": 1398.425800000041,
+      "p90": 3948.893100001442
     },
     "full_response_ms": {
-      "median": 1884.8310000012134,
-      "p90": 3587.1983999968506
+      "median": 1398.4617000005528,
+      "p90": 3948.931099999754
+    },
+    "draft_ms": {
+      "median": 787.2314644973812,
+      "p90": 1011.1150160009856
+    },
+    "check_ms": {
+      "median": 0.2884445020754356,
+      "p90": 2374.8084010003367
+    },
+    "conflict_ms": {
+      "median": 353.54238050058484,
+      "p90": 433.8642490001803
+    },
+    "answer_ms": {
+      "median": 1168.6916524995468,
+      "p90": 3763.591541999631
+    },
+    "drafts": {
+      "median": 1.0,
+      "p90": 2
+    },
+    "check_calls": {
+      "median": 1.0,
+      "p90": 5
     }
   }
 }

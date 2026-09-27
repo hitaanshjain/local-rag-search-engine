@@ -8,7 +8,7 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_core.embeddings import FakeEmbeddings
 
-from app.ingest import process_documents, publish_index_version
+from app.ingest import assign_sections, process_documents, publish_index_version
 
 
 class IngestTests(unittest.TestCase):
@@ -130,6 +130,51 @@ class IngestTests(unittest.TestCase):
             self.assertEqual(len(calls), 3)
             self.assertTrue(marker.read_text(encoding="utf-8"))
             self.assertEqual(list(Path(temporary_dir).glob("*.tmp")), [])
+
+
+class SectionLabelTests(unittest.TestCase):
+    def label(self, *texts):
+        chunks = [Document(page_content=text, metadata={"source": "code.pdf"}) for text in texts]
+        assign_sections(chunks)
+        return [chunk.metadata.get("section") for chunk in chunks]
+
+    def test_numbered_and_sec_prefixed_headings_become_sections(self):
+        self.assertEqual(
+            self.label(
+                "6-15 TCMU Town Center Mixed Use\nRules.",
+                "Source: code.pdf | Page: 2\nSec. 54-269.  Design Review Board created; composition\nText.",
+            ),
+            ["6-15 TCMU Town Center Mixed Use", "Sec. 54-269. Design Review Board created; composition"],
+        )
+
+    def test_cross_references_years_and_contents_lines_are_not_headings(self):
+        self.assertEqual(
+            self.label(
+                "Sec. 54-100.  Purpose\nText.",
+                "1995-160 on May 9, 1995; and amended by\n"
+                "54-348 in areas of the required buffer\n"
+                "2013-2014 South Carolina General Assembly on June 19\n"
+                "54-203 Permitted principal uses . . . . . . . 2-12.1",
+            ),
+            ["Sec. 54-100. Purpose", "Sec. 54-100. Purpose"],
+        )
+
+    def test_appendix_heading_ends_the_previous_section(self):
+        self.assertEqual(
+            self.label("Sec. 54-1060.  Design and construction requirements.\nText.", "APPENDIX C\nRules of procedure."),
+            ["Sec. 54-1060. Design and construction requirements.", "APPENDIX C"],
+        )
+
+    def test_chunk_takes_the_section_covering_most_of_its_text(self):
+        r1_rules = "The R-1 minimum lot area is 10,000 square feet. " * 6
+        self.assertEqual(
+            self.label(
+                "6-2 R-1 Residential\nIntro.",
+                f"{r1_rules}\n6-3 R-2 Residential\nShort.",
+                "The R-2 minimum lot area is 7,500 square feet.",
+            ),
+            ["6-2 R-1 Residential", "6-2 R-1 Residential", "6-3 R-2 Residential"],
+        )
 
 
 if __name__ == "__main__":

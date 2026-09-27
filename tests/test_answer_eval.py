@@ -6,8 +6,23 @@ from benchmarks.answer_eval import load_queries, read_chat, score_answer
 class AnswerScoringTests(unittest.TestCase):
     def test_final_holdout_has_excerpt_verified_answerable_items(self):
         rows = load_queries()
-        self.assertEqual(len(rows), 10)
+        counts = {kind: sum(row["kind"] == kind for row in rows) for kind in ("answerable", "unanswerable", "ambiguous")}
+        self.assertEqual(counts, {"answerable": 20, "unanswerable": 4, "ambiguous": 2})
         self.assertEqual(len({row["id"] for row in rows}), len(rows))
+
+    def test_holdout_shares_no_questions_or_pages_with_tuned_sets(self):
+        holdout = load_queries()
+        tuned = load_queries("regression_queries.json") + load_queries("development_queries.json")
+
+        def pages(rows):
+            return {
+                (row["source"], page)
+                for row in rows if row["kind"] == "answerable"
+                for page in [row["page"], *row.get("additional_relevant_pages", [])]
+            }
+
+        self.assertFalse({row["query"] for row in holdout} & {row["query"] for row in tuned})
+        self.assertFalse({(row["source"], row["page"]) for row in holdout if row["kind"] == "answerable"} & pages(tuned))
 
     def test_answer_requires_expected_fact_and_matching_page_citation(self):
         row = {
@@ -68,7 +83,7 @@ class AnswerScoringTests(unittest.TestCase):
                 pass
 
             def iter_content(self, chunk_size=None):
-                yield b'event: sources\ndata: {"sources": []}\n\nevent: token\ndata: {"text": "Hi"}\n\nevent: done\ndata: {}\n\n'
+                yield b'event: sources\ndata: {"sources": []}\n\nevent: token\ndata: {"text": "Hi"}\n\nevent: timing\ndata: {"check_calls": 2}\n\nevent: done\ndata: {}\n\n'
 
         class FakeSession:
             def post(self, *args, **kwargs):
@@ -76,7 +91,7 @@ class AnswerScoringTests(unittest.TestCase):
 
         meta = {}
         answer, sources = read_chat("Hello?", session=FakeSession(), meta=meta)
-        self.assertEqual((answer, sources, meta), ("Hi", [], {"llm": "served-model:1b"}))
+        self.assertEqual((answer, sources, meta), ("Hi", [], {"llm": "served-model:1b", "timing": {"check_calls": 2}}))
 
 
 if __name__ == "__main__":

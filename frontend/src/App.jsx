@@ -10,6 +10,7 @@ export default function App() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("");
   const requestController = useRef(null);
 
   const sendMessage = async () => {
@@ -35,6 +36,7 @@ export default function App() {
 
     try {
       await streamChat(userMessage.text, (event, data) => {
+        if (event === "status") setStatus(data.text);
         if (event === "sources") updateReply(() => ({ sources: data.sources }));
         if (event === "token") updateReply((msg) => ({ text: msg.text + data.text }));
       }, { signal: controller.signal, apiBase: API_BASE });
@@ -46,6 +48,7 @@ export default function App() {
       }
     } finally {
       requestController.current = null;
+      setStatus("");
       setLoading(false);
     }
   };
@@ -61,7 +64,7 @@ export default function App() {
 
       <div className="flex-1 w-full max-w-2xl bg-gray-800 rounded-2xl shadow-xl overflow-hidden flex flex-col border border-gray-700">
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          {messages.map((msg, idx) => (
+          {messages.filter((msg) => msg.text || msg.sources?.length).map((msg, idx) => (
             <div key={idx} className={`flex gap-4 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.role === "user" ? "bg-purple-600" : "bg-blue-600"}`}>
                 {msg.role === "user" ? <User size={16} /> : <Bot size={16} />}
@@ -93,8 +96,8 @@ export default function App() {
               <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                 <Loader2 className="animate-spin" size={16} />
               </div>
-              <div className="bg-gray-700 px-5 py-3 rounded-2xl rounded-bl-none text-gray-400 animate-pulse">
-                Thinking...
+              <div role="status" aria-live="polite" className="bg-gray-700 px-5 py-3 rounded-2xl rounded-bl-none text-gray-400 animate-pulse">
+                {status || "Thinking..."}
               </div>
             </div>
           )}

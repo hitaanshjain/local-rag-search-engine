@@ -1,6 +1,6 @@
 {
-  "run_at_utc": "2026-09-27T00:24:46.514742+00:00",
-  "git_head_at_run": "b2eb89484e12925d5b0bbe08e6ef64ff7284b51b",
+  "run_at_utc": "2026-09-27T01:42:54.012609+00:00",
+  "git_head_at_run": "3f2fd87b8c608c3a90bcec28a7a4b045685b1e90",
   "models": {
     "embedding": "nomic-embed-text",
     "llm": "llama3.2:3b"
@@ -48,6 +48,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 1796.080947999144,
+        "check_ms": 4294.287762997556,
+        "conflict_ms": 542.1164049985236,
+        "drafts": 2,
+        "answer_ms": 6632.802772001014,
+        "check_calls": 9
       }
     },
     {
@@ -75,6 +83,14 @@
         "citation_match": false,
         "citation_refs_valid": true,
         "pass": false
+      },
+      "timing": {
+        "draft_ms": 729.4455349983764,
+        "check_ms": 4134.933003999322,
+        "conflict_ms": 0.0,
+        "drafts": 2,
+        "answer_ms": 4864.7416249987145,
+        "check_calls": 8
       }
     },
     {
@@ -101,6 +117,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 1092.2605439991457,
+        "check_ms": 7287.702133999119,
+        "conflict_ms": 265.1622990015312,
+        "drafts": 2,
+        "answer_ms": 8645.467572998314,
+        "check_calls": 7
       }
     },
     {
@@ -115,7 +139,7 @@
         "ten acres",
         "ten (10) acres"
       ],
-      "answer": "Jurisdiction: Union City, Georgia | District: RM | Document version: August 20, 2024, Rev. | Source: zoning-ordinance-082024-rev.pdf\nAccording to the provided context, Union City requires a minimum lot area of ten (10) acres for a cemetery, as stated in [2].",
+      "answer": "Jurisdiction: Union City, Georgia | District: R-4 | Document version: August 20, 2024, Rev. | Source: zoning-ordinance-082024-rev.pdf\nAccording to the context, Union City requires a minimum lot area of ten (10) acres for a cemetery [1].",
       "sources": [
         {
           "source": "zoning-ordinance-082024-rev.pdf",
@@ -138,6 +162,14 @@
         "citation_match": false,
         "citation_refs_valid": true,
         "pass": false
+      },
+      "timing": {
+        "draft_ms": 678.6992529996496,
+        "check_ms": 1044.7439029994712,
+        "conflict_ms": 453.42561999859754,
+        "drafts": 1,
+        "answer_ms": 2177.2245120009757,
+        "check_calls": 3
       }
     },
     {
@@ -168,6 +200,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 669.7907839989057,
+        "check_ms": 513.5028749973571,
+        "conflict_ms": 591.0126460003085,
+        "drafts": 1,
+        "answer_ms": 1774.5652300000074,
+        "check_calls": 2
       }
     },
     {
@@ -185,7 +225,7 @@
         "thirty feet",
         "thirty (30) feet"
       ],
-      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nThe minimum height for a principal structure in Charleston's 55/30 height district is thirty (30) feet [1].",
+      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nIn Charleston's 55/30 height district, the minimum height for a principal structure is thirty (30) feet [1].",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
@@ -208,6 +248,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 873.967530002119,
+        "check_ms": 969.734996000625,
+        "conflict_ms": 662.6570990010805,
+        "drafts": 1,
+        "answer_ms": 2506.6192199992656,
+        "check_calls": 2
       }
     },
     {
@@ -222,7 +270,7 @@
         "one hundred square feet",
         "one hundred (100) square feet"
       ],
-      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nFor a Charleston development with at least twenty business units, the per-face area limit for its monument sign is one hundred (100) square feet. [2]",
+      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nFor a Charleston development with at least twenty business units, no sign shall exceed one hundred (100) square feet per face [2].",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
@@ -245,6 +293,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 905.2838979987428,
+        "check_ms": 619.750452999142,
+        "conflict_ms": 664.5578569987265,
+        "drafts": 1,
+        "answer_ms": 2189.8915250021673,
+        "check_calls": 2
       }
     },
     {
@@ -257,7 +313,7 @@
       "accepted_answers": [
         "Board of Zoning Appeals Site Design"
       ],
-      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nAccording to the provided documents, the appeal for an administrative decision, including a sidewalk cafe permit, must be filed with the Zoning Division office within ten (10) business days after actual notice of the decision [1].",
+      "answer": "I don't know based on these documents.",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
@@ -280,6 +336,14 @@
         "citation_match": false,
         "citation_refs_valid": true,
         "pass": false
+      },
+      "timing": {
+        "draft_ms": 3036.5606900013518,
+        "check_ms": 0.13215299986768514,
+        "conflict_ms": 0.0,
+        "drafts": 2,
+        "answer_ms": 3037.013704997662,
+        "check_calls": 0
       }
     },
     {
@@ -309,6 +373,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 1014.9480590007443,
+        "check_ms": 0.001887001417344436,
+        "conflict_ms": 0.0,
+        "drafts": 2,
+        "answer_ms": 1015.2622060013528,
+        "check_calls": 0
       }
     },
     {
@@ -338,6 +410,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 986.4353000011761,
+        "check_ms": 0.0014510005712509155,
+        "conflict_ms": 0.0,
+        "drafts": 2,
+        "answer_ms": 986.6522530028305,
+        "check_calls": 0
       }
     },
     {
@@ -367,6 +447,14 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
+      },
+      "timing": {
+        "draft_ms": 931.0227889982343,
+        "check_ms": 0.0011970005289185792,
+        "conflict_ms": 0.0,
+        "drafts": 2,
+        "answer_ms": 931.2070330015558,
+        "check_calls": 0
       }
     },
     {
@@ -380,7 +468,8 @@
         "citation_match": true,
         "citation_refs_valid": true,
         "pass": true
-      }
+      },
+      "timing": null
     }
   ]
 }

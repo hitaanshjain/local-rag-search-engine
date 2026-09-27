@@ -23,6 +23,10 @@ ROOT = Path(__file__).resolve().parents[1]
 HERE = Path(__file__).resolve().parent
 API_URL = os.getenv("RAG_API_URL", "http://127.0.0.1:8000/chat")
 ABSTAIN = "I don't know based on these documents."
+EVALUATION_SETS = {
+    "heldout_queries.json": "Final holdout",
+    "regression_queries.json": "Regression (former holdout)",
+}
 
 
 def load_queries(dataset_filename="heldout_queries.json"):
@@ -110,6 +114,8 @@ def read_chat(query, session=requests, url=API_URL, meta=None):
                     tokens.append(data["text"])
                 elif name == "error":
                     raise RuntimeError(data.get("message", "Chat stream failed"))
+                elif name == "timing" and meta is not None:
+                    meta["timing"] = data
                 elif name == "done":
                     complete = True
             if complete:
@@ -153,7 +159,8 @@ def run_answer_benchmark(dataset_filename="heldout_queries.json", output_prefix=
             meta = {}
             answer, sources = read_chat(row["query"], session=session, meta=meta)
             served_models.add(meta["llm"])
-            result = {**row, "answer": answer, "sources": sources, "score": score_answer(row, answer, sources)}
+            result = {**row, "answer": answer, "sources": sources, "score": score_answer(row, answer, sources),
+                      "timing": meta.get("timing")}
             results.append(result)
             print(f"{row['id']}: {'pass' if result['score']['pass'] else 'FAIL'}", flush=True)
     if len(served_models) != 1 or None in served_models:
@@ -165,7 +172,7 @@ def run_answer_benchmark(dataset_filename="heldout_queries.json", output_prefix=
         "git_head_at_run": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "models": {"embedding": EMBEDDING_MODEL, "llm": served_llm},
         "dataset_file": dataset_filename,
-        "evaluation_set": "Final holdout" if dataset_filename == "heldout_queries.json" else "Development",
+        "evaluation_set": EVALUATION_SETS.get(dataset_filename, "Development"),
         "counts": counts,
         "passed": sum(row["score"]["pass"] for row in results),
         "queries": results,

@@ -40,6 +40,29 @@ def excerpt(text: str) -> str:
     return text.strip()[:500]
 
 
+STATUS_TEXT = {
+    "drafting": "Drafting an answer…",
+    "checking": "Checking each claim against its cited passage…",
+    "comparing": "Comparing related rules…",
+}
+
+
+def status_event(stage: str) -> str:
+    return sse_event("status", {"stage": stage, "text": STATUS_TEXT[stage]})
+
+
+class CountingLLM:
+    """Count the model calls made while checking one answer."""
+
+    def __init__(self, llm):
+        self.llm = llm
+        self.calls = 0
+
+    async def ainvoke(self, *args, **kwargs):
+        self.calls += 1
+        return await self.llm.ainvoke(*args, **kwargs)
+
+
 class QueryRequest(BaseModel):
     query: str
 
@@ -109,23 +132,40 @@ async def chat(request: QueryRequest):
                 "each factual sentence, for example [1]. Never cite a passage that does not state the answer."
             )
 
-            async def checked_draft(instruction: str) -> str:
+            answer_started = perf_counter()
+            checker = CountingLLM(llm)
+            timing = {"draft_ms": 0.0, "check_ms": 0.0, "conflict_ms": 0.0, "drafts": 0}
+
+            async def write_draft(instruction: str) -> str:
+                started = perf_counter()
                 parts = []
                 async for chunk in chain.astream({
                     "context": context_text, "question": request.query, "citation_instruction": instruction,
                 }):
                     parts.append(chunk.content)
-                candidate = "".join(parts).strip()
-                if candidate != ABSTAIN and not await verify_answer(candidate, context_results, llm):
-                    candidate = await repair_answer(candidate, context_results, llm) or ABSTAIN
+                timing["draft_ms"] += (perf_counter() - started) * 1000
+                timing["drafts"] += 1
+                return "".join(parts).strip()
+
+            async def check_draft(candidate: str) -> str:
+                started = perf_counter()
+                if candidate != ABSTAIN and not await verify_answer(candidate, context_results, checker):
+                    candidate = await repair_answer(candidate, context_results, checker) or ABSTAIN
+                timing["check_ms"] += (perf_counter() - started) * 1000
                 return candidate
 
-            draft = await checked_draft(citation_instruction)
+            yield status_event("drafting")
+            candidate = await write_draft(citation_instruction)
+            yield status_event("checking")
+            draft = await check_draft(candidate)
             if draft == ABSTAIN:
-                draft = await checked_draft(
+                yield status_event("drafting")
+                candidate = await write_draft(
                     "Answer in the fewest words possible using the passage's exact terms and number spelling. "
                     "Do not infer extra processes or obligations. " + citation_instruction
                 )
+                yield status_event("checking")
+                draft = await check_draft(candidate)
 
             shown_docs = list(context_results)
             claims = cited_claims(draft, len(context_results)) if draft != ABSTAIN else None
@@ -133,13 +173,17 @@ async def chat(request: QueryRequest):
             primary_doc = context_results[primary_number - 1]
             conflict_notes = []
             unresolved = False
+            scope_doc = primary_doc
             if draft != ABSTAIN:
-                keyword_candidates = bm25_search(request.query, index, k=30)
+                yield status_event("comparing")
+                started = perf_counter()
+                keyword_candidates = await run_in_threadpool(bm25_search, request.query, index, k=30)
                 candidate_docs = collect_conflict_candidates(primary_doc, results, keyword_candidates)
-                conflicts = await detect_conflicts(request.query, primary_doc, candidate_docs, llm, draft)
+                conflicts = await detect_conflicts(request.query, primary_doc, candidate_docs, checker, draft)
+                timing["conflict_ms"] = (perf_counter() - started) * 1000
                 for conflict in conflicts:
                     decision = resolve_conflict(request.query, primary_doc, conflict.other)
-                    if decision != "primary":
+                    if decision is None:
                         unresolved = True
                         break
                     if conflict.other not in shown_docs:
@@ -149,10 +193,18 @@ async def chat(request: QueryRequest):
                     other_section = conflict.other.metadata.get("section") or conflict.other.metadata.get("source") or "another source"
                     main_quote = " ".join(conflict.primary_quote.split())
                     other_quote = " ".join(conflict.other_quote.split())
-                    conflict_notes.append(
+                    notes = (
                         f'Conflicting provisions: {main_section} states "{main_quote}" [{primary_number}]; '
                         f'{other_section} states "{other_quote}" [{other_number}]. '
-                        f"The named {main_section} provision applies to this question [{primary_number}]."
+                    )
+                    if decision == "other":
+                        # The question names the other passage's scope, so answer from its verified quote.
+                        scope_doc = conflict.other
+                        draft = f'{other_section} states "{other_quote}" [{other_number}].'
+                        conflict_notes = [notes + f"The named {other_section} provision applies to this question [{other_number}]."]
+                        break
+                    conflict_notes.append(
+                        notes + f"The named {main_section} provision applies to this question [{primary_number}]."
                     )
 
             sources = [
@@ -166,10 +218,14 @@ async def chat(request: QueryRequest):
             elif draft == ABSTAIN:
                 answer = ABSTAIN
             else:
-                answer = f"{format_scope(primary_doc, request.query)}\n{draft}"
+                answer = f"{format_scope(scope_doc, request.query)}\n{draft}"
                 if conflict_notes:
                     answer += "\n" + "\n".join(conflict_notes)
             yield sse_event("token", {"text": answer})
+            timing["answer_ms"] = (perf_counter() - answer_started) * 1000
+            timing["check_calls"] = checker.calls
+            logger.info("Answer timing: %s", timing)
+            yield sse_event("timing", timing)
         except Exception:
             logger.exception("Chat answer verification or conflict check failed")
             yield sse_event("error", {"message": "Answer generation failed."})

@@ -1,0 +1,80 @@
+[
+  {
+    "id": "final_iss_01",
+    "query": "For an Issaquah mixed-use development with different FAR limits, which use sets the project's FAR?",
+    "kind": "answerable",
+    "source": "zoning.pdf",
+    "page": 12,
+    "evidence": "In a mixed use development with different FAR limits, the FAR will be the use with the majority square footage",
+    "accepted_answers": ["majority square footage", "majority of the square footage", "majority of the building area"]
+  },
+  {
+    "id": "final_urb_01",
+    "query": "How many vehicle visits per day may an Urbana Type A home occupation have?",
+    "kind": "answerable",
+    "source": "article_v_-_use_regulations.pdf",
+    "page": 7,
+    "evidence": "no more than five vehicle visits per day",
+    "accepted_answers": ["five vehicle visits", "5 vehicle visits", "five visits", "5 visits"]
+  },
+  {
+    "id": "final_urb_02",
+    "query": "Under Urbana's common-lot-line dwelling rules, how many such units may each lot contain?",
+    "kind": "answerable",
+    "source": "article_v_-_use_regulations.pdf",
+    "page": 4,
+    "evidence": "Each lot shall contain no more than one common-lot-line dwelling unit",
+    "accepted_answers": ["one common-lot-line dwelling unit", "1 common-lot-line dwelling unit", "one unit"]
+  },
+  {
+    "id": "final_uni_01",
+    "query": "In Union City's R-2 district, how large may a guest house be?",
+    "kind": "answerable",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 54,
+    "evidence": "Said guesthouse shall be limited to 900 square feet",
+    "accepted_answers": ["900 square feet", "900 sq ft", "900 sq. ft."]
+  },
+  {
+    "id": "final_uni_02",
+    "query": "What front-yard setback applies to cottage home courts in Union City?",
+    "kind": "answerable",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 80,
+    "evidence": "Front yard setback, as measured from the right-of-way: 15 feet",
+    "accepted_answers": ["15 feet", "fifteen feet"]
+  },
+  {
+    "id": "final_cha_01",
+    "query": "How many nonresident employees may work at a Charleston home occupation?",
+    "kind": "answerable",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 201,
+    "evidence": "no more than one full-time or part-time non resident employee who works at the residence",
+    "accepted_answers": ["one full-time", "one nonresident", "one non-resident", "1 nonresident", "1 non-resident"]
+  },
+  {
+    "id": "final_cha_02",
+    "query": "What fraction of a Charleston building facade may sign faces occupy?",
+    "kind": "answerable",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 506,
+    "evidence": "Sign faces shall not occupy more than ten (10) percent",
+    "accepted_answers": ["10 percent", "ten percent", "10%", "ten (10) percent"]
+  },
+  {
+    "id": "final_absent_01",
+    "query": "What was Issaquah's median household income in 2024?",
+    "kind": "unanswerable"
+  },
+  {
+    "id": "final_absent_02",
+    "query": "Which medication should be prescribed for pneumonia?",
+    "kind": "unanswerable"
+  },
+  {
+    "id": "final_ambiguous_01",
+    "query": "What is the minimum front-yard setback?",
+    "kind": "ambiguous"
+  }
+]

@@ -1,80 +1,300 @@
 [
   {
-    "id": "final_iss_01",
-    "query": "For an Issaquah mixed-use development with different FAR limits, which use sets the project's FAR?",
+    "id": "h2_urb_01",
+    "query": "In Urbana, how far must an adult entertainment use be from another adult entertainment use?",
+    "kind": "answerable",
+    "source": "article_v_-_use_regulations.pdf",
+    "page": 3,
+    "evidence": "No adult entertainment use shall be located or established within one thousand feet of another adult entertainment use",
+    "accepted_answers": [
+      "one thousand feet",
+      "1,000 feet",
+      "1000 feet",
+      "1,000 ft"
+    ]
+  },
+  {
+    "id": "h2_urb_02",
+    "query": "In Urbana, who decides how to treat a use that is not specifically mentioned in Table V-1?",
+    "kind": "answerable",
+    "source": "article_v_-_use_regulations.pdf",
+    "page": 1,
+    "evidence": "as determined by the Zoning Administrator",
+    "accepted_answers": [
+      "Zoning Administrator"
+    ]
+  },
+  {
+    "id": "h2_urb_03",
+    "query": "In Urbana's table of uses, what does the letter S mean?",
+    "kind": "answerable",
+    "source": "article_v_-_use_regulations.pdf",
+    "page": 15,
+    "additional_relevant_pages": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "evidence": "S – Special Use Permit Required",
+    "accepted_answers": [
+      "Special Use Permit"
+    ]
+  },
+  {
+    "id": "h2_urb_04",
+    "query": "In Urbana, how close to a residentially zoned lot can a cannabis cultivation center be before a special use permit is required?",
+    "kind": "answerable",
+    "source": "article_v_-_use_regulations.pdf",
+    "page": 9,
+    "evidence": "within 300 feet of any residentially zoned lot",
+    "accepted_answers": [
+      "300 feet",
+      "300 ft"
+    ]
+  },
+  {
+    "id": "h2_iss_01",
+    "query": "In Central Issaquah, how much of the total roof area may gabled dormers make up?",
     "kind": "answerable",
     "source": "zoning.pdf",
-    "page": 12,
-    "evidence": "In a mixed use development with different FAR limits, the FAR will be the use with the majority square footage",
-    "accepted_answers": ["majority square footage", "majority of the square footage", "majority of the building area"]
+    "page": 13,
+    "evidence": "Gabled dormers may comprise no more than fifty (50) percent of the total roof area",
+    "accepted_answers": [
+      "fifty (50) percent",
+      "fifty percent",
+      "50 percent",
+      "50%"
+    ]
   },
   {
-    "id": "final_urb_01",
-    "query": "How many vehicle visits per day may an Urbana Type A home occupation have?",
+    "id": "h2_iss_02",
+    "query": "In Central Issaquah's Urban Core, how high may the base height increase to accommodate additional first floor height?",
     "kind": "answerable",
-    "source": "article_v_-_use_regulations.pdf",
-    "page": 7,
-    "evidence": "no more than five vehicle visits per day",
-    "accepted_answers": ["five vehicle visits", "5 vehicle visits", "five visits", "5 visits"]
+    "source": "zoning.pdf",
+    "page": 14,
+    "evidence": "66 feet in Urban Core and Mixed Use zoning districts",
+    "accepted_answers": [
+      "66 feet",
+      "66 ft",
+      "66'"
+    ]
   },
   {
-    "id": "final_urb_02",
-    "query": "Under Urbana's common-lot-line dwelling rules, how many such units may each lot contain?",
+    "id": "h2_iss_03",
+    "query": "In Central Issaquah, if Tables 4.3A and 4.3B indicate different Levels of Review, which level is required?",
     "kind": "answerable",
-    "source": "article_v_-_use_regulations.pdf",
+    "source": "zoning.pdf",
     "page": 4,
-    "evidence": "Each lot shall contain no more than one common-lot-line dwelling unit",
-    "accepted_answers": ["one common-lot-line dwelling unit", "1 common-lot-line dwelling unit", "one unit"]
+    "evidence": "then the highest Level of Review is the required Level of Review",
+    "accepted_answers": [
+      "highest Level of Review",
+      "highest level"
+    ]
   },
   {
-    "id": "final_uni_01",
-    "query": "In Union City's R-2 district, how large may a guest house be?",
+    "id": "h2_iss_04",
+    "query": "About how many acres does Central Issaquah's Urban Core district cover?",
+    "kind": "answerable",
+    "source": "zoning.pdf",
+    "page": 2,
+    "evidence": "Urban Core (~ 248 acres)",
+    "accepted_answers": [
+      "248 acres",
+      "248"
+    ]
+  },
+  {
+    "id": "h2_uni_01",
+    "query": "Under Union City's definition, how many children does a group day care provide care for?",
     "kind": "answerable",
     "source": "zoning-ordinance-082024-rev.pdf",
-    "page": 54,
-    "evidence": "Said guesthouse shall be limited to 900 square feet",
-    "accepted_answers": ["900 square feet", "900 sq ft", "900 sq. ft."]
+    "page": 20,
+    "evidence": "provides care for 7 to 18 children",
+    "accepted_answers": [
+      "7 to 18",
+      "seven to eighteen",
+      "7-18"
+    ]
   },
   {
-    "id": "final_uni_02",
-    "query": "What front-yard setback applies to cottage home courts in Union City?",
+    "id": "h2_uni_02",
+    "query": "In Union City, how long does a sign owner have to remove a sign after a removal order before the City removes it?",
     "kind": "answerable",
     "source": "zoning-ordinance-082024-rev.pdf",
-    "page": 80,
-    "evidence": "Front yard setback, as measured from the right-of-way: 15 feet",
-    "accepted_answers": ["15 feet", "fifteen feet"]
+    "page": 224,
+    "evidence": "If the sign is not removed within 14 days after the order of removal",
+    "accepted_answers": [
+      "14 days",
+      "fourteen days"
+    ]
   },
   {
-    "id": "final_cha_01",
-    "query": "How many nonresident employees may work at a Charleston home occupation?",
+    "id": "h2_uni_03",
+    "query": "What minimum greenspace area applies in Union City's MXD Overlay District?",
+    "kind": "answerable",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 168,
+    "evidence": "Minimum greenspace area: 20%",
+    "accepted_answers": [
+      "20%",
+      "20 percent",
+      "twenty percent"
+    ]
+  },
+  {
+    "id": "h2_uni_04",
+    "query": "Under Union City's Roosevelt Highway Corridor overlay standards, what height may cell towers not exceed?",
+    "kind": "answerable",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 196,
+    "additional_relevant_pages": [
+      188,
+      193
+    ],
+    "evidence": "Height of cell towers shall not exceed 199 feet",
+    "accepted_answers": [
+      "199 feet",
+      "199 ft"
+    ]
+  },
+  {
+    "id": "h2_cha_01",
+    "query": "In Charleston, what household income limit defines a rental workforce housing unit?",
     "kind": "answerable",
     "source": "Charleston, SC Zoning.pdf",
-    "page": 201,
-    "evidence": "no more than one full-time or part-time non resident employee who works at the residence",
-    "accepted_answers": ["one full-time", "one nonresident", "one non-resident", "1 nonresident", "1 non-resident"]
+    "page": 318,
+    "evidence": "household income less than or equal to eighty (80 %) percent of the area median income (AMI) for rental units",
+    "accepted_answers": [
+      "eighty",
+      "80%",
+      "80 %",
+      "80 percent"
+    ]
   },
   {
-    "id": "final_cha_02",
-    "query": "What fraction of a Charleston building facade may sign faces occupy?",
+    "id": "h2_cha_02",
+    "query": "For a Charleston subdivision concept plan hearing before the Planning Commission, how many days before the hearing must notice be published?",
     "kind": "answerable",
     "source": "Charleston, SC Zoning.pdf",
-    "page": 506,
-    "evidence": "Sign faces shall not occupy more than ten (10) percent",
-    "accepted_answers": ["10 percent", "ten percent", "10%", "ten (10) percent"]
+    "page": 557,
+    "evidence": "at least ten (10) days prior to the hearing by publication of an agenda",
+    "accepted_answers": [
+      "ten (10) days",
+      "ten days",
+      "10 days"
+    ]
   },
   {
-    "id": "final_absent_01",
-    "query": "What was Issaquah's median household income in 2024?",
+    "id": "h2_cha_03",
+    "query": "In Charleston, what is the largest floor area a United States postal service facility may have before it falls under special exception procedures?",
+    "kind": "answerable",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 627,
+    "evidence": "Any postal service facility shall have a maximum floor area of 5,000 square feet or less",
+    "accepted_answers": [
+      "5,000 square feet",
+      "5000 square feet",
+      "5,000 sq"
+    ]
+  },
+  {
+    "id": "h2_cha_04",
+    "query": "In Charleston, what minimum clear pedestrian path must a sidewalk cafe keep on sidewalks that abut marked on-street parking spaces?",
+    "kind": "answerable",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 206,
+    "evidence": "sidewalk café operators shall maintain a minimum clear pede strian path width of five feet",
+    "accepted_answers": [
+      "five feet",
+      "5 feet",
+      "5'"
+    ]
+  },
+  {
+    "id": "h2_sum_01",
+    "query": "In the Los Angeles generalized zoning summary, what transitional height limit applies to parts of C or M zone buildings within 0 to 49 feet of an RW1 or more restrictive zone?",
+    "kind": "answerable",
+    "source": "E Generalized Summary of Zoning Regulations.pdf",
+    "page": 7,
+    "evidence": "0–49 25",
+    "accepted_answers": [
+      "25 feet",
+      "25 ft",
+      "25-foot",
+      "25 foot"
+    ]
+  },
+  {
+    "id": "h2_sum_02",
+    "query": "In the Los Angeles generalized zoning summary, what is the minimum loading space for commercial zones?",
+    "kind": "answerable",
+    "source": "E Generalized Summary of Zoning Regulations.pdf",
+    "page": 4,
+    "additional_relevant_pages": [
+      5
+    ],
+    "evidence": "Minimum loading space is 400 sq. ft.",
+    "accepted_answers": [
+      "400 sq. ft.",
+      "400 square feet",
+      "400 sq ft"
+    ]
+  },
+  {
+    "id": "h2_sum_03",
+    "query": "In the Los Angeles generalized zoning summary, how far must M3 nuisance-type uses be from any other zone?",
+    "kind": "answerable",
+    "source": "E Generalized Summary of Zoning Regulations.pdf",
+    "page": 5,
+    "evidence": "Nuisance Type Uses 500 ft. from any Other Zone",
+    "accepted_answers": [
+      "500 ft",
+      "500 feet"
+    ]
+  },
+  {
+    "id": "h2_sum_04",
+    "query": "In the Los Angeles generalized zoning summary, what is the minimum lot area per dwelling unit in the R2 zone?",
+    "kind": "answerable",
+    "source": "E Generalized Summary of Zoning Regulations.pdf",
+    "page": 3,
+    "evidence": "15 ft. 5,000 sq. ft. 2,500 sq. ft. 50 ft.",
+    "accepted_answers": [
+      "2,500 sq",
+      "2500 sq",
+      "2,500 square"
+    ]
+  },
+  {
+    "id": "h2_absent_01",
+    "query": "What transportation impact fee does Union City charge for each new single-family house?",
     "kind": "unanswerable"
   },
   {
-    "id": "final_absent_02",
-    "query": "Which medication should be prescribed for pneumonia?",
+    "id": "h2_absent_02",
+    "query": "How many chickens may an Urbana homeowner keep in the R-2 district?",
     "kind": "unanswerable"
   },
   {
-    "id": "final_ambiguous_01",
-    "query": "What is the minimum front-yard setback?",
+    "id": "h2_absent_03",
+    "query": "What setback applies to rooftop solar panels in Charleston?",
+    "kind": "unanswerable"
+  },
+  {
+    "id": "h2_absent_04",
+    "query": "How many electric vehicle charging stations must a new parking garage in Central Issaquah provide?",
+    "kind": "unanswerable"
+  },
+  {
+    "id": "h2_ambiguous_01",
+    "query": "How far must an adult entertainment use be from a residential district?",
+    "kind": "ambiguous"
+  },
+  {
+    "id": "h2_ambiguous_02",
+    "query": "How many dogs does it take for a property to count as a kennel?",
     "kind": "ambiguous"
   }
 ]

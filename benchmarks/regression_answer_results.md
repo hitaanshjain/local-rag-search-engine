@@ -1,8 +1,8 @@
-# Final holdout answer evaluation
+# Regression (former holdout) answer evaluation
 
-Run at: 2026-09-27T00:24:00.918400+00:00
-Git HEAD at run: `b2eb89484e12925d5b0bbe08e6ef64ff7284b51b` (worktree changes may have been present).
-Dataset: `heldout_queries.json`.
+Run at: 2026-09-27T01:43:17.592709+00:00
+Git HEAD at run: `3f2fd87b8c608c3a90bcec28a7a4b045685b1e90` (worktree changes may have been present).
+Dataset: `regression_queries.json`.
 Models: `llama3.2:3b` and `nomic-embed-text`.
 Queries: 10 (7 answerable, 2 unanswerable, 1 ambiguous).
 
@@ -78,7 +78,7 @@ Sources: [{"source": "zoning-ordinance-082024-rev.pdf", "page": 80, "excerpt": "
 Question: How many nonresident employees may work at a Charleston home occupation?
 
 Answer: Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf
-According to Charleston, SC Zoning.pdf, page 201, section 54-213 subsection k. paragraph 2, no more than one full-time or part-time nonresident employee who works at the residence used for the home occupation may be present. [1]
+According to Sec. 54-211, a home occupation may have no more than one full-time or part-time nonresident employee who works at the residence used for the home occupation. [1]
 
 Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 201, "excerpt": "the premises, and no more than one full-time or part-time non resident employee\nwho works at the residence used for the home occupation. The h ome occupation\nmay have other employees who are not working at the residence, b ut work at other\noff-site locations, if applicable. For the purpose of this s ection, the term \"nonresident\nemployee\" includes an employee, business partner, co-owner, or other person\naffiliated with the home occupation, who does not live at the site, but who may\nwork at the s"}, {"source": "article_v_-_use_regulations.pdf", "page": 8, "excerpt": "vehicles are repaired inside a garage, and no inoperable vehicles are stored outside. Any vehicle \nto be repaired may not queue outside the garage. Additionally, the garage must  meet all \napplicable building and fire safety codes, and any such work may not violate any of the City’s \nnuisance codes and ordinances. Only minor automobile repairs as defined in Article II are \npermitted. Additionally, no major automobile repairs as defined in Article II are permitted as a \nhome-based occupation. \n M"}, {"source": "article_v_-_use_regulations.pdf", "page": 6, "excerpt": "dwelling, and resulting in only incidental traffic associated with the occupation. Such home \noccupations include, but are not limited to, private consulting, non-retail based arts and crafts \nstudios, internet-based business, telecommunication-based commuting, and Day Care Homes \nwith fewer than three children or adults. Type A Home Occupations do not require a Certificate of \nOccupancy or Conditional Use Permit and are permitted with the following criteria:  \n1. Employees - No persons other th"}]
 
@@ -87,7 +87,7 @@ Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 201, "excerpt": "the p
 Question: What fraction of a Charleston building facade may sign faces occupy?
 
 Answer: Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf
-Sign faces shall not occupy more than ten (10) percent per façade of the building [1] and [2].
+Sign faces shall not occupy more than ten (10) percent per façade of the building [1], [2], and [3].
 
 Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 506, "excerpt": "2. With the exception of public schools, reader boards shall not exceed\nfifty (50) percent of the allowable sign face area.\n3. Reader boards are not to be internally illuminated.\nb. Façade Signs shall be permitted as follows:\n1. Sign faces shall not occupy more than ten (10) percent per f açade of the\nbuilding.\n2. Where more than one (1) business or use occupies a single bu ilding, each\nseparate business occupying a space which includes an exter ior façade may\nerect signage whose sign faces shal"}, {"source": "Charleston, SC Zoning.pdf", "page": 496, "excerpt": "a. Freestanding signs shall be permitted as follows:\n1. One double-faced monument style shall be allowed per lot w ith a maximum\nof twelve (12) square feet in area per side and not exceeding f ive (5) feet in\nheight.\n2. Monument signs may be illuminated internally or with a shie lded spot light\nlocated at the base of the sign. The use of plastic sign faces i s prohibited.\nb. Façade signs shall be permitted as follows:\n1. Façade signs for businesses or uses occupying the ground f loor of a\nmulti-"}, {"source": "Charleston, SC Zoning.pdf", "page": 512, "excerpt": "(c) Monument signs may be illuminated internally or with a shi elded spot\nlight located at the base of the sign. Plastic face signs shal l have opaque\nbackgrounds allowing only the text and logos to illuminate.\n(d) Reader boards are allowed as a part of a monument sign only and are\nnot to be used as façade signs.\n(e) With the exception of public schools, reader boards shal l not exceed fifty\n(50) percent of the allowable freestanding sign face area.\n(f) Reader boards are not to be illuminated.\n2"}]
 

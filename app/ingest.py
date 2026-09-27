@@ -10,6 +10,43 @@ from app.engine import INDEX_VERSION_PATH, get_vector_db
 from app.provenance import infer_document_provenance
 
 DATA_DIR = "./data"
+# "6-15 TCMU Town Center", "Sec. 54-269.  Design Review", or "APPENDIX C". A capital after the
+# number rejects cross-references ("54-348 in areas"), and \d{1,3} rejects years ("1995-160").
+SECTION_HEADING = re.compile(
+    r"(?m)^[ \t]*((?:Sec\.[ \t]*)?\d{1,3}-\d+(?:\.\d+)?\.?[ \t]+[A-Z][^\n]*|APPENDIX[ \t]+[A-Z]\b[^\n]*)"
+)
+
+
+def section_headings(text):
+    return [
+        (match.start(), " ".join(match.group(1).split()))
+        for match in SECTION_HEADING.finditer(text)
+        if ". ." not in match.group(1)
+    ]
+
+
+def assign_sections(chunks):
+    """Label each chunk with the section covering most of its text."""
+    current_source = None
+    current_section = None
+    for chunk in chunks:
+        if chunk.metadata.get("source") != current_source:
+            current_source = chunk.metadata.get("source")
+            current_section = None
+        text = chunk.page_content
+        body_start = text.find("\n") + 1 if text.startswith("Source: ") else 0
+        coverage = defaultdict(int)
+        position = body_start
+        for start, heading in section_headings(text):
+            if start < body_start:
+                continue
+            if current_section:
+                coverage[current_section] += start - position
+            current_section, position = heading, start
+        if current_section:
+            coverage[current_section] += len(text) - position
+        if coverage:
+            chunk.metadata["section"] = max(coverage, key=coverage.get)
 
 def publish_index_version(marker_path):
     marker_path = Path(marker_path)
@@ -73,20 +110,7 @@ def process_documents(data_dir=DATA_DIR, db=None, marker_path=None):
     )
     
     chunks = text_splitter.split_documents(all_docs)
-    current_source = None
-    current_section = None
-    for chunk in chunks:
-        if chunk.metadata["source"] != current_source:
-            current_source = chunk.metadata["source"]
-            current_section = None
-        headings = re.findall(
-            r"(?m)^[ \t]*(\d+-\d+[ \t]+[A-Za-z][^\n]*)",
-            chunk.page_content,
-        )
-        if headings:
-            current_section = headings[-1].strip()
-        if current_section:
-            chunk.metadata["section"] = current_section
+    assign_sections(chunks)
     print(f"Split {len(all_docs)} pages into {len(chunks)} contextualized chunks.")
 
     print("Step 3: Ingesting into Vector Store...")

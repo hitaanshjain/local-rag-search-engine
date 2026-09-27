@@ -1,7 +1,7 @@
 # Development answer evaluation
 
-Run at: 2026-09-27T00:24:46.514742+00:00
-Git HEAD at run: `b2eb89484e12925d5b0bbe08e6ef64ff7284b51b` (worktree changes may have been present).
+Run at: 2026-09-27T01:42:54.012609+00:00
+Git HEAD at run: `3f2fd87b8c608c3a90bcec28a7a4b045685b1e90` (worktree changes may have been present).
 Dataset: `development_queries.json`.
 Models: `llama3.2:3b` and `nomic-embed-text`.
 Queries: 12 (8 answerable, 3 unanswerable, 1 ambiguous).
@@ -59,8 +59,8 @@ Sources: [{"source": "article_v_-_use_regulations.pdf", "page": 16, "excerpt": "
 
 Question: What minimum lot size does Union City require for a cemetery?
 
-Answer: Jurisdiction: Union City, Georgia | District: RM | Document version: August 20, 2024, Rev. | Source: zoning-ordinance-082024-rev.pdf
-According to the provided context, Union City requires a minimum lot area of ten (10) acres for a cemetery, as stated in [2].
+Answer: Jurisdiction: Union City, Georgia | District: R-4 | Document version: August 20, 2024, Rev. | Source: zoning-ordinance-082024-rev.pdf
+According to the context, Union City requires a minimum lot area of ten (10) acres for a cemetery [1].
 
 Sources: [{"source": "zoning-ordinance-082024-rev.pdf", "page": 63, "excerpt": "planted buffer strip. \n \n8. Cemetery, provided: \n \na. Minimum lot area shall be ten (10) acres; \n \nb. Gravesites shall be set back at least 50 feet from all property lines; \n \nc. No structure other than grave markers shall be located within 35 feetof property \nzoned for residential use;"}, {"source": "zoning-ordinance-082024-rev.pdf", "page": 76, "excerpt": "3. Schools and their customary related uses, provided: \n \na. Minimum lot size is three (3) acres; \n \nb. Minimum lot frontage is at least 200 feet; \n \nc. All buildings are located on a lot fronting a major or collector street, as \ndetermined by the Planning Commission; and \n \nd. All buildings are placed not less than 50 feet from any property line and are \nseparated from any such property line, excluding the front property line, by a \nplanted buffer strip. \n \n4. Cemetery, provided: \n \na. Minimum "}, {"source": "zoning-ordinance-082024-rev.pdf", "page": 16, "excerpt": "August 20, 2024, Rev. Page 7 \n \nand including four-inch caliper size, and twelve (12) inches above the ground for larger \nsizes. \n \n3-39 Car Wash. An establishment used for washing and cleaning of passenger vehicles, \nrecreational vehicles, and other light duty equipment, including facilities containing \nmechanical devices for washing and those that are self-service/coin operated. (Ordinance \n2022-03; 12/08/22) \n \n3-40 Cemetery. A burial ground. \n \n3-41 Cemetery, Commercial. The operation of a b"}]
 
@@ -78,7 +78,7 @@ Sources: [{"source": "zoning-ordinance-082024-rev.pdf", "page": 53, "excerpt": "
 Question: What is the minimum height for a principal structure in Charleston's 55/30 height district?
 
 Answer: Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf
-The minimum height for a principal structure in Charleston's 55/30 height district is thirty (30) feet [1].
+In Charleston's 55/30 height district, the minimum height for a principal structure is thirty (30) feet [1].
 
 Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 405, "excerpt": "(Ord. No. 2017-085, § 1, 8-15-17; Ord. No. 2020-014, § 1, 1-28 -20) \nSec. 54-306.V.  Height District 55/30 S. \nIn this district: \n1. No part of a structure shall exceed the height of fifty-fiv e (55) feet, nor shall the \nprincipal structure be lower than thirty (30) feet. \n§ 54-306.T  § 54-306.VSITE REGULATIONS\n3-20.5Supp. No. 19"}, {"source": "Charleston, SC Zoning.pdf", "page": 406, "excerpt": "2. All structures shall have no minimum set back from street ri ght-of-way lines, subject \nto provisions of Article 3: Part 10. \n(Ord. No. 2017-085, § 1, 8-15-17; Ord. No. 2020-014, § 1, 1-28 -20) \nSec. 54-306.W.  Height District 55/30. \nIn this district: \n1. No part of a structure shall exceed the height of fifty-fiv e (55) feet, nor shall the \nprincipal structure be lower than thirty (30) feet. \n2. All structures shall have no set back from street right-of- way lines, subject to \nprovisions of"}, {"source": "Charleston, SC Zoning.pdf", "page": 402, "excerpt": "Sec. 54-306.O.  Height District 100/30. \nIn this district: \n1. The minimum height for a structure fronting on a street is t hirty (30) feet, and the \nminimum height on the ground floor of a structure fifteen (15 ) feet. \n2. The maximum height of a structure along north-south orien ted streets is four (4) \nstories. The height along north-south oriented streets sha ll be maintained from the \nedge of the right-of-way into the interior of the lot for a dist ance of one hundred (100) \nfeet, except as"}]
 
@@ -87,7 +87,7 @@ Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 405, "excerpt": "(Ord.
 Question: For a Charleston development with at least twenty business units, what is the per-face area limit for its monument sign?
 
 Answer: Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf
-For a Charleston development with at least twenty business units, the per-face area limit for its monument sign is one hundred (100) square feet. [2]
+For a Charleston development with at least twenty business units, no sign shall exceed one hundred (100) square feet per face [2].
 
 Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 504, "excerpt": "2. For a development containing more than three (3) business units and fewer\nthan twenty (20) business units, one (1) monument sign shall be permitted as\nfollows:\n(a) No sign shall exceed sixty (60) square feet per face or one hundred and\ntwenty (120) square feet of total sign face area. No sign shal l exceed\nfourteen (14) feet in height.\n(b) Monument signs may be illuminated internally or with a shi elded spot\nlight located at the base of the sign. Plastic face signs shal l have opaque\nbackgrou"}, {"source": "Charleston, SC Zoning.pdf", "page": 505, "excerpt": "3. For a development containing twenty (20) or more business units, or 150,000\nsquare feet or more of floor area, one (1) monument sign shall be permitted as\nfollows:\n(a) No sign shall exceed one hundred (100) square feet per fac e or two\nhundred (200) square feet of total sign face area. No sign sha ll exceed\nfourteen (14) feet in height.\n(b) Monument signs may be illuminated internally or with a shi elded spot\nlight located at the base of the sign. Plastic face signs shal l have opaque\nbackgro"}, {"source": "Charleston, SC Zoning.pdf", "page": 503, "excerpt": "property owner of the parcel on which the sign is to be located stating\nthat the property owner will allow the sign to be erected at th e location\nindicated on the site plan.\n(Ord. No. 2018-031, § 8, 4-10-18)\nSec. 54-415. Regulations for signs within all other distric ts.\nIn all other districts, only the following signs shall be per mitted:\na. Freestanding signs shall be permitted as follows:\n1. For a development containing three (3) or fewer business u nits, one (1)\nmonument sign shall be permi"}]
 
@@ -95,8 +95,7 @@ Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 504, "excerpt": "2. Fo
 
 Question: In Charleston, where does someone appeal an administrative decision about a sidewalk cafe permit?
 
-Answer: Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf
-According to the provided documents, the appeal for an administrative decision, including a sidewalk cafe permit, must be filed with the Zoning Division office within ten (10) business days after actual notice of the decision [1].
+Answer: I don't know based on these documents.
 
 Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 681, "excerpt": "Meeting agendas are limited to no more than twenty-five (25) new applications and appeals. \nEach application or appeal shall require a fee as set by City C ouncil. \nSection 2.  Time Limit for Appeal of an Administrative Decis ion. \nAn appeal from an administrative decision must be filed with in ten (10) business days after \nactual notice of the decision by delivery of the approved app eal form and fee to the Zoning \nDivision office. \nSection 3.  Time Limit and Procedure for Appeal for Reconsid e"}, {"source": "Charleston, SC Zoning.pdf", "page": 721, "excerpt": "provided by the Rules of Procedure. \n   Article III.\nAppeals Procedure \nSection 1.  Form of Appeal—Administrative Decision. \nAppeals to the Board from an administrative decision may be ta ken by any person aggrieved \nby a determination of the administrative officer. Appeals s hall be filed on forms approved by \nthe Board and provided by the Secretary of the Board. Appeal f orms shall be made available \nin the City of Charleston Department of Planning and Preserv ation, 75 Calhoun Street, \nCharle"}, {"source": "Charleston, SC Zoning.pdf", "page": 688, "excerpt": "Section 2.  Time for Appeal for an Administrative Decision. \nAn appeal from an administrative decision must be filed with in fifteen (15) calendar days \nfrom the making of such decision, order, requirement or dete rmination. \nSection 3.  Calendar. \nAppeals shall be marked with the date of receipt and placed on the hearing calendar. \nSection 4.  Withdrawal of Appeal. \nAny appeal may be withdrawn by written notice delivered to the s ecretary prior to action by \nthe Board. An appeal may not be re-f"}]
 

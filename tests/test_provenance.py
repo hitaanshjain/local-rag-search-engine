@@ -20,6 +20,10 @@ class DocumentProvenanceTests(unittest.TestCase):
         urbana = "The Urbana Zoning Ordinance permits such uses."
         self.assertEqual(infer_document_provenance([urbana]), {"jurisdiction": "Urbana"})
 
+    def test_table_cell_that_looks_like_place_name_is_not_a_jurisdiction(self):
+        table = "Generalized Summary of\nZoning Regulations\nAccessory Living\nQuarters, Home \nOccupations"
+        self.assertNotIn("jurisdiction", infer_document_provenance([table]))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -67,6 +67,73 @@ def quote_in_passage(quote: str, passage: Document) -> bool:
     return len(compact_quote) >= 12 and compact_quote in compact_passage
 
 
+NUMBER_WORDS = {
+    word: str(value) for value, word in enumerate(
+        "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen "
+        "fifteen sixteen seventeen eighteen nineteen twenty".split()
+    )
+} | {"thirty": "30", "forty": "40", "fifty": "50", "sixty": "60", "seventy": "70", "eighty": "80", "ninety": "90"}
+NEGATION_WORDS = {"not", "no", "never", "nor", "cannot", "prohibited"}
+LIMIT_WORDS = {
+    "minimum", "maximum", "least", "most", "exceed", "more", "less", "fewer", "greater",
+    "within", "under", "over", "below", "above", "beyond",
+}
+ATTRIBUTION_WORDS = {
+    "according", "context", "provided", "document", "passage", "state", "stated", "say", "said",
+    "ordinance", "code", "zoning", "the", "be", "shall", "must", "will", "has", "there", "this",
+    "that", "these", "those", "it", "its", "their", "they", "by", "at", "as", "or", "from", "than",
+}
+UNIT_WORDS = {"ft", "feet", "foot", "square", "sq", "acre", "percent", "inch", "inche", "mile"}
+SECTION_NUMBER = re.compile(r"\b\d+-\d+(?:\.\d+)?\b")
+
+
+def _stems(text: str) -> set[str]:
+    words = re.findall(r"[a-z]+", IDENTIFIER.sub(" ", text.casefold()))
+    return {word.removesuffix("s") if len(word) > 4 else word for word in words}
+
+
+def _numbers(text: str) -> set[str]:
+    text = SECTION_NUMBER.sub(" ", IDENTIFIER.sub(" ", text.casefold()))
+    digits = {value.replace(",", "").rstrip(".") for value in re.findall(r"\d[\d,]*(?:\.\d+)?", text)}
+    return digits | {NUMBER_WORDS[word] for word in re.findall(r"[a-z]+", text) if word in NUMBER_WORDS}
+
+
+def supported_by_text(claim: str, passage: Document) -> bool:
+    """Accept a numeric claim only when one passage sentence restates all of it.
+
+    Returning False means "not confirmed here", and the caller falls back to the model check.
+    """
+    body = passage.page_content
+    if body.startswith("Source: "):
+        body = body.split("\n", 1)[-1]
+    claim_numbers = _numbers(claim)
+    if not claim_numbers:
+        return False
+    metadata = " ".join(str(passage.metadata.get(key, "")) for key in ("section", "jurisdiction", "source"))
+    if set(IDENTIFIER.findall(claim.casefold())) - set(IDENTIFIER.findall(f"{body} {metadata}".casefold())):
+        return False
+    claim_words = _stems(claim)
+    negations = claim_words & NEGATION_WORDS
+    limits = claim_words & LIMIT_WORDS
+    content = {
+        word for word in claim_words - NEGATION_WORDS - LIMIT_WORDS - QUESTION_FILLER - ATTRIBUTION_WORDS
+        if word not in NUMBER_WORDS and len(word) > 1
+    }
+    if not content - UNIT_WORDS:
+        return False  # "10 ft." says nothing about what measures 10 feet
+    metadata_words = _stems(metadata)
+    for sentence in re.split(r"(?<=[.!?;])\s+(?=[A-Z(\d])", body):
+        if not claim_numbers <= _numbers(sentence):
+            continue
+        sentence_words = _stems(sentence)
+        if sentence_words & NEGATION_WORDS != negations or not limits <= sentence_words:
+            continue
+        pool = sentence_words | metadata_words
+        if all(word in pool or (len(word) >= 4 and any(word in token for token in pool)) for word in content):
+            return True
+    return False
+
+
 def numeric_rule_conflicts(query: str, answer: str, primary: Document, candidates: list[Document]) -> list[Conflict]:
     """Find differing numeric limits in sentences about the question's subject."""
     answer_values = {(number.replace(",", ""), unit.casefold()) for number, unit in NUMBER_UNIT.findall(answer)}
@@ -155,6 +222,8 @@ async def verify_answer(answer: str, passages: list[Document], llm) -> bool:
 
 
 async def claim_supported(claim: str, passage: Document, llm) -> bool:
+    if supported_by_text(claim, passage):
+        return True
     prompt = (
         "Determine whether this cited passage supports every factual assertion in the claim. "
         "Ignore source-attribution phrases; use the passage section and jurisdiction to identify scope. "

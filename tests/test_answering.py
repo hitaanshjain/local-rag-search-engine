@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 from langchain_core.documents import Document
 
-from app.answering import cited_claims, collect_conflict_candidates, detect_conflicts, format_scope, repair_answer, resolve_conflict, verify_answer
+from app.answering import cited_claims, collect_conflict_candidates, detect_conflicts, format_scope, repair_answer, resolve_conflict, supported_by_text, verify_answer
 
 
 class FixedLLM:
@@ -16,6 +16,46 @@ class FixedLLM:
         response = self.responses[min(self.index, len(self.responses) - 1)]
         self.index += 1
         return SimpleNamespace(content=response)
+
+
+class TextSupportTests(unittest.TestCase):
+    def passage(self, text, **metadata):
+        return Document(page_content=text, metadata=metadata)
+
+    def test_accepts_claim_whose_numbers_and_words_share_one_passage_sentence(self):
+        guest = self.passage("Source: code.pdf | Page: 54\nSaid guesthouse shall be limited to 900 square feet.", section="6-2 R-2 Residential")
+        self.assertTrue(supported_by_text("A guest house in R-2 is limited to 900 square feet", guest))
+        acres = self.passage("a. Minimum lot area shall be ten (10) acres;")
+        self.assertTrue(supported_by_text("The minimum lot area is 10 acres", acres))
+        self.assertTrue(supported_by_text("The minimum lot area is ten acres", acres))
+
+    def test_leaves_claims_it_cannot_confirm_to_the_model(self):
+        self.assertFalse(supported_by_text("Guest houses are allowed", self.passage("Guest houses are allowed.")))
+        self.assertFalse(supported_by_text("The limit is 700 square feet", self.passage("The limit is 900 square feet.")))
+
+    def test_rejects_same_number_with_a_different_meaning(self):
+        yards = self.passage("Front yard setback is 10 feet. Rear yard setback is 25 feet.")
+        self.assertFalse(supported_by_text("The rear yard setback is 10 feet", yards))
+        self.assertFalse(supported_by_text("The minimum height is 35 feet", self.passage("The maximum height is 35 feet.")))
+        towers = self.passage("Height of cell towers shall not exceed 199 feet.")
+        self.assertFalse(supported_by_text("Cell towers may exceed 199 feet", towers))
+        self.assertTrue(supported_by_text("Cell towers may not exceed 199 feet", towers))
+        self.assertFalse(supported_by_text("In R-3, a guest house is limited to 900 square feet", self.passage("Said guesthouse shall be limited to 900 square feet.", section="6-2 R-2 Residential")))
+
+    def test_bare_measurement_needs_the_model(self):
+        table = self.passage("Front 10 ft. in combination with an A or R Zone; side 5 ft.")
+        self.assertFalse(supported_by_text("10 ft.", table))
+        self.assertTrue(supported_by_text("The front yard is 10 ft.", self.passage("Front yard 10 ft. in combination with an A or R Zone.")))
+
+    def test_source_header_page_number_is_not_evidence(self):
+        passage = self.passage("Source: code.pdf | Page: 54\nThe fee is set by council.")
+        self.assertFalse(supported_by_text("The fee is 54 dollars", passage))
+
+    def test_text_support_skips_the_model_call(self):
+        passage = Document(page_content="Said guesthouse shall be limited to 900 square feet.")
+        llm = FixedLLM('{"supported": false, "quote": ""}')
+        self.assertTrue(asyncio.run(verify_answer("A guest house is limited to 900 square feet [1].", [passage], llm)))
+        self.assertEqual(llm.index, 0)
 
 
 class AnswerVerificationTests(unittest.TestCase):
@@ -49,12 +89,11 @@ class AnswerVerificationTests(unittest.TestCase):
 
     def test_every_cited_claim_is_checked_before_acceptance(self):
         passage = Document(page_content="The limit is 900 square feet. One guest house is allowed.")
-        llm = FixedLLM(
-            '{"supported": true, "quote": "The limit is 900 square feet."}',
-            '{"supported": false, "quote": ""}',
-        )
+        # The first claim is confirmed by text; the second contradicts the passage and reaches the model.
+        llm = FixedLLM('{"supported": false, "quote": ""}')
         answer = "The limit is 900 square feet [1]. Two guest houses are allowed [1]."
         self.assertFalse(asyncio.run(verify_answer(answer, [passage], llm)))
+        self.assertEqual(llm.index, 1)
         self.assertIsNone(cited_claims("The limit is 900 feet. Two units are allowed [1].", 1))
 
     def test_false_negative_is_rechecked_against_the_validated_quote(self):

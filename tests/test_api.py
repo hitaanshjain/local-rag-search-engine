@@ -37,6 +37,10 @@ async def response_events(response):
     return events
 
 
+def event_data(events, name):
+    return next(data for event, data in events if event == name)
+
+
 class ChatEventsTests(unittest.TestCase):
     def setUp(self):
         clarification = patch("app.api.needs_clarification", return_value=False)
@@ -143,7 +147,7 @@ class ChatEventsTests(unittest.TestCase):
             response = asyncio.run(chat(QueryRequest(query="In R-2, how large may a guest house be?")))
             events = asyncio.run(response_events(response))
 
-        self.assertEqual([source["page"] for source in events[0][1]["sources"]], [54, 38])
+        self.assertEqual([source["page"] for source in event_data(events, "sources")["sources"]], [54, 38])
         answer = "".join(data["text"] for name, data in events if name == "token")
         self.assertIn("900 square feet", answer)
         self.assertIn("700 square feet", answer)
@@ -222,6 +226,72 @@ class ChatEventsTests(unittest.TestCase):
         self.assertIn("Which jurisdiction, district, or document version", answer)
         self.assertNotIn("900 square feet", answer)
 
+    def test_conflict_is_answered_from_the_other_passage_when_the_question_names_its_section(self):
+        class DraftChain:
+            async def astream(self, values):
+                yield SimpleNamespace(content="The limit is 700 square feet [1].")
+
+        class DraftPrompt:
+            def __or__(self, llm):
+                return DraftChain()
+
+        general = Document(id="gen", page_content="Guest houses are limited to 700 square feet.", metadata={"source": "code.pdf", "page": 38, "section": "5-4 Accessory Uses", "jurisdiction": "Union City"})
+        district = Document(id="r2", page_content="In R-2, guest houses are limited to 900 square feet.", metadata={"source": "code.pdf", "page": 54, "section": "6-3 R-2 Residential", "jurisdiction": "Union City"})
+        conflict = Conflict(district, "Guest houses are limited to 700 square feet", "In R-2, guest houses are limited to 900 square feet")
+        with patch("app.api.hybrid_search", return_value=[general]), patch("app.api.bm25_search", return_value=[(district, 8.0)]), patch("app.api.prompt_template", DraftPrompt()), patch("app.api.detect_conflicts", new_callable=AsyncMock, return_value=[conflict]):
+            response = asyncio.run(chat(QueryRequest(query="What is the guest house limit in R-2?")))
+            events = asyncio.run(response_events(response))
+        sources = event_data(events, "sources")["sources"]
+        answer = "".join(data["text"] for name, data in events if name == "token")
+        self.assertEqual([(source["source"], source["page"]) for source in sources], [("code.pdf", 38), ("code.pdf", 54)])
+        self.assertTrue(answer.startswith("Jurisdiction: Union City | District: R-2"))
+        self.assertIn('6-3 R-2 Residential states "In R-2, guest houses are limited to 900 square feet" [2].', answer)
+        self.assertIn("The named 6-3 R-2 Residential provision applies to this question [2].", answer)
+        self.assertNotIn("Which jurisdiction", answer)
+
+    def test_progress_status_precedes_sources_and_timing_precedes_done(self):
+        docs = [Document(page_content="Rule [1].", metadata={"source": "rules.pdf", "page": 1})]
+        with patch("app.api.hybrid_search", return_value=docs), patch("app.api.prompt_template", FakePrompt()):
+            events = asyncio.run(response_events(asyncio.run(chat(QueryRequest(query="What is the rule?")))))
+        names = [event for event, _ in events]
+        self.assertEqual(names, ["status", "status", "status", "sources", "token", "timing", "done"])
+        self.assertEqual([data["stage"] for event, data in events if event == "status"], ["drafting", "checking", "comparing"])
+        self.assertTrue(all(data["text"] for event, data in events if event == "status"))
+
+    def test_timing_reports_stage_durations_and_model_calls(self):
+        class CallingLLM:
+            async def ainvoke(self, prompt):
+                return SimpleNamespace(content="{}")
+
+        async def verify(answer, passages, llm):
+            await llm.ainvoke("check one")
+            await llm.ainvoke("check two")
+            return True
+
+        docs = [Document(page_content="Rule [1].", metadata={"source": "rules.pdf", "page": 1})]
+        with patch("app.api.hybrid_search", return_value=docs), patch("app.api.prompt_template", FakePrompt()), patch(
+            "app.api.llm", CallingLLM()
+        ), patch("app.api.verify_answer", verify):
+            events = asyncio.run(response_events(asyncio.run(chat(QueryRequest(query="What is the rule?")))))
+        timing = event_data(events, "timing")
+        self.assertEqual(set(timing), {"draft_ms", "check_ms", "conflict_ms", "answer_ms", "drafts", "check_calls"})
+        self.assertEqual((timing["drafts"], timing["check_calls"]), (1, 2))
+        self.assertTrue(all(timing[key] >= 0 for key in ("draft_ms", "check_ms", "conflict_ms", "answer_ms")))
+
+    def test_conflict_keyword_search_runs_off_the_event_loop(self):
+        import threading
+
+        threads = []
+
+        def keyword_search(query, index, k=5):
+            threads.append((k, threading.current_thread() is threading.main_thread()))
+            return []
+
+        docs = [Document(page_content="Rule [1].", metadata={"source": "rules.pdf", "page": 1})]
+        with patch("app.api.hybrid_search", return_value=docs), patch("app.api.bm25_search", keyword_search), patch("app.api.prompt_template", FakePrompt()):
+            asyncio.run(response_events(asyncio.run(chat(QueryRequest(query="What is the rule?")))))
+        self.assertIn((30, False), threads)
+
     def test_source_list_contains_only_passages_sent_to_model(self):
         first = Document(id="one", page_content="The direct answer.", metadata={"source": "a.pdf", "page": 1})
         second = Document(id="two", page_content="Unrelated rule.", metadata={"source": "b.pdf", "page": 2})
@@ -241,7 +311,7 @@ class ChatEventsTests(unittest.TestCase):
         ), patch("app.api.prompt_template", RecordingPrompt()):
             response = asyncio.run(chat(QueryRequest(query="Direct answer?")))
             events = asyncio.run(response_events(response))
-        self.assertEqual(len(events[0][1]["sources"]), 1)
+        self.assertEqual(len(event_data(events, "sources")["sources"]), 1)
         self.assertNotIn("Unrelated rule", observed["context"])
 
     def test_named_section_sends_its_keyword_leader_without_conflicting_passages(self):
@@ -274,7 +344,7 @@ class ChatEventsTests(unittest.TestCase):
             response = asyncio.run(chat(QueryRequest(query="In R-2, how large may a guest house be?")))
             events = asyncio.run(response_events(response))
 
-        self.assertEqual([(source["page"]) for source in events[0][1]["sources"]], [2])
+        self.assertEqual([(source["page"]) for source in event_data(events, "sources")["sources"]], [2])
         self.assertIn("900 square feet", observed["context"])
         self.assertNotIn("700 square feet", observed["context"])
 
@@ -297,7 +367,7 @@ class ChatEventsTests(unittest.TestCase):
 
         self.assertIn("[1] rules.pdf, page 7", observed["context"])
         self.assertIn("only valid citation labels for this answer are: [1]", observed.get("citation_instruction", ""))
-        self.assertEqual(events[0][1]["sources"][0]["excerpt"], "No fence may exceed four feet.")
+        self.assertEqual(event_data(events, "sources")["sources"][0]["excerpt"], "No fence may exceed four feet.")
 
     def test_pdf_page_endpoint_serves_only_files_in_data_directory(self):
         with tempfile.TemporaryDirectory() as temporary_dir:
@@ -348,7 +418,7 @@ class ChatEventsTests(unittest.TestCase):
         self.assertIn("index;dur=", retrieval_timing)
         self.assertIn("vector;dur=", retrieval_timing)
         self.assertEqual(
-            events,
+            [(event, data) for event, data in events if event not in {"status", "timing"}],
             [
                 ("sources", {"sources": [{"source": "zoning.pdf", "page": 2, "excerpt": "A"}, {"source": "rules.pdf", "page": 7, "excerpt": "B"}]}),
                 ("token", {"text": "Jurisdiction: not identified | District: not specified | Document version: not identified | Source: zoning.pdf\nFirst answer"}),
@@ -380,7 +450,7 @@ class ChatEventsTests(unittest.TestCase):
             response = asyncio.run(chat(QueryRequest(query="Fence limit?")))
             events = asyncio.run(response_events(response))
 
-        excerpts = [source["excerpt"] for source in events[0][1]["sources"]]
+        excerpts = [source["excerpt"] for source in event_data(events, "sources")["sources"]]
         self.assertEqual(excerpts, ["First line.\nSecond line.", "Continued fact.\nMore text."])
 
     def test_response_reports_the_serving_llm_model(self):

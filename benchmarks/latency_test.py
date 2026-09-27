@@ -20,13 +20,19 @@ ROOT = Path(__file__).resolve().parents[1]
 BENCHMARK_DIR = Path(__file__).resolve().parent
 API_URL = os.getenv("RAG_API_URL", "http://127.0.0.1:8000/chat")
 QUERY_IDS = ("iss_03", "sum_04", "urb_03", "uni_02", "cha_02")
-METRICS = ("retrieval_ms", "index_ms", "vector_ms", "keyword_ms", "fusion_ms", "ttft_ms", "full_response_ms")
+ANSWER_STAGES = ("draft_ms", "check_ms", "conflict_ms", "answer_ms", "drafts", "check_calls")
+METRICS = (
+    "retrieval_ms", "index_ms", "vector_ms", "keyword_ms", "fusion_ms",
+    "first_status_ms", "ttft_ms", "full_response_ms", *ANSWER_STAGES,
+)
 
 
 def measure_stream(query, session=requests, url=API_URL, clock=time.perf_counter):
     started = clock()
+    first_status_ms = None
     first_token_ms = None
     full_response_ms = None
+    answer_timing = None
     buffer = ""
     with session.post(url, json={"query": query}, stream=True, timeout=(10, 300)) as response:
         response.raise_for_status()
@@ -49,6 +55,10 @@ def measure_stream(query, session=requests, url=API_URL, clock=time.perf_counter
                     if line.startswith(("event: ", "data: "))
                 )
                 event = fields.get("event")
+                if event == "status" and first_status_ms is None:
+                    first_status_ms = (clock() - started) * 1000
+                if event == "timing":
+                    answer_timing = json.loads(fields["data"])
                 if event == "token" and first_token_ms is None:
                     if json.loads(fields["data"]).get("text"):
                         first_token_ms = (clock() - started) * 1000
@@ -61,10 +71,14 @@ def measure_stream(query, session=requests, url=API_URL, clock=time.perf_counter
 
     if first_token_ms is None or full_response_ms is None:
         raise ValueError("Chat stream ended without a token and done event")
+    if first_status_ms is None or answer_timing is None:
+        raise ValueError("Chat stream did not report answer progress and timing")
     return {
         **{f"{stage}_ms": stage_times[stage] for stage in ("retrieval", "index", "vector", "keyword", "fusion")},
+        "first_status_ms": first_status_ms,
         "ttft_ms": first_token_ms,
         "full_response_ms": full_response_ms,
+        **{stage: answer_timing[stage] for stage in ANSWER_STAGES},
     }
 
 
@@ -86,8 +100,9 @@ def ollama_hardware(session=requests):
 def summary_table(summary):
     lines = ["| Metric | Median | P90 |", "|---|---:|---:|"]
     for metric in METRICS:
+        unit = " ms" if metric.endswith("_ms") else ""
         lines.append(
-            f"| {metric} | {summary[metric]['median']:.1f} ms | {summary[metric]['p90']:.1f} ms |"
+            f"| {metric} | {summary[metric]['median']:.1f}{unit} | {summary[metric]['p90']:.1f}{unit} |"
         )
     return "\n".join(lines)
 
@@ -121,18 +136,19 @@ def write_results(result):
         "",
         summary_table(result["summary"]),
         "",
-        "Time to first token (TTFT) starts before the POST and stops at the first nonempty SSE `token` event. Full response time stops at the SSE `done` event. The API reports retrieval and its index, vector, keyword, and fusion stages in `Server-Timing`; total retrieval also includes thread scheduling and other overhead. P90 uses the nearest-rank method. The warmup request is excluded from all statistics.",
+        "Client times start before the POST. First status stops at the first SSE `status` event, TTFT at the first nonempty `token` event (the checked answer), and full response at `done`. The API reports retrieval and its index, vector, keyword, and fusion stages in `Server-Timing`; total retrieval also includes thread scheduling and other overhead. The final SSE `timing` event reports answer stages: `draft_ms` (all drafts), `check_ms` (claim checks and citation repair), `conflict_ms` (conflict search and comparison), `answer_ms` (drafting through the answer), `drafts`, and `check_calls` (model calls outside drafting). P90 uses the nearest-rank method. The warmup request is excluded from all statistics.",
         "",
         "## Measured requests",
         "",
-        "| Query ID | Run | Retrieval | Index | Vector | Keyword | Fusion | TTFT | Full response |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
+        "| Query ID | Run | Retrieval | First status | TTFT | Full response | Draft | Check | Conflict | Drafts | Check calls |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for sample in result["samples"]:
         lines.append(
             f"| {sample['query_id']} | {sample['iteration']} | {sample['retrieval_ms']:.1f} ms | "
-            f"{sample['index_ms']:.1f} ms | {sample['vector_ms']:.1f} ms | {sample['keyword_ms']:.1f} ms | "
-            f"{sample['fusion_ms']:.1f} ms | {sample['ttft_ms']:.1f} ms | {sample['full_response_ms']:.1f} ms |"
+            f"{sample['first_status_ms']:.1f} ms | {sample['ttft_ms']:.1f} ms | {sample['full_response_ms']:.1f} ms | "
+            f"{sample['draft_ms']:.1f} ms | {sample['check_ms']:.1f} ms | {sample['conflict_ms']:.1f} ms | "
+            f"{sample['drafts']} | {sample['check_calls']} |"
         )
     (BENCHMARK_DIR / "latency_results.md").write_text(
         "\n".join(lines) + "\n", encoding="utf-8"

@@ -2,12 +2,28 @@
 
 import re
 
+US_STATES = {
+    "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
+    "District of Columbia", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa",
+    "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
+    "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
+    "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
+    "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah",
+    "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
+}
+
 
 def infer_document_provenance(pages: list[str]) -> dict[str, str]:
     text = "\n".join(pages[:2])
     result = {}
     city = re.search(r"(?im)^City of[ \t]*(?:\n[ \t]*)?([A-Za-z][A-Za-z ]+(?:,[ \t]*[A-Za-z ]+)?)$", text)
-    place = re.search(r"(?m)^([A-Z][a-z]+(?: [A-Z][a-z]+)*),[ \t]*([A-Z][a-z]+(?: [A-Z][a-z]+)*)[ \t]*$", text)
+    # A "Place, State" line counts only when the state is real; table cells can look alike.
+    place = next((
+        match for match in re.finditer(
+            r"(?m)^([A-Z][a-z]+(?: [A-Z][a-z]+)*),[ \t]*([A-Z][a-z]+(?: [A-Z][a-z]+)*)[ \t]*$", text
+        )
+        if match.group(2) in US_STATES
+    ), None)
     ordinance = re.search(r"\b([A-Z][a-z]+(?: [A-Z][a-z]+)*) Zoning Ordinance\b", text)
     central = re.search(r"\bCentral ([A-Z][a-z]+)\b", text)
     planning = re.search(r"\b([A-Z][a-z]+(?: [A-Z][a-z]+)*) Department of City Planning\b", text)
