@@ -1,7 +1,14 @@
+import json
+import tempfile
 import unittest
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
+
+import pymupdf
 
 from benchmarks.citation_support import (
-    score_support, sentence_citations, split_sentences, summarize_support,
+    OllamaJudge, PageTexts, calibrate, score_support, sentence_citations, split_sentences, summarize_support,
 )
 
 P54 = "e. Said guesthouse shall be limited to 900 square feet; and\nf. No kitchen shall be provided."
@@ -119,6 +126,72 @@ class SummaryTests(unittest.TestCase):
         self.assertEqual(summary["overall"]["support_rate"], 0.5)
         self.assertAlmostEqual(summary["by_category"]["table"]["support_rate"], 2 / 3)
         self.assertEqual(summary["by_category"]["general"]["counts"], {"uncited": 1})
+
+
+class PageTextsTests(unittest.TestCase):
+    def test_reads_a_page_and_returns_none_for_missing_file_or_page(self):
+        with tempfile.TemporaryDirectory() as root:
+            pdf = pymupdf.open()
+            page = pdf.new_page()
+            page.insert_textbox(pymupdf.Rect(72, 72, 540, 300), "4-2 Accessory Dwelling Units.\n\nAn accessory dwelling unit shall not exceed 800 square feet of floor area.", fontsize=11)
+            pdf.save(Path(root) / "town.pdf")
+            pdf.close()
+            texts = PageTexts([Path(root) / "missing-dir", Path(root)])
+            self.assertIn("800 square feet", texts("town.pdf", 1))
+            self.assertIsNone(texts("town.pdf", 2))
+            self.assertIsNone(texts("other.pdf", 1))
+            self.assertIsNone(texts("town.pdf", None))
+
+
+class OllamaJudgeTests(unittest.TestCase):
+    class FakeLLM:
+        def __init__(self, content):
+            self.content = content
+
+        def invoke(self, prompt):
+            self.prompt = prompt
+            return SimpleNamespace(content=self.content)
+
+    def test_parses_verdict_and_rejects_unknown_verdicts(self):
+        llm = self.FakeLLM('{"verdict": "supported", "quote": "limited to 900 square feet"}')
+        judge = OllamaJudge(model="judge:7b", llm=llm)
+        self.assertEqual(judge("The limit is 900 square feet.", "page text"), {"verdict": "supported", "quote": "limited to 900 square feet"})
+        self.assertIn("The limit is 900 square feet.", llm.prompt)
+        with self.assertRaises(ValueError):
+            OllamaJudge(model="judge:7b", llm=self.FakeLLM('{"verdict": "maybe"}'))("x", "y")
+
+    def test_check_available_names_the_pull_command(self):
+        response = SimpleNamespace(json=lambda: {"models": [{"name": "llama3.2:3b"}]}, raise_for_status=lambda: None)
+        with patch("benchmarks.citation_support.requests.get", return_value=response):
+            with self.assertRaisesRegex(RuntimeError, "ollama pull judge:7b"):
+                OllamaJudge(model="judge:7b", llm=self.FakeLLM("{}")).check_available()
+
+
+class CalibrationTests(unittest.TestCase):
+    def test_agreement_by_expected_label(self):
+        rows = [
+            {"id": "c1", "sentence": "The limit is 900 square feet.", "source": "u.pdf", "page": 54, "expected": "supported"},
+            {"id": "c2", "sentence": "The limit is 700 square feet.", "source": "u.pdf", "page": 54, "expected": "unsupported"},
+        ]
+        judge = FakeJudge({
+            "The limit is 900 square feet.": {"verdict": "supported", "quote": "limited to 900 square feet"},
+            "The limit is 700 square feet.": {"verdict": "supported", "quote": "limited to 900 square feet"},
+        })
+        judge.model = "fake"
+        result = calibrate(rows, judge, pages({("u.pdf", 54): P54}))
+        self.assertEqual(result["agreement"]["overall"], 0.5)
+        self.assertEqual(result["agreement"]["by_expected"], {"supported": 1.0, "unsupported": 0.0})
+        self.assertEqual([row["label"] for row in result["rows"]], ["supported", "supported"])
+
+    def test_calibration_file_is_well_formed(self):
+        path = Path(__file__).resolve().parents[1] / "benchmarks" / "judge_calibration.json"
+        rows = json.loads(path.read_text(encoding="utf-8"))
+        self.assertGreaterEqual(len(rows), 20)
+        self.assertEqual(len({row["id"] for row in rows}), len(rows))
+        self.assertEqual({row["expected"] for row in rows}, {"supported", "partial", "unsupported"})
+        texts = PageTexts([Path(__file__).resolve().parents[1] / "data"])
+        for row in rows:
+            self.assertIsNotNone(texts(row["source"], row["page"]), row["id"])
 
 
 if __name__ == "__main__":
