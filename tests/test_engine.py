@@ -11,6 +11,72 @@ from app.engine import SearchIndex, SearchIndexCache, bm25_search, build_search_
 
 
 class RetrievalTests(unittest.TestCase):
+    def test_named_district_passage_precedes_a_general_rule(self):
+        general = Document(id="general", page_content="Guest house: 700 square feet.")
+        district = Document(
+            id="district", page_content="Guest house: 900 square feet.",
+            metadata={"section": "6-2 R-2 Residential."},
+        )
+        other = Document(
+            id="other", page_content="Guest house: 800 square feet.",
+            metadata={"section": "6-3 R-3 Residential."},
+        )
+        class FixedScores:
+            def get_scores(self, words):
+                return [10.0, 9.0, 9.5]
+
+        class FixedVectorDB:
+            def similarity_search_with_score(self, query, k):
+                return [(general, 0.01), (other, 0.5), (district, 0.6)]
+
+        index = SearchIndex(documents=[general, other, district], bm25=FixedScores())
+        self.assertEqual(
+            hybrid_search("In the R-2 district, how large may a guest house be?", FixedVectorDB(), k=3, index=index),
+            [district, general, other],
+        )
+        self.assertEqual(
+            hybrid_search("How large may a guest house be?", FixedVectorDB(), k=3, index=index),
+            [general, district, other],
+        )
+
+    def test_district_specific_guest_house_rule_outranks_general_and_other_districts(self):
+        db = Chroma(
+            collection_name=f"retrieval_test_{uuid4().hex}",
+            embedding_function=FakeEmbeddings(size=16),
+        )
+        db.add_documents(
+            [
+                Document(page_content="Guest houses. Maximum size: 700 square feet.", metadata={"source": "rules.pdf", "page": 1}),
+                Document(page_content="Guest house. Maximum size: 900 square feet.", metadata={"source": "rules.pdf", "page": 2, "section": "6-2 R-2 Residential."}),
+                Document(page_content="Guest house. Maximum size: 800 square feet.", metadata={"source": "rules.pdf", "page": 3, "section": "6-3 R-3 Residential."}),
+                *[Document(page_content=f"Unrelated zoning topic {n}.", metadata={"source": "rules.pdf", "page": n + 4}) for n in range(8)],
+            ],
+            ids=[str(n) for n in range(11)],
+        )
+        index = build_search_index(db)
+        hits = bm25_search("In the R-2 district, how large may a guest house be?", index, k=3)
+        self.assertEqual(hits[0][0].metadata["page"], 2)
+
+    def test_section_heading_does_not_create_hits_for_ordinary_queries(self):
+        db = Chroma(
+            collection_name=f"retrieval_test_{uuid4().hex}",
+            embedding_function=FakeEmbeddings(size=16),
+        )
+        db.add_documents(
+            [
+                Document(page_content="Fence height limit.", metadata={"source": "rules.pdf", "page": 1, "section": "6-2 Guest house rules."}),
+                Document(page_content="Guest house size limit.", metadata={"source": "rules.pdf", "page": 2}),
+                Document(page_content="Parking space rules.", metadata={"source": "rules.pdf", "page": 3}),
+                Document(page_content="Setback rules.", metadata={"source": "rules.pdf", "page": 4}),
+                Document(page_content="Tree canopy rules.", metadata={"source": "rules.pdf", "page": 5}),
+                Document(page_content="Lighting rules.", metadata={"source": "rules.pdf", "page": 6}),
+                Document(page_content="Sign height rules.", metadata={"source": "rules.pdf", "page": 7}),
+            ],
+            ids=["section-only", "answer", "parking", "setback", "trees", "lighting", "sign"],
+        )
+        hits = bm25_search("guest house", build_search_index(db), k=4)
+        self.assertEqual([doc.id for doc, _ in hits], ["answer"])
+
     def test_strong_keyword_lead_uses_only_its_matching_top_passage(self):
         first = Document(id="one", page_content="specific rule")
         second = Document(id="two", page_content="unrelated")

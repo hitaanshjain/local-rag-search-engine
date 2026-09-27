@@ -1,6 +1,6 @@
 {
-  "run_at_utc": "2026-09-25T05:09:05.362898+00:00",
-  "git_head_at_run": "0eed7423ebf992265f2b0d1d70451fae7e1fd92e",
+  "run_at_utc": "2026-09-27T00:25:21.729805+00:00",
+  "git_head_at_run": "b2eb89484e12925d5b0bbe08e6ef64ff7284b51b",
   "models": {
     "embedding": "nomic-embed-text",
     "llm": "llama3.2:3b"
@@ -25,142 +25,142 @@
     {
       "query_id": "iss_03",
       "iteration": 1,
-      "retrieval_ms": 173.043,
-      "index_ms": 0.866,
-      "vector_ms": 111.392,
-      "keyword_ms": 22.316,
-      "fusion_ms": 0.031,
-      "ttft_ms": 294.63810000015656,
-      "full_response_ms": 756.9516000003205
+      "retrieval_ms": 207.015,
+      "index_ms": 3.048,
+      "vector_ms": 150.301,
+      "keyword_ms": 20.287,
+      "fusion_ms": 0.078,
+      "ttft_ms": 2076.969400000962,
+      "full_response_ms": 2076.99539999885
     },
     {
       "query_id": "iss_03",
       "iteration": 2,
-      "retrieval_ms": 186.201,
-      "index_ms": 0.842,
-      "vector_ms": 127.681,
-      "keyword_ms": 20.697,
-      "fusion_ms": 0.034,
-      "ttft_ms": 303.48310000044876,
-      "full_response_ms": 646.4790999998513
+      "retrieval_ms": 218.162,
+      "index_ms": 7.241,
+      "vector_ms": 154.533,
+      "keyword_ms": 19.409,
+      "fusion_ms": 0.079,
+      "ttft_ms": 1825.6765000005544,
+      "full_response_ms": 1825.6886999988637
     },
     {
       "query_id": "sum_04",
       "iteration": 1,
-      "retrieval_ms": 186.247,
-      "index_ms": 0.896,
-      "vector_ms": 141.56,
-      "keyword_ms": 16.432,
-      "fusion_ms": 0.047,
-      "ttft_ms": 502.0671999991464,
-      "full_response_ms": 846.2829000018246
+      "retrieval_ms": 212.977,
+      "index_ms": 6.658,
+      "vector_ms": 163.17,
+      "keyword_ms": 16.641,
+      "fusion_ms": 0.077,
+      "ttft_ms": 1943.9604000035615,
+      "full_response_ms": 1943.973300003563
     },
     {
       "query_id": "sum_04",
       "iteration": 2,
-      "retrieval_ms": 168.49,
-      "index_ms": 0.951,
-      "vector_ms": 127.061,
-      "keyword_ms": 14.36,
-      "fusion_ms": 0.031,
-      "ttft_ms": 321.2046000007831,
-      "full_response_ms": 666.9390999995812
+      "retrieval_ms": 176.99,
+      "index_ms": 5.955,
+      "vector_ms": 119.026,
+      "keyword_ms": 19.369,
+      "fusion_ms": 0.088,
+      "ttft_ms": 1454.6225999984017,
+      "full_response_ms": 1454.6483999984048
     },
     {
       "query_id": "urb_03",
       "iteration": 1,
-      "retrieval_ms": 167.59,
-      "index_ms": 0.907,
-      "vector_ms": 126.066,
-      "keyword_ms": 14.163,
-      "fusion_ms": 0.045,
-      "ttft_ms": 428.06449999989127,
-      "full_response_ms": 950.2638000012666
+      "retrieval_ms": 221.022,
+      "index_ms": 7.811,
+      "vector_ms": 173.45,
+      "keyword_ms": 15.114,
+      "fusion_ms": 0.082,
+      "ttft_ms": 2053.259299998899,
+      "full_response_ms": 2053.270699998393
     },
     {
       "query_id": "urb_03",
       "iteration": 2,
-      "retrieval_ms": 166.656,
-      "index_ms": 0.714,
-      "vector_ms": 123.566,
-      "keyword_ms": 13.824,
-      "fusion_ms": 0.038,
-      "ttft_ms": 276.6300000002957,
-      "full_response_ms": 793.1457999984559
+      "retrieval_ms": 183.431,
+      "index_ms": 6.416,
+      "vector_ms": 131.557,
+      "keyword_ms": 15.188,
+      "fusion_ms": 0.102,
+      "ttft_ms": 1821.1314999971364,
+      "full_response_ms": 1821.1456999997608
     },
     {
       "query_id": "uni_02",
       "iteration": 1,
-      "retrieval_ms": 185.118,
-      "index_ms": 0.748,
-      "vector_ms": 145.477,
-      "keyword_ms": 14.463,
-      "fusion_ms": 0.051,
-      "ttft_ms": 537.5072999995609,
-      "full_response_ms": 664.1239000018686
+      "retrieval_ms": 230.911,
+      "index_ms": 6.782,
+      "vector_ms": 180.967,
+      "keyword_ms": 16.477,
+      "fusion_ms": 0.08,
+      "ttft_ms": 1141.4059000017005,
+      "full_response_ms": 1141.4299000025494
     },
     {
       "query_id": "uni_02",
       "iteration": 2,
-      "retrieval_ms": 175.791,
-      "index_ms": 0.826,
-      "vector_ms": 132.411,
-      "keyword_ms": 15.579,
-      "fusion_ms": 0.035,
-      "ttft_ms": 305.60870000044815,
-      "full_response_ms": 420.06880000189994
+      "retrieval_ms": 220.376,
+      "index_ms": 5.832,
+      "vector_ms": 170.566,
+      "keyword_ms": 16.852,
+      "fusion_ms": 0.085,
+      "ttft_ms": 963.6198000007425,
+      "full_response_ms": 963.6325999999826
     },
     {
       "query_id": "cha_02",
       "iteration": 1,
-      "retrieval_ms": 224.545,
-      "index_ms": 0.872,
-      "vector_ms": 187.866,
-      "keyword_ms": 12.419,
-      "fusion_ms": 0.031,
-      "ttft_ms": 705.132400002185,
-      "full_response_ms": 1247.4363000001176
+      "retrieval_ms": 227.78,
+      "index_ms": 7.663,
+      "vector_ms": 184.903,
+      "keyword_ms": 13.682,
+      "fusion_ms": 0.075,
+      "ttft_ms": 4127.53739999971,
+      "full_response_ms": 4127.561799999967
     },
     {
       "query_id": "cha_02",
       "iteration": 2,
-      "retrieval_ms": 146.57,
-      "index_ms": 0.651,
-      "vector_ms": 112.632,
-      "keyword_ms": 11.787,
-      "fusion_ms": 0.033,
-      "ttft_ms": 265.56889999847044,
-      "full_response_ms": 796.301799997309
+      "retrieval_ms": 210.986,
+      "index_ms": 7.217,
+      "vector_ms": 168.567,
+      "keyword_ms": 12.551,
+      "fusion_ms": 0.087,
+      "ttft_ms": 3587.1714999993856,
+      "full_response_ms": 3587.1983999968506
     }
   ],
   "summary": {
     "retrieval_ms": {
-      "median": 174.417,
-      "p90": 186.247
+      "median": 215.5695,
+      "p90": 227.78
     },
     "index_ms": {
-      "median": 0.854,
-      "p90": 0.907
+      "median": 6.720000000000001,
+      "p90": 7.663
     },
     "vector_ms": {
-      "median": 127.37100000000001,
-      "p90": 145.477
+      "median": 165.86849999999998,
+      "p90": 180.967
     },
     "keyword_ms": {
-      "median": 14.4115,
-      "p90": 20.697
+      "median": 16.558999999999997,
+      "p90": 19.409
     },
     "fusion_ms": {
-      "median": 0.0345,
-      "p90": 0.047
+      "median": 0.081,
+      "p90": 0.088
     },
     "ttft_ms": {
-      "median": 313.4066500006156,
-      "p90": 537.5072999995609
+      "median": 1884.818450002058,
+      "p90": 3587.1714999993856
     },
     "full_response_ms": {
-      "median": 775.0486999993882,
-      "p90": 950.2638000012666
+      "median": 1884.8310000012134,
+      "p90": 3587.1983999968506
     }
   }
 }

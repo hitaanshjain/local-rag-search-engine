@@ -1,11 +1,13 @@
 from collections import defaultdict
 from hashlib import sha256
 from pathlib import Path
+import re
 from time import sleep
 from uuid import uuid4
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from app.engine import INDEX_VERSION_PATH, get_vector_db
+from app.provenance import infer_document_provenance
 
 DATA_DIR = "./data"
 
@@ -42,10 +44,12 @@ def process_documents(data_dir=DATA_DIR, db=None, marker_path=None):
             filename = path.name
             loader = PyPDFLoader(str(path))
             docs = loader.load()
+            provenance = infer_document_provenance([doc.page_content for doc in docs[:2]])
             
             for i, doc in enumerate(docs):
                 doc.metadata["source"] = filename
                 doc.metadata["page"] = i + 1
+                doc.metadata.update(provenance)
                 doc.page_content = f"Source: {filename} | Page: {i + 1}\n{doc.page_content}"
             
             all_docs.extend(docs)
@@ -69,6 +73,20 @@ def process_documents(data_dir=DATA_DIR, db=None, marker_path=None):
     )
     
     chunks = text_splitter.split_documents(all_docs)
+    current_source = None
+    current_section = None
+    for chunk in chunks:
+        if chunk.metadata["source"] != current_source:
+            current_source = chunk.metadata["source"]
+            current_section = None
+        headings = re.findall(
+            r"(?m)^[ \t]*(\d+-\d+[ \t]+[A-Za-z][^\n]*)",
+            chunk.page_content,
+        )
+        if headings:
+            current_section = headings[-1].strip()
+        if current_section:
+            chunk.metadata["section"] = current_section
     print(f"Split {len(all_docs)} pages into {len(chunks)} contextualized chunks.")
 
     print("Step 3: Ingesting into Vector Store...")

@@ -43,7 +43,7 @@ def get_rag_prompt() -> ChatPromptTemplate:
     Instructions:
     1. Look for the specific answer in the context below.
     2. If the context contains information about different topics (e.g., different games or subjects), ONLY use the part that is relevant to the user's question.
-    3. Give a short answer using only facts explicitly supported by the numbered passages. Add the number of the passage that states the answer in square brackets immediately after each factual sentence, for example [1]. Never cite a passage that does not state the answer.
+    3. {citation_instruction}
     4. If the passages do not answer the question, reply exactly: I don't know based on these documents.
     5. If the question does not specify a jurisdiction or district and the passages have different answers, ask which jurisdiction or district the user means.
     6. Do not mention "the provided context" or "documents" otherwise. Answer directly.
@@ -59,10 +59,15 @@ def tokenize(text: str) -> list[str]:
     return re.findall(r"\b\w+\b", text.lower())
 
 
+def tokenize_with_identifiers(text: str) -> list[str]:
+    return re.findall(r"\b\w+(?:-\w+)*\b", text.lower())
+
+
 @dataclass
 class SearchIndex:
     documents: list[Document]
     bm25: Any | None
+    section_bm25: Any | None = None
 
 
 class SearchIndexCache:
@@ -94,13 +99,20 @@ def build_search_index(db: Chroma) -> SearchIndex:
         if content is not None
     ]
     bm25 = BM25Okapi([tokenize(doc.page_content) for doc in documents]) if documents else None
-    return SearchIndex(documents=documents, bm25=bm25)
+    section_bm25 = BM25Okapi([
+        tokenize_with_identifiers(f"{doc.metadata.get('section', '')} {doc.page_content}")
+        for doc in documents
+    ]) if documents else None
+    return SearchIndex(documents=documents, bm25=bm25, section_bm25=section_bm25)
 
 
 def bm25_search(query: str, index: SearchIndex, k: int = 5) -> list[tuple[Document, float]]:
-    if index.bm25 is None or not tokenize(query):
+    section_query = bool(re.search(r"\b[A-Za-z][A-Za-z0-9]*-\d+\b", query)) and index.section_bm25 is not None
+    scorer = index.section_bm25 if section_query else index.bm25
+    words = tokenize_with_identifiers(query) if section_query else tokenize(query)
+    if scorer is None or not words:
         return []
-    scores = index.bm25.get_scores(tokenize(query))
+    scores = scorer.get_scores(words)
     ranked = sorted(enumerate(scores), key=lambda item: item[1], reverse=True)
     return [(index.documents[i], float(score)) for i, score in ranked[:k] if score > 0]
 
@@ -132,15 +144,32 @@ def needs_clarification(query: str, index: SearchIndex) -> bool:
 
 
 def select_context(
-    results: list[Document], keyword_results: list[tuple[Document, float]]
+    results: list[Document], keyword_results: list[tuple[Document, float]], query: str = ""
 ) -> list[Document]:
-    """Avoid distracting a small model when the top passage has a clear lead."""
+    """Keep a clear keyword leader or one from the explicitly named section."""
     if not results or len(keyword_results) < 2:
         return results
     first, runner_up = keyword_results[:2]
-    if first[0].id is not None and first[0].id == results[0].id and first[1] >= runner_up[1] * 1.4:
+    if (
+        first[0].id is not None
+        and first[0].id == results[0].id
+        and (first[1] >= runner_up[1] * 1.4 or section_matches_query(query, first[0]))
+    ):
         return results[:1]
     return results
+
+
+def section_matches_query(query: str, doc: Document) -> bool:
+    identifiers = set(re.findall(r"\b[A-Za-z][A-Za-z0-9]*-\d+\b", query.casefold()))
+    section_identifiers = set(re.findall(
+        r"\b[A-Za-z][A-Za-z0-9]*-\d+\b", doc.metadata.get("section", "").casefold()
+    ))
+    return bool(identifiers & section_identifiers)
+
+
+def prioritize_section_matches(query: str, results: list[Document]) -> list[Document]:
+    """Keep passages for an explicitly named section ahead of broader matches."""
+    return sorted(results, key=lambda doc: not section_matches_query(query, doc))
 
 
 def fuse_results(
@@ -197,13 +226,13 @@ def hybrid_search(
     keyword_results = bm25_search(query, index, k=k * 2)
     keyword_ms = (perf_counter() - started) * 1000
     started = perf_counter()
-    results = fuse_results(
+    results = prioritize_section_matches(query, fuse_results(
         vector_results,
         keyword_results,
         k=k,
         vector_weight=vector_weight,
         keyword_weight=keyword_weight,
-    )
+    ))
     if timings is not None:
         timings.update(vector=vector_ms, keyword=keyword_ms, fusion=(perf_counter() - started) * 1000)
     return results

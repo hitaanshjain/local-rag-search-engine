@@ -12,6 +12,36 @@ from app.ingest import process_documents, publish_index_version
 
 
 class IngestTests(unittest.TestCase):
+    def test_district_heading_carries_to_provisions_on_following_page(self):
+        with tempfile.TemporaryDirectory() as temporary_dir:
+            data_dir = Path(temporary_dir)
+            (data_dir / "rules.pdf").touch()
+            db = Chroma(
+                collection_name=f"ingest_test_{uuid4().hex}",
+                embedding_function=FakeEmbeddings(size=16),
+            )
+            pages = [
+                Document(page_content="August 20, 2024, Rev. Page 1\nUnion City, Georgia\n6-2 R-2 Residential.\nPermitted uses.", metadata={"page": 0}),
+                Document(page_content="3. Guest house. Limit: 900 square feet.", metadata={"page": 1}),
+                Document(page_content="6-3 R-3 Residential.\nPermitted uses.", metadata={"page": 2}),
+                Document(page_content="3. Guest house. Limit: 800 square feet.", metadata={"page": 3}),
+                Document(page_content="7-1 Definitions.\nA separate topic.", metadata={"page": 4}),
+            ]
+            with patch("app.ingest.PyPDFLoader") as loader:
+                loader.return_value.load.return_value = pages
+                process_documents(data_dir=data_dir, db=db)
+
+            stored = db.get(include=["documents", "metadatas"])
+            by_page = {
+                metadata["page"]: metadata.get("section")
+                for metadata in stored["metadatas"]
+            }
+            self.assertEqual(by_page[2], "6-2 R-2 Residential.")
+            self.assertEqual(by_page[4], "6-3 R-3 Residential.")
+            self.assertEqual(by_page[5], "7-1 Definitions.")
+            self.assertTrue(all(item.get("jurisdiction") == "Union City, Georgia" for item in stored["metadatas"]))
+            self.assertTrue(all(item.get("version") == "August 20, 2024, Rev." for item in stored["metadatas"]))
+
     def test_ingestion_publishes_new_index_version_after_corpus_change(self):
         with tempfile.TemporaryDirectory() as temporary_dir:
             root = Path(temporary_dir)

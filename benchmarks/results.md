@@ -1,7 +1,7 @@
 # Retrieval accuracy benchmark
 
-Run at: 2026-09-25T05:04:25.465326+00:00
-Git HEAD at run: `0eed7423ebf992265f2b0d1d70451fae7e1fd92e` (worktree changes may have been present).
+Run at: 2026-09-27T00:11:59.124627+00:00
+Git HEAD at run: `b2eb89484e12925d5b0bbe08e6ef64ff7284b51b` (worktree changes may have been present).
 Models: `nomic-embed-text` embeddings; `llama3.2:3b` configured for answers (not used in retrieval scoring).
 Corpus: 1070 PDF pages, 3639 indexed chunks, 5 files.
 Queries: 28 excerpt-verified questions.
@@ -12,10 +12,10 @@ Queries: 28 excerpt-verified questions.
 |---|---:|---:|---:|---:|---:|---:|
 | vector_only | 96.4% | 100.0% | 0.954 | 82.1% | 89.3% | 0.718 |
 | substring_keyword | 75.0% | 85.7% | 0.736 | 64.3% | 71.4% | 0.550 |
-| bm25_keyword | 100.0% | 100.0% | 1.000 | 89.3% | 92.9% | 0.848 |
+| bm25_keyword | 100.0% | 100.0% | 1.000 | 89.3% | 92.9% | 0.866 |
 | hybrid_substring | 85.7% | 89.3% | 0.846 | 71.4% | 75.0% | 0.668 |
-| hybrid_bm25 | 100.0% | 100.0% | 1.000 | 92.9% | 92.9% | 0.833 |
-| hybrid_bm25_50 | 100.0% | 100.0% | 1.000 | 89.3% | 92.9% | 0.801 |
+| hybrid_bm25 | 100.0% | 100.0% | 1.000 | 92.9% | 92.9% | 0.851 |
+| hybrid_bm25_50 | 100.0% | 100.0% | 1.000 | 89.3% | 92.9% | 0.795 |
 | hybrid_bm25_75 | 100.0% | 100.0% | 1.000 | 85.7% | 92.9% | 0.798 |
 
 Hit@k and reciprocal rank inspect the top k *chunks*. Source metrics match their file name; page metrics match file name and physical PDF page. MRR is the mean reciprocal rank of the first match. Each method returns at most five chunks. Hybrid candidate pools contain ten vector and ten keyword chunks. `hybrid_bm25` is the production 0.25 vector / 0.75 BM25 blend; the `_50` and `_75` variants use 0.50 and 0.75 vector weights. `hybrid_substring` retains the old 0.50/0.50 comparison.
