@@ -1,6 +1,10 @@
+import json
+import tempfile
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
-from benchmarks.answer_eval import load_queries, read_chat, score_answer
+from benchmarks.answer_eval import load_queries, parse_sse, read_chat, run_answer_benchmark, score_answer
 
 
 class AnswerScoringTests(unittest.TestCase):
@@ -92,6 +96,56 @@ class AnswerScoringTests(unittest.TestCase):
         meta = {}
         answer, sources = read_chat("Hello?", session=FakeSession(), meta=meta)
         self.assertEqual((answer, sources, meta), ("Hi", [], {"llm": "served-model:1b", "timing": {"check_calls": 2}}))
+
+
+class AnswerEvalExtensionTests(unittest.TestCase):
+    def test_parse_sse_handles_split_frames_and_requires_done(self):
+        chunks = [b'event: sources\ndata: {"sources": [{"source": "a.pdf", "page": 1}]}\n', b'\nevent: token\ndata: {"text": "Hi [1]."}\n\nevent: done\ndata: {}\n\n']
+        self.assertEqual(parse_sse(chunks), ("Hi [1].", [{"source": "a.pdf", "page": 1}]))
+        with self.assertRaises(ValueError):
+            parse_sse([b'event: token\ndata: {"text": "Hi"}\n\n'])
+
+    def test_holdout_requires_the_final_run_flag(self):
+        with self.assertRaisesRegex(ValueError, "--final-holdout"):
+            run_answer_benchmark("heldout_queries.json", "x", support=False)
+
+    def test_results_record_support_and_categories_without_changing_pass(self):
+        rows = [
+            {"id": "t1", "kind": "answerable", "category": "table", "query": "Q1?", "source": "a.pdf", "page": 1, "accepted_answers": ["10 feet"]},
+            {"id": "t2", "kind": "unanswerable", "query": "Q2?"},
+        ]
+        replies = {"Q1?": ("The yard is 10 feet [1].", [{"source": "a.pdf", "page": 1}]),
+                   "Q2?": ("I don't know based on these documents.", [])}
+
+        def fake_read_chat(query, session=None, meta=None):
+            meta["llm"] = "served:3b"
+            return replies[query]
+
+        class Judge:
+            model = "judge:7b"
+
+            def __call__(self, sentence, page):
+                return {"verdict": "supported", "quote": "yard is 10 feet"}
+
+        with patch("benchmarks.answer_eval.load_queries", return_value=rows), \
+             patch("benchmarks.answer_eval.read_chat", side_effect=fake_read_chat), \
+             patch("benchmarks.answer_eval.write_results"):
+            result = run_answer_benchmark("development_queries.json", "x", judge=Judge(),
+                                          page_text=lambda source, page: "The front yard is 10 feet.")
+        self.assertEqual(result["passed"], 2)
+        self.assertEqual(result["queries"][0]["citation_support"]["counts"], {"supported": 1})
+        self.assertNotIn("citation_support", result["queries"][1])
+        self.assertEqual(result["citation_support"]["judge_model"], "judge:7b")
+        self.assertEqual(result["citation_support"]["by_category"]["table"]["support_rate"], 1.0)
+        self.assertEqual(result["category_pass"], {"table": {"passed": 1, "total": 1}, "general": {"passed": 1, "total": 1}})
+
+    def test_unknown_category_is_rejected(self):
+        with tempfile.TemporaryDirectory() as root:
+            path = Path(root) / "bad.json"
+            path.write_text(json.dumps([{"id": "b", "kind": "unanswerable", "query": "Q?", "category": "misc"}]), encoding="utf-8")
+            with patch("benchmarks.answer_eval.HERE", Path(root)):
+                with self.assertRaisesRegex(ValueError, "Unknown category"):
+                    load_queries("bad.json")
 
 
 if __name__ == "__main__":

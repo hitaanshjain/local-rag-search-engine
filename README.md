@@ -151,11 +151,14 @@ uv run python -m unittest discover -s tests -v
 uv run python -m benchmarks.accuracy_eval
 uv run python -m benchmarks.answer_eval --dataset development_queries.json --output-prefix development_answer_results
 uv run python -m benchmarks.answer_eval --dataset regression_queries.json --output-prefix regression_answer_results
-uv run python -m benchmarks.answer_eval  # final holdout: see the protocol above before running
+uv run python -m benchmarks.citation_support --calibrate
+uv run python -m benchmarks.answer_eval --dataset coverage_development_queries.json --output-prefix coverage_development_answer_results
+uv run python -m benchmarks.fixture_eval
+uv run python -m benchmarks.answer_eval --dataset heldout_queries.json --output-prefix heldout_answer_results --final-holdout  # once; see the protocol above
 uv run python -m benchmarks.latency_test
 ```
 
-Run the answer and latency commands after `docker compose up -d --build`, since they call the live `/chat` endpoint. For the frontend, run `npm ci`, `npm test`, `npm run lint`, and `npm run build` from `frontend/`.
+Run the answer and latency commands after `docker compose up -d --build`, since they call the live `/chat` endpoint. Answer evaluations judge citation support with `qwen2.5:7b` (pull it with `docker compose exec ollama ollama pull qwen2.5:7b`, or set `BENCH_JUDGE_MODEL`); `--no-support` skips it. For the frontend, run `npm ci`, `npm test`, `npm run lint`, and `npm run build` from `frontend/`.
 
 ## License
 
