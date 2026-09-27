@@ -78,6 +78,12 @@ class ScoreTests(unittest.TestCase):
         generic = FakeJudge({claim: {"verdict": "supported", "quote": "No kitchen"}})
         self.assertEqual(score_support("No kitchen is allowed [1].", SOURCES, self.texts(), generic)["sentences"][0]["label"], "unverified")
 
+    def test_quote_matches_despite_word_spacing_differences(self):
+        # The page says "guesthouse"; the judge quoted it as "guest house".
+        claim = "A guest house may be 900 square feet."
+        spaced = FakeJudge({claim: {"verdict": "supported", "quote": "Said guest house shall be limited to 900 square feet."}})
+        self.assertEqual(score_support(f"{claim[:-1]} [1].", SOURCES, self.texts(), spaced)["sentences"][0]["label"], "supported")
+
     def test_multi_citation_sentence_is_judged_against_all_cited_pages(self):
         claim = "The R-2 limit is 900 square feet and the general limit is 700 square feet."
         judge = FakeJudge({claim: {"verdict": "supported", "quote": "shall not exceed 700 square feet"}})

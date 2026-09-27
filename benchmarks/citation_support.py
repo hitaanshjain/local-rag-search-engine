@@ -63,8 +63,9 @@ def quote_on_page(quote: str, page_texts: list[str]) -> bool:
     quote = quote.translate(QUOTE_MARKS).strip(" \"'…").rstrip(".").strip()
     if len(quote.split()) < 3 and not re.search(r"\d", quote):
         return False
-    needle = normalize(quote)
-    return bool(needle) and any(needle in normalize(text) for text in page_texts)
+    # Compare without whitespace: PDF text and judges split words differently ("guesthouse" / "guest house").
+    needle = normalize(quote).replace(" ", "")
+    return bool(needle) and any(needle in normalize(text).replace(" ", "") for text in page_texts)
 
 
 def judge_sentence(claim: str, cited: list[dict], page_text, judge) -> tuple[str, str, list]:

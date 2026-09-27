@@ -1,0 +1,256 @@
+{
+  "run_at_utc": "2026-09-27T08:45:30.884868+00:00",
+  "judge_model": "qwen2.5:7b",
+  "rows": [
+    {
+      "id": "cal_01",
+      "sentence": "A guest house is limited to 900 square feet.",
+      "source": "zoning-ordinance-082024-rev.pdf",
+      "page": 54,
+      "expected": "supported",
+      "note": "restatement",
+      "label": "supported",
+      "quote": "Said guest house shall be limited to 900 square feet.",
+      "agree": true
+    },
+    {
+      "id": "cal_02",
+      "sentence": "A guest house is limited to 700 square feet.",
+      "source": "zoning-ordinance-082024-rev.pdf",
+      "page": 54,
+      "expected": "unsupported",
+      "note": "wrong number",
+      "label": "unsupported",
+      "quote": "",
+      "agree": true
+    },
+    {
+      "id": "cal_03",
+      "sentence": "A guest house is limited to 900 square meters.",
+      "source": "zoning-ordinance-082024-rev.pdf",
+      "page": 54,
+      "expected": "unsupported",
+      "note": "wrong unit",
+      "label": "unsupported",
+      "quote": "",
+      "agree": true
+    },
+    {
+      "id": "cal_04",
+      "sentence": "A Charleston home occupation may have one full-time or part-time nonresident employee working at the residence.",
+      "source": "Charleston, SC Zoning.pdf",
+      "page": 201,
+      "expected": "supported",
+      "note": "paraphrase",
+      "label": "partial",
+      "quote": "no more than one full-time or part-time nonresident employee who works at the residence used for the home occupation.",
+      "agree": false
+    },
+    {
+      "id": "cal_05",
+      "sentence": "A Charleston home occupation may have two nonresident employees working at the residence.",
+      "source": "Charleston, SC Zoning.pdf",
+      "page": 201,
+      "expected": "unsupported",
+      "note": "wrong number",
+      "label": "partial",
+      "quote": "The home occupation may have other employees who are not working at the residence, but work at other off-site locations, if applicable.",
+      "agree": false
+    },
+    {
+      "id": "cal_06",
+      "sentence": "A guest house may not be rented out.",
+      "source": "zoning-ordinance-082024-rev.pdf",
+      "page": 54,
+      "expected": "supported",
+      "note": "paraphrase",
+      "label": "supported",
+      "quote": "c. Said guest house shall not be used for rental purposes.",
+      "agree": true
+    },
+    {
+      "id": "cal_07",
+      "sentence": "A guest house may be used for rental purposes.",
+      "source": "zoning-ordinance-082024-rev.pdf",
+      "page": 54,
+      "expected": "unsupported",
+      "note": "flipped negation",
+      "label": "unsupported",
+      "quote": "",
+      "agree": true
+    },
+    {
+      "id": "cal_08",
+      "sentence": "A guest house is limited to 900 square feet and may contain no more than two bedrooms.",
+      "source": "zoning-ordinance-082024-rev.pdf",
+      "page": 54,
+      "expected": "partial",
+      "note": "partial claim",
+      "label": "partial",
+      "quote": "Said guest house shall be limited to 900 square feet.",
+      "agree": true
+    },
+    {
+      "id": "cal_09",
+      "sentence": "A guest house is limited to 900 square feet.",
+      "source": "zoning-ordinance-082024-rev.pdf",
+      "page": 55,
+      "expected": "unsupported",
+      "note": "adjacent page",
+      "label": "unsupported",
+      "quote": "",
+      "agree": true
+    },
+    {
+      "id": "cal_10",
+      "sentence": "A Charleston home occupation may have no exterior sign.",
+      "source": "Charleston, SC Zoning.pdf",
+      "page": 201,
+      "expected": "partial",
+      "note": "dropped exception (except as permitted by the applicable district regulations)",
+      "label": "supported",
+      "quote": "no exterior sign, except as permitted by the applicable district regulations,",
+      "agree": false
+    },
+    {
+      "id": "cal_11",
+      "sentence": "Truck cabs may be used in connection with a Charleston home occupation.",
+      "source": "Charleston, SC Zoning.pdf",
+      "page": 201,
+      "expected": "unsupported",
+      "note": "flipped negation",
+      "label": "unsupported",
+      "quote": "",
+      "agree": true
+    },
+    {
+      "id": "cal_12",
+      "sentence": "Music instruction at a Charleston home occupation is limited to two students at a time.",
+      "source": "Charleston, SC Zoning.pdf",
+      "page": 201,
+      "expected": "supported",
+      "note": "restatement",
+      "label": "supported",
+      "quote": "Instruction in music, dancing, swimming, art and similar instruction shall be limited to two students at a time, with the expectation that pick-up and drop-off times are arranged in a manner that minimizes impact to the neighborhood.",
+      "agree": true
+    },
+    {
+      "id": "cal_13",
+      "sentence": "A Charleston home occupation may have one full-time or part-time nonresident employee working at the residence.",
+      "source": "Charleston, SC Zoning.pdf",
+      "page": 202,
+      "expected": "unsupported",
+      "note": "adjacent page",
+      "label": "unsupported",
+      "quote": "",
+      "agree": true
+    },
+    {
+      "id": "cal_14",
+      "sentence": "Surface parking in a P zone combined with an A or R zone requires a 10 ft. front yard.",
+      "source": "E Generalized Summary of Zoning Regulations.pdf",
+      "page": 6,
+      "expected": "supported",
+      "note": "restatement",
+      "label": "supported",
+      "quote": "Maximum Height Stories: unlimited (8); Required yards Front: 10 ft. in combination with an A or R Zone; otherwise none",
+      "agree": true
+    },
+    {
+      "id": "cal_15",
+      "sentence": "The OS zone requires a 10 ft. front yard.",
+      "source": "E Generalized Summary of Zoning Regulations.pdf",
+      "page": 6,
+      "expected": "unsupported",
+      "note": "wrong district",
+      "label": "unsupported",
+      "quote": "",
+      "agree": true
+    },
+    {
+      "id": "cal_16",
+      "sentence": "A P zone requires no front yard.",
+      "source": "E Generalized Summary of Zoning Regulations.pdf",
+      "page": 6,
+      "expected": "partial",
+      "note": "dropped exception (10 ft. in combination with an A or R zone)",
+      "label": "supported",
+      "quote": "Required yards Front: 10 ft. in combination with an A or R Zone; otherwise none;",
+      "agree": false
+    },
+    {
+      "id": "cal_17",
+      "sentence": "In a mixed use development with different FAR limits, the use with the majority of the square footage sets the FAR.",
+      "source": "zoning.pdf",
+      "page": 12,
+      "expected": "supported",
+      "note": "paraphrase",
+      "label": "supported",
+      "quote": "For example, if 50.6 % of the building area is residential, then the whole project will use the residential FAR.",
+      "agree": true
+    },
+    {
+      "id": "cal_18",
+      "sentence": "The minimum FAR applies to all new development and redevelopment in the Urban Core zone.",
+      "source": "zoning.pdf",
+      "page": 12,
+      "expected": "partial",
+      "note": "dropped exception (existing automobile service stations)",
+      "label": "supported",
+      "quote": "The minimum FAR listed on the District Standards Table is required for new Development and Redevelopment in: 1) the Urban Core zone and, 2) Sites totaling three (3) contiguous acres or more outside the Urban Core zone.",
+      "agree": false
+    },
+    {
+      "id": "cal_19",
+      "sentence": "The minimum FAR applies to sites totaling five contiguous acres or more outside the Urban Core zone.",
+      "source": "zoning.pdf",
+      "page": 12,
+      "expected": "unsupported",
+      "note": "wrong number",
+      "label": "unsupported",
+      "quote": "",
+      "agree": true
+    },
+    {
+      "id": "cal_20",
+      "sentence": "In the MIC District, a hospital or clinic is permitted by right.",
+      "source": "article_v_-_use_regulations.pdf",
+      "page": 5,
+      "expected": "supported",
+      "note": "restatement",
+      "label": "supported",
+      "quote": "drugstore, day care facility, hospital or clinic, ambulance service, medical carrier service, home  for the aged, nursing home, fitness center;",
+      "agree": true
+    },
+    {
+      "id": "cal_21",
+      "sentence": "All development regulations of the B-3 zoning district apply in the MIC District.",
+      "source": "article_v_-_use_regulations.pdf",
+      "page": 5,
+      "expected": "unsupported",
+      "note": "wrong district",
+      "label": "unsupported",
+      "quote": "",
+      "agree": true
+    },
+    {
+      "id": "cal_22",
+      "sentence": "In the MIC District, a drugstore and a car wash are both permitted by right.",
+      "source": "article_v_-_use_regulations.pdf",
+      "page": 5,
+      "expected": "partial",
+      "note": "partial claim",
+      "label": "unsupported",
+      "quote": "",
+      "agree": false
+    }
+  ],
+  "agreement": {
+    "overall": 0.7272727272727273,
+    "by_expected": {
+      "partial": 0.2,
+      "supported": 0.8571428571428571,
+      "unsupported": 0.9
+    }
+  }
+}
