@@ -8,15 +8,26 @@ from benchmarks.answer_eval import load_queries, parse_sse, read_chat, run_answe
 
 
 class AnswerScoringTests(unittest.TestCase):
-    def test_final_holdout_has_excerpt_verified_answerable_items(self):
+    def test_final_holdout_has_random_page_items_and_a_category_stratum(self):
         rows = load_queries()
-        counts = {kind: sum(row["kind"] == kind for row in rows) for kind in ("answerable", "unanswerable", "ambiguous")}
+        original = [row for row in rows if row["id"].startswith("h2_")]
+        counts = {kind: sum(row["kind"] == kind for row in original) for kind in ("answerable", "unanswerable", "ambiguous")}
         self.assertEqual(counts, {"answerable": 20, "unanswerable": 4, "ambiguous": 2})
+        stratum = [row for row in rows if not row["id"].startswith("h2_")]
+        self.assertEqual({category: sum(row.get("category") == category for row in stratum)
+                          for category in ("conflict", "table", "exception", "outdated")},
+                         {"conflict": 4, "table": 4, "exception": 4, "outdated": 4})
+        self.assertEqual(len(stratum), 16)
         self.assertEqual(len({row["id"] for row in rows}), len(rows))
+
+    def test_coverage_development_set_has_four_per_category(self):
+        rows = load_queries("coverage_development_queries.json")
+        self.assertEqual(sorted(row["category"] for row in rows), sorted(["conflict", "table", "exception", "outdated"] * 4))
 
     def test_holdout_shares_no_questions_or_pages_with_tuned_sets(self):
         holdout = load_queries()
-        tuned = load_queries("regression_queries.json") + load_queries("development_queries.json")
+        tuned = (load_queries("regression_queries.json") + load_queries("development_queries.json")
+                 + load_queries("coverage_development_queries.json"))
 
         def pages(rows):
             return {

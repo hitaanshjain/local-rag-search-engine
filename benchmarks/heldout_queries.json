@@ -296,5 +296,236 @@
     "id": "h2_ambiguous_02",
     "query": "How many dogs does it take for a property to count as a kennel?",
     "kind": "ambiguous"
+  },
+  {
+    "id": "cov_conflict_02",
+    "category": "conflict",
+    "kind": "answerable",
+    "query": "When Charleston's Old City Height District requirements conflict with Table 3.1, which one applies?",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 391,
+    "evidence_extractor": "layout",
+    "evidence": "for the Old City Height District shall prevail over Table 3.1",
+    "accepted_answers": [
+      "Old City Height District"
+    ],
+    "forbidden_answers": [
+      "Table 3.1 applies",
+      "Table 3.1 prevails",
+      "Table 3.1 governs"
+    ]
+  },
+  {
+    "id": "cov_conflict_05",
+    "category": "conflict",
+    "kind": "answerable",
+    "query": "In Charleston's MU-2 district, what is the minimum parking requirement for a multifamily dwelling?",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 414,
+    "evidence": "except that the minimum requirement shall be 1 per unit within the MU-1 and MU-2 districts",
+    "accepted_answers": [
+      "1 per unit",
+      "one per unit",
+      "one space per unit",
+      "1 space per unit",
+      "one parking space per unit",
+      "1 parking space per unit"
+    ]
+  },
+  {
+    "id": "cov_conflict_03",
+    "category": "conflict",
+    "kind": "answerable",
+    "query": "If Union City's Roosevelt Highway Corridor Overlay provisions conflict with another section of the zoning ordinance, which provisions govern?",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 182,
+    "evidence": "Whenever provisions of this section conflict with any other article or section in the Zoning Ordinance of the City of Union City or any other City ordinances, regulations or resolutions, these standards shall prevail.",
+    "accepted_answers": [
+      "overlay standards",
+      "overlay provisions",
+      "overlay district",
+      "overlay's",
+      "these standards shall prevail",
+      "these standards prevail"
+    ]
+  },
+  {
+    "id": "cov_conflict_04",
+    "category": "conflict",
+    "kind": "answerable",
+    "query": "In Union City's R-3 district, how large may a guest house be?",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 58,
+    "evidence": "e. Said guest house shall be limited to 900 square feet.",
+    "accepted_answers": [
+      "900 square feet",
+      "900 sq"
+    ]
+  },
+  {
+    "id": "cov_table_04",
+    "category": "table",
+    "kind": "answerable",
+    "query": "In Union City's list of replacement overstory trees, what is the average height of a Sugar Maple?",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 209,
+    "evidence": "Sugar Maple Acer saccharum Y Y Y 50 35",
+    "accepted_answers": [
+      "50"
+    ]
+  },
+  {
+    "id": "cov_table_08",
+    "category": "table",
+    "kind": "answerable",
+    "query": "Under Charleston's schedule of required buffers, how wide is a Type J buffer?",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 448,
+    "evidence": "D. 25 J. 100",
+    "accepted_answers": [
+      "100 feet",
+      "100 ft",
+      "100-foot",
+      "100"
+    ]
+  },
+  {
+    "id": "cov_table_06",
+    "category": "table",
+    "kind": "answerable",
+    "query": "How many bicycle parking spaces does Charleston require for a library?",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 424,
+    "evidence": "Library 2 per 10,000 square feet of interior floor area",
+    "accepted_answers": [
+      "2 per 10,000",
+      "two per 10,000",
+      "2 spaces per 10,000",
+      "two spaces per 10,000",
+      "2 bicycle parking spaces per 10,000",
+      "two bicycle parking spaces per 10,000"
+    ]
+  },
+  {
+    "id": "cov_table_07",
+    "category": "table",
+    "kind": "answerable",
+    "query": "Under Charleston's Table 3.1, what is the minimum lot area per family for a one-family dwelling in the SR-1 district?",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 384,
+    "evidence": "9,000(4.8) NA NA 35%",
+    "accepted_answers": [
+      "9,000"
+    ]
+  },
+  {
+    "id": "cov_exception_05",
+    "category": "exception",
+    "kind": "answerable",
+    "query": "In Issaquah's Class 1, 2, and 3 Critical Aquifer Recharge Areas, which radioactive-substance uses are excepted from the prohibition?",
+    "source": "zoning.pdf",
+    "page": 11,
+    "evidence": "Processing, storage, and disposal of radioactive substances (except certain medical uses) is prohibited in Class 1, 2, and 3 CARA.",
+    "accepted_answers": [
+      "medical"
+    ]
+  },
+  {
+    "id": "cov_exception_02",
+    "category": "exception",
+    "kind": "answerable",
+    "query": "Does Union City's definition of domestic animals for animal hospitals include poultry?",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 14,
+    "evidence": "Domestic animals include horses, fish, fur-bearing animals, rabbits, dogs, cats and other pets and birds, except poultry.",
+    "accepted_answers": [
+      "except poultry",
+      "excludes poultry",
+      "excluding poultry",
+      "does not include poultry",
+      "not include poultry",
+      "poultry are excluded",
+      "poultry is excluded"
+    ]
+  },
+  {
+    "id": "cov_exception_07",
+    "category": "exception",
+    "kind": "answerable",
+    "query": "Which displayed merchandise is exempt from Union City's outside-storage screening requirements?",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 43,
+    "evidence": "Merchandise whichis moved inside on a daily basis shall be exempt from the screening requirements",
+    "accepted_answers": [
+      "moved inside on a daily basis",
+      "moved inside daily",
+      "brought inside daily",
+      "moved indoors daily",
+      "moved inside each day",
+      "moved inside every day"
+    ]
+  },
+  {
+    "id": "cov_exception_08",
+    "category": "exception",
+    "kind": "answerable",
+    "query": "How much street frontage must a Union City residential lot on a cul-de-sac turnaround have?",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 38,
+    "evidence": "must have a minimum of 35 feet of street frontage",
+    "accepted_answers": [
+      "35 feet",
+      "35 ft",
+      "thirty-five feet"
+    ]
+  },
+  {
+    "id": "cov_outdated_04",
+    "category": "outdated",
+    "kind": "answerable",
+    "query": "What does subsection B of Union City's administrative approvals section currently contain?",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 200,
+    "evidence": "B. Reserved. (Ordinance No. 2018-___; 9/18/18)",
+    "accepted_answers": [
+      "reserved"
+    ]
+  },
+  {
+    "id": "cov_outdated_08",
+    "category": "outdated",
+    "kind": "answerable",
+    "query": "Is Charleston's temporary moratorium on late night bar permits still in effect?",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 607,
+    "evidence": "adopted May 30, 2017, repealed former",
+    "accepted_answers": [
+      "repealed"
+    ]
+  },
+  {
+    "id": "cov_outdated_02",
+    "category": "outdated",
+    "kind": "answerable",
+    "query": "What does definition 3-53 in Union City's zoning ordinance say?",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 16,
+    "evidence": "3-53 Reserved. (Ordinance 2023-01; 05/16/23)",
+    "accepted_answers": [
+      "reserved"
+    ]
+  },
+  {
+    "id": "cov_outdated_01",
+    "category": "outdated",
+    "kind": "answerable",
+    "query": "What does Section 5-19 of Union City's zoning ordinance currently contain?",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 40,
+    "evidence": "5-19 Reserved. [Section 5-19 deleted by Mayor and Council on December 15, 2020.]",
+    "accepted_answers": [
+      "reserved",
+      "deleted"
+    ]
   }
 ]

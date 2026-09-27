@@ -1,0 +1,193 @@
+[
+  {
+    "id": "cov_conflict_06",
+    "category": "conflict",
+    "kind": "ambiguous",
+    "query": "How many people who do not live in the home may work at a home occupation?"
+  },
+  {
+    "id": "cov_conflict_07",
+    "category": "conflict",
+    "kind": "ambiguous",
+    "query": "How large may a home occupation sign be?"
+  },
+  {
+    "id": "cov_conflict_01",
+    "category": "conflict",
+    "kind": "answerable",
+    "query": "In Charleston's SR-8 district, how close to an adjoining property line may a porch be built in the rear setback?",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 527,
+    "evidence_extractor": "layout",
+    "evidence": "In the SR-8 district, porches and exterior stairs may encroach into the required front setback up to ten (10) feet and may be erected into the required rear setback provided they are not closer to an adjoining property line than twelve (12) feet",
+    "accepted_answers": [
+      "twelve (12) feet",
+      "12 feet",
+      "twelve feet"
+    ]
+  },
+  {
+    "id": "cov_conflict_08",
+    "category": "conflict",
+    "kind": "ambiguous",
+    "query": "How close to a street intersection may a fence taller than three feet be placed?"
+  },
+  {
+    "id": "cov_table_02",
+    "category": "table",
+    "kind": "answerable",
+    "query": "What is the maximum building height in Issaquah's Vertical Mixed Use Overlay?",
+    "source": "zoning.pdf",
+    "page": 15,
+    "evidence": "85’ 14 125’",
+    "accepted_answers": [
+      "125’",
+      "125'",
+      "125 feet",
+      "125 ft"
+    ]
+  },
+  {
+    "id": "cov_table_05",
+    "category": "table",
+    "kind": "answerable",
+    "query": "In Charleston, what is the minimum building setback for a business lot on a street with a 40 mph speed limit?",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 411,
+    "evidence": "40 25/50 25 40",
+    "accepted_answers": [
+      "40 feet",
+      "40 ft",
+      "forty feet",
+      "40-foot"
+    ]
+  },
+  {
+    "id": "cov_table_01",
+    "category": "table",
+    "kind": "answerable",
+    "query": "In the Los Angeles generalized zoning summary, what is the minimum lot width in the A1 agricultural zone?",
+    "source": "E Generalized Summary of Zoning Regulations.pdf",
+    "page": 2,
+    "evidence": "5 acres 2.5 acres 300 ft.",
+    "accepted_answers": [
+      "300 ft",
+      "300 feet",
+      "300-foot"
+    ]
+  },
+  {
+    "id": "cov_table_03",
+    "category": "table",
+    "kind": "answerable",
+    "query": "How wide a buffer must a Union City self-service storage facility provide next to an R-2 district?",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 101,
+    "evidence": "R-1, R-2, R-3, R-4, R-6, RMD-1, RM, MHP, PUD or OSC 40 feet",
+    "accepted_answers": [
+      "40 feet",
+      "40-foot",
+      "forty (40) feet",
+      "40 ft"
+    ]
+  },
+  {
+    "id": "cov_exception_06",
+    "category": "exception",
+    "kind": "answerable",
+    "query": "What approval does Charleston require for outdoor dining services within 150 feet of a residential area?",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 210,
+    "evidence_extractor": "layout",
+    "evidence": "shall not be granted except upon a special exception approved by the Board of Zoning Appeals-Zoning",
+    "accepted_answers": [
+      "special exception"
+    ]
+  },
+  {
+    "id": "cov_exception_04",
+    "category": "exception",
+    "kind": "answerable",
+    "query": "In Urbana, may an accessory use be established before the principal use?",
+    "source": "article_v_-_use_regulations.pdf",
+    "page": 2,
+    "evidence": "It is not established before the principal use is established, except as authorized by the Zoning Administrator",
+    "accepted_answers": [
+      "Zoning Administrator"
+    ]
+  },
+  {
+    "id": "cov_exception_01",
+    "category": "exception",
+    "kind": "answerable",
+    "query": "Which objects are exempt from Union City's rule against vision obstructions near street intersections?",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 39,
+    "evidence": "except utility poles, lights or street signs",
+    "accepted_answers": [
+      "utility poles"
+    ]
+  },
+  {
+    "id": "cov_exception_03",
+    "category": "exception",
+    "kind": "answerable",
+    "query": "In Urbana, which Type A home occupations are exempt from the exterior visibility rules?",
+    "source": "article_v_-_use_regulations.pdf",
+    "page": 6,
+    "evidence": "Day Care Homes are exempt from the exterior visibility provisions",
+    "accepted_answers": [
+      "Day Care Home"
+    ]
+  },
+  {
+    "id": "cov_outdated_03",
+    "category": "outdated",
+    "kind": "answerable",
+    "query": "What does Section 4-5 of Union City's zoning ordinance provide?",
+    "source": "zoning-ordinance-082024-rev.pdf",
+    "page": 35,
+    "evidence": "4-5 Reserved. (Ordinance No. 15 - ___; 9/21/15)",
+    "accepted_answers": [
+      "reserved"
+    ]
+  },
+  {
+    "id": "cov_outdated_06",
+    "category": "outdated",
+    "kind": "answerable",
+    "query": "Is Appendix E of Charleston's zoning ordinance, on the Planning Commission, still in effect?",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 693,
+    "evidence": "Ord. No. 2024-190, § 3, adopted December 17, 2024, repealed",
+    "accepted_answers": [
+      "repealed",
+      "reserved"
+    ]
+  },
+  {
+    "id": "cov_outdated_07",
+    "category": "outdated",
+    "kind": "answerable",
+    "query": "What does Appendix H of Charleston's zoning ordinance contain today?",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 707,
+    "evidence": "Ord. No. 2013-143, § 8, adopted Dec. 3, 2013, repealed former App. H in its entirety",
+    "accepted_answers": [
+      "reserved",
+      "repealed"
+    ]
+  },
+  {
+    "id": "cov_outdated_05",
+    "category": "outdated",
+    "kind": "answerable",
+    "query": "What happened to Charleston's original Part 7 parking lot landscaping requirements?",
+    "source": "Charleston, SC Zoning.pdf",
+    "page": 439,
+    "evidence": "Ord. No. 2008-05, § 1, adopted Jan. 22, 2008, repealed former Part 7,",
+    "accepted_answers": [
+      "repealed"
+    ]
+  }
+]
