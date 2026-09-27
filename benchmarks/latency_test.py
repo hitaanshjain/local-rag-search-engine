@@ -3,7 +3,6 @@
 import json
 import math
 import os
-import re
 import statistics
 import subprocess
 import time
@@ -36,13 +35,6 @@ def measure_stream(query, session=requests, url=API_URL, clock=time.perf_counter
     buffer = ""
     with session.post(url, json={"query": query}, stream=True, timeout=(10, 300)) as response:
         response.raise_for_status()
-        timing = response.headers.get("Server-Timing", "")
-        stage_times = {
-            name: float(duration)
-            for name, duration in re.findall(r"(?:^|,)\s*(\w+);dur=([0-9.]+)", timing)
-        }
-        if any(stage not in stage_times for stage in ("retrieval", "index", "vector", "keyword", "fusion")):
-            raise ValueError("Chat response did not report all retrieval stages")
         for chunk in response.iter_content(chunk_size=None, decode_unicode=True):
             buffer = (buffer + chunk).replace("\r\n", "\n")
             boundary = buffer.find("\n\n")
@@ -73,8 +65,10 @@ def measure_stream(query, session=requests, url=API_URL, clock=time.perf_counter
         raise ValueError("Chat stream ended without a token and done event")
     if first_status_ms is None or answer_timing is None:
         raise ValueError("Chat stream did not report answer progress and timing")
+    if any(f"{stage}_ms" not in answer_timing for stage in ("retrieval", "index", "vector", "keyword", "fusion")):
+        raise ValueError("Chat response did not report all retrieval stages")
     return {
-        **{f"{stage}_ms": stage_times[stage] for stage in ("retrieval", "index", "vector", "keyword", "fusion")},
+        **{f"{stage}_ms": answer_timing[f"{stage}_ms"] for stage in ("retrieval", "index", "vector", "keyword", "fusion")},
         "first_status_ms": first_status_ms,
         "ttft_ms": first_token_ms,
         "full_response_ms": full_response_ms,
@@ -136,7 +130,7 @@ def write_results(result):
         "",
         summary_table(result["summary"]),
         "",
-        "Client times start before the POST. First status stops at the first SSE `status` event, TTFT at the first nonempty `token` event (the checked answer), and full response at `done`. The API reports retrieval and its index, vector, keyword, and fusion stages in `Server-Timing`; total retrieval also includes thread scheduling and other overhead. The final SSE `timing` event reports answer stages: `draft_ms` (all drafts), `check_ms` (claim checks and citation repair), `conflict_ms` (conflict search and comparison), `answer_ms` (drafting through the answer), `drafts`, and `check_calls` (model calls outside drafting). P90 uses the nearest-rank method. The warmup request is excluded from all statistics.",
+        "Client times start before the POST. First status stops at the first SSE `status` event, TTFT at the first nonempty `token` event (the checked answer), and full response at `done`. The final SSE `timing` event reports retrieval (`retrieval_ms`, including its index check, vector, keyword, and fusion stages plus thread scheduling) and answer stages: `draft_ms` (all drafts), `check_ms` (claim checks and citation repair), `conflict_ms` (conflict search and comparison), `answer_ms` (drafting through the answer), `drafts`, and `check_calls` (model calls outside drafting). P90 uses the nearest-rank method. The warmup request is excluded from all statistics.",
         "",
         "## Measured requests",
         "",

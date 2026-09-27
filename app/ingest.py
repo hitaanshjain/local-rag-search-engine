@@ -1,15 +1,17 @@
 from collections import defaultdict
+import json
 from hashlib import sha256
 from pathlib import Path
 import re
 from time import sleep
 from uuid import uuid4
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from app.engine import INDEX_VERSION_PATH, get_vector_db
+from app.engine import INDEX_VERSION_PATH, PAGE_REPORT_PATH, get_vector_db
 from app.pdf_extraction import extract_pdf
 from app.provenance import infer_document_provenance
 
 DATA_DIR = "./data"
+PAGE_REPORT_NAME = PAGE_REPORT_PATH.name
 # "6-15 TCMU Town Center", "Sec. 54-269.  Design Review", or "APPENDIX C". A capital after the
 # number rejects cross-references ("54-348 in areas"), and \d{1,3} rejects years ("1995-160").
 SECTION_HEADING = re.compile(
@@ -17,11 +19,15 @@ SECTION_HEADING = re.compile(
 )
 
 
+# Charleston page footers ("4-20.1 Supp. No. 6") look like numbered headings.
+PAGE_FOOTER = re.compile(r"^\d{1,3}-\d+(?:\.\d+)?\s+Supp\.\s*No\.\s*\d+\s*$")
+
+
 def section_headings(text):
     return [
         (match.start(), " ".join(match.group(1).split()))
         for match in SECTION_HEADING.finditer(text)
-        if ". ." not in match.group(1)
+        if ". ." not in match.group(1) and not PAGE_FOOTER.match(match.group(1).strip())
     ]
 
 
@@ -62,12 +68,13 @@ def split_section_documents(pages, splitter):
         header, separator, body = text.partition("\n") if text.startswith("Source: ") else ("", "", text)
         headings = section_headings(body)
         boundaries = [(0, current_section)] + [(start, heading) for start, heading in headings]
-        for (start, section), (end, _) in zip(boundaries, boundaries[1:] + [(len(body), None)]):
-            content = body[start:end].strip()
-            if not content:
-                if not page.metadata.get("low_text") or start != 0:
-                    continue
-                content = "[This page has little or no readable text after extraction and OCR.]"
+        pieces = [
+            (body[start:end].strip(), section)
+            for (start, section), (end, _) in zip(boundaries, boundaries[1:] + [(len(body), None)])
+        ]
+        # Unreadable pages are reported by page_report, not stored as filler chunks.
+        pieces = [(content, section) for content, section in pieces if content]
+        for content, section in pieces:
             metadata = dict(page.metadata)
             if section:
                 metadata["section"] = section
@@ -78,22 +85,38 @@ def split_section_documents(pages, splitter):
             current_section = headings[-1][1]
     return splitter.split_documents(segments)
 
-def publish_index_version(marker_path):
-    marker_path = Path(marker_path)
-    marker_path.parent.mkdir(parents=True, exist_ok=True)
-    version = uuid4().hex
-    temporary_path = marker_path.with_name(f"{marker_path.name}.{version}.tmp")
-    temporary_path.write_text(version, encoding="utf-8")
-    # On Windows, replacing fails while the API is reading the marker.
+def page_report(pages):
+    """Per-document page count plus pages that are unreadable or intentionally blank."""
+    report = {}
+    for page in pages:
+        entry = report.setdefault(page.metadata["source"], {"pages": 0, "low_text_pages": [], "blank_pages": []})
+        entry["pages"] = max(entry["pages"], page.metadata["page"])
+        if page.metadata.get("low_text"):
+            entry["low_text_pages"].append(page.metadata["page"])
+        if page.metadata.get("blank"):
+            entry["blank_pages"].append(page.metadata["page"])
+    return report
+
+
+def write_atomically(path, text):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = path.with_name(f"{path.name}.{uuid4().hex}.tmp")
+    temporary_path.write_text(text, encoding="utf-8")
+    # On Windows, replacing fails while the API is reading the file.
     for attempt in range(10):
         try:
-            temporary_path.replace(marker_path)
+            temporary_path.replace(path)
             return
         except PermissionError:
             if attempt == 9:
                 temporary_path.unlink(missing_ok=True)
                 raise
             sleep(0.05 * (attempt + 1))
+
+
+def publish_index_version(marker_path):
+    write_atomically(marker_path, uuid4().hex)
 
 
 def process_documents(data_dir=DATA_DIR, db=None, marker_path=None):
@@ -123,6 +146,9 @@ def process_documents(data_dir=DATA_DIR, db=None, marker_path=None):
             if weak_pages:
                 print(f"Warning: {filename} has little or no extracted text on pages {weak_pages}.")
     
+    if marker_path is not None:
+        write_atomically(Path(marker_path).with_name(PAGE_REPORT_NAME), json.dumps(page_report(all_docs), indent=2))
+
     if not all_docs:
         if db is None:
             db = get_vector_db()

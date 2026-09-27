@@ -65,7 +65,7 @@ def text_table_rows(page: pymupdf.Page, table) -> list[list[str]]:
 
 
 def extract_text_layout(page: pymupdf.Page) -> str:
-    blocks = [block for block in page.get_text("blocks", sort=True) if len(block) >= 7 and block[6] == 0 and block[4].strip()]
+    blocks = [block for block in page.get_text("blocks", sort=False) if len(block) >= 7 and block[6] == 0 and block[4].strip()]
     if not blocks:
         return ""
     tables = []
@@ -94,7 +94,10 @@ def extract_text_layout(page: pymupdf.Page) -> str:
         content = table_markdown(text_table_rows(page, table) if text_tables else table.extract())
         if content:
             items.append((table.bbox[1], table.bbox[0], content))
-    items.sort(key=lambda item: (item[0], item[1]))
+    # Place detected tables by position. Without one, keep the PDF's drawing order: sorting
+    # a borderless table's cells by position scatters each row across the page.
+    if tables:
+        items.sort(key=lambda item: (item[0], item[1]))
     text = "\n\n".join(content for _, _, content in items)
     # PDF text layers often put a section number and its title on separate lines.
     return re.sub(
@@ -115,8 +118,10 @@ def extract_pdf(path: str | Path, ocr=None) -> list[Document]:
             content = native
             method = "text"
             ocr_chars = 0
-            # A genuinely empty PDF page has nothing that OCR could recover.
-            if not text_is_usable(native) and (native.strip() or page.get_images() or page.get_drawings()):
+            # A page with no text, images, or drawings is intentionally blank (e.g. a
+            # back-of-sheet page): nothing for OCR to recover and nothing to warn about.
+            blank = not native.strip() and not page.get_images() and not page.get_drawings()
+            if not text_is_usable(native) and not blank:
                 if engine is None:
                     engine = RapidOCR()
                 pixmap = page.get_pixmap(matrix=pymupdf.Matrix(2, 2), alpha=False)
@@ -127,7 +132,7 @@ def extract_pdf(path: str | Path, ocr=None) -> list[Document]:
                     content = ocr_text
                     method = "ocr"
             chars = meaningful_chars(content)
-            low_text = chars < MIN_USABLE_CHARS
+            low_text = chars < MIN_USABLE_CHARS and not blank
             pages.append(Document(
                 page_content=content,
                 metadata={
@@ -137,6 +142,7 @@ def extract_pdf(path: str | Path, ocr=None) -> list[Document]:
                     "text_chars": chars,
                     "ocr_chars": ocr_chars,
                     "low_text": low_text,
+                    "blank": blank,
                     "extraction_warning": "Page has little or no text after extraction and OCR." if low_text else "",
                 },
             ))

@@ -1,6 +1,6 @@
 {
-  "run_at_utc": "2026-09-27T03:28:22.822667+00:00",
-  "git_head_at_run": "cb070a41c7114bd22bffc35e307a7a620831e36a",
+  "run_at_utc": "2026-09-27T05:18:22.765468+00:00",
+  "git_head_at_run": "ce0bd071fe78e310c49169035b0a7d7bd960fe99",
   "models": {
     "embedding": "nomic-embed-text",
     "llm": "llama3.2:3b"
@@ -31,7 +31,7 @@
         {
           "source": "zoning.pdf",
           "page": 12,
-          "excerpt": "------------------------------------------   = FAR \n \n \n \nDevelopable Site Area \n \nFor Sites separated by rights-of-way, FAR will be calculated based on the FAR across the entire \nSite, and density and impervious surface coverage may be transferred among parcels, provided \nthe Site meets other applicable regulations. For other unique or undefined configurations, the \nDirector will determine the definition of Site. In a mixed use development with different FAR \nlimits, the FAR will be the use wit",
+          "excerpt": "18\n\n------------------------------------------   = FAR \n \n \n \nDevelopable Site Area \n \nFor Sites separated by rights-of-way, FAR will be calculated based on the FAR across the entire \nSite, and density and impervious surface coverage may be transferred among parcels, provided \nthe Site meets other applicable regulations. For other unique or undefined configurations, the \nDirector will determine the definition of Site. In a mixed use development with different FAR \nlimits, the FAR will be the use",
           "extraction_method": "text"
         }
       ],
@@ -42,11 +42,19 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 41349.18177700092,
-        "check_ms": 596.0205490009685,
-        "conflict_ms": 602.0844310005486,
+        "index_ms": 7.150011995690875,
+        "rewrite_ms": 0.0010619987733662128,
+        "retrieval_ms": 279.9265279973042,
+        "vector_ms": 180.6280919990968,
+        "keyword_ms": 34.842521003156435,
+        "fusion_ms": 0.15964500198606402,
+        "ambiguity_ms": 29.51976600161288,
+        "context_ms": 26.791625998157542,
+        "draft_ms": 810.2842340013012,
+        "check_ms": 763.1195520007168,
+        "conflict_ms": 612.9823930023122,
+        "answer_ms": 2186.71348800126,
         "drafts": 1,
-        "answer_ms": 42547.794063000765,
         "check_calls": 2
       }
     },
@@ -63,8 +71,14 @@
         "five visits",
         "5 visits"
       ],
-      "answer": "Jurisdiction: Urbana | District: not specified | Document version: not identified | Source: article_v_-_use_regulations.pdf\nFor an Urbana Type A home occupation, no more than five vehicle visits per day are permitted [2].",
+      "answer": "Jurisdiction: Urbana | District: not specified | Document version: not identified | Source: article_v_-_use_regulations.pdf\nAccording to the context, a Type A home occupation in Urbana may have no more than five vehicle visits per day. [1]",
       "sources": [
+        {
+          "source": "article_v_-_use_regulations.pdf",
+          "page": 7,
+          "excerpt": "Return to Article Heading \n \nReturn to Table of Contents\n\nSection V-12. Regulation of Home Occupation. \n45 \nArticle V. Use Regulations\n\n4. Vehicles and Customer Visits - No more than two commercial or business vehicles used in \nconjunction with the home occupation may be on the premises at any one time; and no more \nthan five vehicle visits per day.\n\n5. Parking - No more than two commercial or business vehicles, trucks, or trailers used in \nconjunction with the home occupation may be parked on t",
+          "extraction_method": "text"
+        },
         {
           "source": "article_v_-_use_regulations.pdf",
           "page": 7,
@@ -74,13 +88,7 @@
         {
           "source": "article_v_-_use_regulations.pdf",
           "page": 7,
-          "excerpt": "Return to Article Heading \n \nReturn to Table of Contents\n\n4. Vehicles and Customer Visits - No more than two commercial or business vehicles used in \nconjunction with the home occupation may be on the premises at any one time; and no more \nthan five vehicle visits per day.\n\n5. Parking - No more than two commercial or business vehicles, trucks, or trailers used in \nconjunction with the home occupation may be parked on the premises or on an abutting \nstreet.\n\n6. Equipment - No mechanical or electr",
-          "extraction_method": "text"
-        },
-        {
-          "source": "article_v_-_use_regulations.pdf",
-          "page": 6,
-          "excerpt": "Section V-12. Regulation of Home Occupation.\n\nIn recognition of the growing importance of home-based businesses in the local economy, the Urbana \nZoning Ordinance permits certain such activities at different intensities and subject to varying \nrequirements as set forth below. \n \nAny person seeking a home occupation shall submit an application to the Zoning Administrator. Upon \napproval, home occupations shall be permitted as follows:\n\nHome Occupation, Type A – A home-based occupation that has mi",
+          "excerpt": "Home Occupation, Type B - A home-based occupation that exceeds the limitations of a Type A\n\nHome Occupation and involves a minor amount of traffic from individuals not residing in the \nhousehold. Such activity may involve scheduled visits with outside clients or customers and \nemploy up to two individuals not residing in the household. Type B home occupations may \ninclude, but are not limited to, music lessons, professional consultations, and personal services \nsuch as clothing alterations or sh",
           "extraction_method": "text"
         }
       ],
@@ -91,12 +99,20 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 645.8919190008601,
-        "check_ms": 2854.6729940026125,
-        "conflict_ms": 378.96766000267235,
+        "index_ms": 7.807162000972312,
+        "rewrite_ms": 0.000672000169288367,
+        "retrieval_ms": 251.92719700135058,
+        "vector_ms": 185.56139200518373,
+        "keyword_ms": 19.795262000116054,
+        "fusion_ms": 0.10218100214842707,
+        "ambiguity_ms": 20.549904998915736,
+        "context_ms": 17.697449002298526,
+        "draft_ms": 861.7453210026724,
+        "check_ms": 537.3442909985897,
+        "conflict_ms": 631.7233400041005,
+        "answer_ms": 2031.211618996167,
         "drafts": 1,
-        "answer_ms": 3879.8698219979997,
-        "check_calls": 6
+        "check_calls": 2
       }
     },
     {
@@ -111,14 +127,8 @@
         "1 common-lot-line dwelling unit",
         "one unit"
       ],
-      "answer": "Jurisdiction: Urbana | District: not specified | Document version: not identified | Source: article_v_-_use_regulations.pdf\nEach lot shall contain no more than one common-lot-line dwelling unit [1].",
+      "answer": "Jurisdiction: Urbana | District: not specified | Document version: not identified | Source: article_v_-_use_regulations.pdf\nEach lot shall contain no more than one common-lot-line dwelling unit [2].",
       "sources": [
-        {
-          "source": "article_v_-_use_regulations.pdf",
-          "page": 4,
-          "excerpt": "Subdivision of Land\n\n1. The fee simple transfer of ownership of a portion of a lot improved with a duplex for the \npurpose of establishing separate ownership of common-lot-line dwelling unit(s) shall \nconstitute a subdivision and shall be subject to the provisions of this Ordinance and to the \nprovisions of Section 21-19 in Chapter 21 of the Urbana City Code. Each lot shall contain no \nmore than one common-lot-line dwelling unit.\n\n2. After a common-lot-line subdivision has been recorded, the lot",
-          "extraction_method": "text"
-        },
         {
           "source": "article_v_-_use_regulations.pdf",
           "page": 4,
@@ -128,7 +138,13 @@
         {
           "source": "article_v_-_use_regulations.pdf",
           "page": 4,
-          "excerpt": "Return to Article Heading \n \nReturn to Table of Contents\n\nSection V-7. (Reserved)\n\nSection V-8. (Reserved)\n\nSection V-9. Regulations for Common-Lot-Line Dwelling Units\n\nCommon-lot-line dwelling units, as defined in Article II and as permitted in Table V-1 of this Ordinance, \nshall be allowed in conformance with Section VI-3.E and the following restrictions:\n\nSubdivision of Land",
+          "excerpt": "Subdivision of Land\n\n1. The fee simple transfer of ownership of a portion of a lot improved with a duplex for the \npurpose of establishing separate ownership of common-lot-line dwelling unit(s) shall \nconstitute a subdivision and shall be subject to the provisions of this Ordinance and to the \nprovisions of Section 21-19 in Chapter 21 of the Urbana City Code. Each lot shall contain no \nmore than one common-lot-line dwelling unit.\n\n2. After a common-lot-line subdivision has been recorded, the lot",
+          "extraction_method": "text"
+        },
+        {
+          "source": "Charleston, SC Zoning.pdf",
+          "page": 636,
+          "excerpt": "b.\nMinimum lot standards for accessory dwelling units on parcels which\ncontain or abut an OCRM Critical Line. In order to establish an accessory\ndwelling unit on a parcel that contains or abuts an OCRM Critical Line the\nfollowing standards shall apply:\n\n1.\nWhen an accessory dwelling unit is to be located in front of the principal\ndwelling unit (between the street and the front of principal dwelling unit) the\nminimum lot area shall be 50% larger than the minimum lot area require-\nment of the zoni",
           "extraction_method": "text"
         }
       ],
@@ -139,11 +155,19 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 510.87668299805955,
-        "check_ms": 0.19261699708295055,
-        "conflict_ms": 628.2197289983742,
+        "index_ms": 7.5037479982711375,
+        "rewrite_ms": 0.0005219990271143615,
+        "retrieval_ms": 239.66034499608213,
+        "vector_ms": 161.5921479969984,
+        "keyword_ms": 22.383209005056415,
+        "fusion_ms": 0.15879500278970227,
+        "ambiguity_ms": 24.759739004366565,
+        "context_ms": 22.719002998201177,
+        "draft_ms": 1059.8116109977127,
+        "check_ms": 0.26878100470639765,
+        "conflict_ms": 868.8503489975119,
+        "answer_ms": 1929.258096999547,
         "drafts": 1,
-        "answer_ms": 1139.539601997967,
         "check_calls": 1
       }
     },
@@ -164,7 +188,7 @@
         {
           "source": "zoning-ordinance-082024-rev.pdf",
           "page": 54,
-          "excerpt": "a. Any building or structure established in connection with such use must be set\n\nback no less than 100 feet from any property line; and\n\nb. Lighting shall be established in such a way that no direct light shall cast over any\n\nproperty line nor adversely affect neighboring properties.\n\n3. Guest house, provided: \n \na. The main dwelling is located on a lot containing at least one (1) acre;\n\nb. No more than one (1) shall be permitted on a lot with another dwelling;\n\nc. Said guest house shall not be",
+          "excerpt": "August 20, 2024, Rev. \nPage 45\n\na. Any building or structure established in connection with such use must be set\n\nback no less than 100 feet from any property line; and\n\nb. Lighting shall be established in such a way that no direct light shall cast over any\n\nproperty line nor adversely affect neighboring properties.\n\n3. Guest house, provided: \n \na. The main dwelling is located on a lot containing at least one (1) acre;\n\nb. No more than one (1) shall be permitted on a lot with another dwelling;\n\n",
           "extraction_method": "text"
         },
         {
@@ -181,11 +205,19 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 664.6794730004331,
-        "check_ms": 0.4416029987623915,
-        "conflict_ms": 597.9693459994451,
+        "index_ms": 4.907568996713962,
+        "rewrite_ms": 0.0004660032573156059,
+        "retrieval_ms": 331.06482299626805,
+        "vector_ms": 205.32653699774528,
+        "keyword_ms": 63.15991700103041,
+        "fusion_ms": 0.19683300342876464,
+        "ambiguity_ms": 21.198438000283204,
+        "context_ms": 35.80243699980201,
+        "draft_ms": 869.0269900034764,
+        "check_ms": 0.23590300406794995,
+        "conflict_ms": 952.9361039967625,
+        "answer_ms": 1822.55230199371,
         "drafts": 1,
-        "answer_ms": 1263.3607130010205,
         "check_calls": 1
       }
     },
@@ -200,12 +232,12 @@
         "15 feet",
         "fifteen feet"
       ],
-      "answer": "Jurisdiction: Union City, Georgia | District: RM | Document version: August 20, 2024, Rev. | Source: zoning-ordinance-082024-rev.pdf\nThe front-yard setback that applies to cottage home courts in Union City is 15 feet, as measured from the right-of-way [1].",
+      "answer": "Jurisdiction: Union City, Georgia | District: RM | Document version: August 20, 2024, Rev. | Source: zoning-ordinance-082024-rev.pdf\nThe front-yard setback for cottage home courts in Union City is 15 feet, as measured from the right-of-way. [1]",
       "sources": [
         {
           "source": "zoning-ordinance-082024-rev.pdf",
           "page": 80,
-          "excerpt": "d. Cottage home courts (setbacks shall apply to the entire development as a whole):\n\n(Adopted 8/20/24; Ordinance 2024-Z-03) \n \n \ni. Minimum floor area per dwelling unit:  900 square feet;\n\nii. Front yard setback, as measured from the right-of-way: 15 feet;\n\niii. Rear yard setback:  10 feet;\n\niv. Side yard setback:  6 feet;\n\nv. Height:  up to 27 feet. \n \n \ne. Multifamily dwellings:\n\ni. Lot width and frontage: 100 feet;\n\nii. Minimum floor area per dwelling unit:\n\n1. Efficiency apartments: 500 squa",
+          "excerpt": "August 20, 2024, Rev. \nPage 71\n\nd. Cottage home courts (setbacks shall apply to the entire development as a whole):\n\n(Adopted 8/20/24; Ordinance 2024-Z-03) \n \n \ni. Minimum floor area per dwelling unit:  900 square feet;\n\nii. Front yard setback, as measured from the right-of-way: 15 feet;\n\niii. Rear yard setback:  10 feet;\n\niv. Side yard setback:  6 feet;\n\nv. Height:  up to 27 feet. \n \n \ne. Multifamily dwellings:\n\ni. Lot width and frontage: 100 feet;\n\nii. Minimum floor area per dwelling unit:\n\n1.",
           "extraction_method": "text"
         },
         {
@@ -215,9 +247,9 @@
           "extraction_method": "text"
         },
         {
-          "source": "Charleston, SC Zoning.pdf",
-          "page": 702,
-          "excerpt": "3. Patio Homes\n\n(a)\nSetbacks\n\n(1)\nFront yard:\n25\n8 minimum setback from road right of way\n\n(2)\nSide or interior yard:\n\ni.\n2\n8 mandatory setback from zero lot line with no roof drainage allowed on\nthe neighboring property.\n\nii.\n10\n8 minimum setback on non zero lot line side yard.\n\n(3)\nRear yard:\n15\n8 minimum setback\n\n(4)\nCorner lots:\n25\n8 minimum setback from road right-of-way (Front Yard) shall\napply to only one (1) frontage.\n\nApp. G-2",
+          "source": "zoning-ordinance-082024-rev.pdf",
+          "page": 68,
+          "excerpt": "4. Front yard setback, as measured from the right-of-way: 20 feet;\n\n5. Rear yard setback: 10 feet;\n\n6. Side yard setback: 7.5 feet (Ordinance 2002-04, March 19, 2002);\n\n7. Height: up to 35 feet; and",
           "extraction_method": "text"
         }
       ],
@@ -228,12 +260,20 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 715.8924179966561,
-        "check_ms": 617.4151449995406,
-        "conflict_ms": 569.1065339997294,
+        "index_ms": 4.916361998766661,
+        "rewrite_ms": 0.0006510017556138337,
+        "retrieval_ms": 236.38850700081093,
+        "vector_ms": 160.31248200306436,
+        "keyword_ms": 25.53182699921308,
+        "fusion_ms": 0.8789139974396676,
+        "ambiguity_ms": 24.985321004351135,
+        "context_ms": 19.272412995633204,
+        "draft_ms": 892.065467996872,
+        "check_ms": 1411.1228669935372,
+        "conflict_ms": 1353.1648370044422,
+        "answer_ms": 3656.672648001404,
         "drafts": 1,
-        "answer_ms": 1902.7786910010036,
-        "check_calls": 2
+        "check_calls": 3
       }
     },
     {
@@ -248,9 +288,11 @@
         "one nonresident",
         "one non-resident",
         "1 nonresident",
-        "1 non-resident"
+        "1 non-resident",
+        "nonresident employees is one",
+        "non-resident employees is one"
       ],
-      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nAccording to the context, a nonresident employee may work at the residence used for the home occupation, but the maximum number of nonresident employees is one. [1]",
+      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nAccording to the Charleston, SC Zoning.pdf, page 201, section Sec. 54-211, no more than one full-time or part-time nonresident employee may work at the residence used for the home occupation. [1]",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
@@ -260,17 +302,25 @@
         }
       ],
       "score": {
-        "fact_match": false,
+        "fact_match": true,
         "citation_match": true,
         "citation_refs_valid": true,
-        "pass": false
+        "pass": true
       },
       "timing": {
-        "draft_ms": 720.8114899985958,
-        "check_ms": 594.0704210006515,
-        "conflict_ms": 385.8400079989224,
+        "index_ms": 6.26659100089455,
+        "rewrite_ms": 0.0008640054147690535,
+        "retrieval_ms": 224.34325799986254,
+        "vector_ms": 168.57417600112967,
+        "keyword_ms": 16.06966499821283,
+        "fusion_ms": 0.10739800200099126,
+        "ambiguity_ms": 17.704477002553176,
+        "context_ms": 15.034200994705316,
+        "draft_ms": 1101.6476439981489,
+        "check_ms": 974.8177590008709,
+        "conflict_ms": 439.28140599746257,
+        "answer_ms": 2516.0478170000715,
         "drafts": 1,
-        "answer_ms": 1701.0176340008911,
         "check_calls": 2
       }
     },
@@ -287,39 +337,47 @@
         "10%",
         "ten (10) percent"
       ],
-      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nSign faces shall not occupy more than ten (10) percent per façade of the building [1].",
+      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nSign faces shall not occupy more than ten (10) percent per ground floor facade of the building [1].",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
-          "page": 506,
-          "excerpt": "b.\nFaçade Signs shall be permitted as follows:\n\n1.\nSign faces shall not occupy more than ten (10) percent per façade of the\nbuilding.\n\n2.\nWhere more than one (1) business or use occupies a single building, each\nseparate business occupying a space which includes an exterior façade may\nerect signage whose sign faces shall not occupy more than ten (10) percent\nper façade of the separate business entity; provided, however, that the total\nsignage per façade for the business entities occupying the sin",
-          "extraction_method": "text"
-        },
-        {
-          "source": "Charleston, SC Zoning.pdf",
           "page": 496,
-          "excerpt": "b.\nFaçade signs shall be permitted as follows:\n\n1.\nFaçade signs for businesses or uses occupying the ground floor of a\nmulti-story building shall be permitted as follows:\n\n(a)\nSign faces shall not occupy more than ten (10) percent per ground floor\nfacade of the building.\n\n(b)\nFaçade signs shall not be located above the ground floor level of a\nmulti-story building with the exception of those signs identifying the\nname of a building.\n\n4-14",
+          "excerpt": "b.\nFaçade signs shall be permitted as follows:\n\n1.\nFaçade signs for businesses or uses occupying the ground floor of a\nmulti-story building shall be permitted as follows:\n\n(a)\nSign faces shall not occupy more than ten (10) percent per ground floor\nfacade of the building.\n\n(b)\nFaçade signs shall not be located above the ground floor level of a\nmulti-story building with the exception of those signs identifying the\nname of a building.\n\n§ 54-413\n§ 54-414\nCHARLESTON ZONING ORDINANCE\n\n4-14",
           "extraction_method": "text"
         },
         {
           "source": "Charleston, SC Zoning.pdf",
           "page": 506,
-          "excerpt": "§ 54-415\n§ 54-415\nCHARLESTON ZONING ORDINANCE\n\n2.\nWith the exception of public schools, reader boards shall not exceed\nfifty (50) percent of the allowable sign face area.\n\n3.\nReader boards are not to be internally illuminated.\n\nb.\nFaçade Signs shall be permitted as follows:\n\n1.\nSign faces shall not occupy more than ten (10) percent per façade of the\nbuilding.",
+          "excerpt": "2.\nWith the exception of public schools, reader boards shall not exceed\nfifty (50) percent of the allowable sign face area.\n\n3.\nReader boards are not to be internally illuminated.\n\nb.\nFaçade Signs shall be permitted as follows:\n\n1.\nSign faces shall not occupy more than ten (10) percent per façade of the\nbuilding.\n\n2.\nWhere more than one (1) business or use occupies a single building, each\nseparate business occupying a space which includes an exterior façade may\nerect signage whose sign faces sha",
+          "extraction_method": "text"
+        },
+        {
+          "source": "Charleston, SC Zoning.pdf",
+          "page": 497,
+          "excerpt": "(c)\nSign faces shall have a vertical dimension of no more than two-thirds\n(2/3) of the vertical dimension of a single uninterrupted wall plane,\nsurface, or sign band.\n\n2.\nFaçade signs for businesses or uses occupying a space above the ground floor\nof a multi-story building shall be permitted as follows:\n\n(a)\nFor buildings with three (3) or fewer business spaces above the ground\nfloor of a multi-story building, one (1) façade sign, not exceeding one (1)\nsquare foot, is allowed per business unit o",
           "extraction_method": "text"
         }
       ],
       "score": {
         "fact_match": true,
-        "citation_match": true,
+        "citation_match": false,
         "citation_refs_valid": true,
-        "pass": true
+        "pass": false
       },
       "timing": {
-        "draft_ms": 523.5146060003899,
-        "check_ms": 0.190610000572633,
-        "conflict_ms": 592.8856409991567,
+        "index_ms": 5.004281003493816,
+        "rewrite_ms": 0.0004840039764530957,
+        "retrieval_ms": 220.25017400301294,
+        "vector_ms": 149.87085600296268,
+        "keyword_ms": 27.01882499968633,
+        "fusion_ms": 0.09227500413544476,
+        "ambiguity_ms": 23.897924002085347,
+        "context_ms": 13.94245499977842,
+        "draft_ms": 767.8476489963941,
+        "check_ms": 0.1875160014606081,
+        "conflict_ms": 715.4388120034127,
+        "answer_ms": 1483.7123999968753,
         "drafts": 1,
-        "answer_ms": 1116.8284859995765,
         "check_calls": 1
       }
     },
@@ -355,11 +413,19 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 892.6128040002368,
-        "check_ms": 0.001248998160008341,
+        "index_ms": 6.979906000196934,
+        "rewrite_ms": 0.0004249959602020681,
+        "retrieval_ms": 195.6226659967797,
+        "vector_ms": 153.79434699570993,
+        "keyword_ms": 14.006929006427526,
+        "fusion_ms": 0.13614099589176476,
+        "ambiguity_ms": 9.643559002142865,
+        "context_ms": 10.645364003721625,
+        "draft_ms": 1206.087482991279,
+        "check_ms": 0.00149600236909464,
         "conflict_ms": 0.0,
+        "answer_ms": 1206.3902410009177,
         "drafts": 2,
-        "answer_ms": 892.8062539998791,
         "check_calls": 0
       }
     },
@@ -372,7 +438,19 @@
         {
           "source": "Charleston, SC Zoning.pdf",
           "page": 421,
-          "excerpt": "approval shall be evidenced by the issuance of an order in the manner \nprescribed in Section 54-319.1., 54-319.2.\n\nb. \nChange in use. Should any of the approved uses as indicated in the approved \nshared parking analysis change, or should the Zoning Director or Department of \nTraffic and Transportation, or its successor, find that any of the conditions",
+          "excerpt": "approval shall be evidenced by the issuance of an order in the manner \nprescribed in Section 54-319.1., 54-319.2.\n\nb. \nChange in use. Should any of the approved uses as indicated in the approved \nshared parking analysis change, or should the Zoning Director or Department of \nTraffic and Transportation, or its successor, find that any of the conditions\n\n§ 54-319.1 \n § 54-319.1\nSITE REGULATIONS\n\n3-31 Supp. No. 25",
+          "extraction_method": "text"
+        },
+        {
+          "source": "Charleston, SC Zoning.pdf",
+          "page": 334,
+          "excerpt": "b.\nPedestrians should have easy access common open space;\n\nc.\nIndividual lots, buildings, structures, streets, parking areas, utilities and\ninfrastructure should be designed and sited to minimize the alteration of natural\nfeatures, vegetation and topography;\n\nd.\nIndividual lots, building locations, streets, parking areas, utilities and infrastructure\nshould be designed and sited to be compatible with surrounding development\npatterns;\n\ne.\nExisting scenic views or vistas should be permitted to rem",
+          "extraction_method": "text"
+        },
+        {
+          "source": "Charleston, SC Zoning.pdf",
+          "page": 243,
+          "excerpt": "b)\nBuildings on corner lots should address all applicable street frontages with\nregards to site design and architectural interest.\n\nc)\nParking for new developments should be located to the side or rear of the\nbuilding. When side or rear parking abuts a public right-of-way, a screen wall\nshould be provided.\n\n4.\nBuilding appearance.\n\na)\nBuilding entrances and windows should be provided along the street\nfrontage.\n\nb)\nVehicle bays and storage bays shall not face any road frontage. Emergency\nservice ",
           "extraction_method": "text"
         }
       ],
@@ -383,11 +461,19 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 739.6663899999112,
-        "check_ms": 0.001067000994225964,
+        "index_ms": 5.596204995526932,
+        "rewrite_ms": 0.0005409965524449944,
+        "retrieval_ms": 205.48203199723503,
+        "vector_ms": 141.46843799971975,
+        "keyword_ms": 19.6086270007072,
+        "fusion_ms": 0.3767389935092069,
+        "ambiguity_ms": 18.550159002188593,
+        "context_ms": 19.41786500538001,
+        "draft_ms": 1436.5954320019227,
+        "check_ms": 0.0019220024114474654,
         "conflict_ms": 0.0,
+        "answer_ms": 1436.8837360016187,
         "drafts": 2,
-        "answer_ms": 739.8376319979434,
         "check_calls": 0
       }
     },
@@ -403,7 +489,22 @@
         "citation_refs_valid": true,
         "pass": true
       },
-      "timing": null
+      "timing": {
+        "index_ms": 6.177571005537175,
+        "rewrite_ms": 0.0004219982656650245,
+        "retrieval_ms": 193.27327101200353,
+        "vector_ms": 157.60591100115562,
+        "keyword_ms": 13.698310998734087,
+        "fusion_ms": 0.09482500172453001,
+        "ambiguity_ms": 15.21422399673611,
+        "context_ms": 0.0026790003175847232,
+        "draft_ms": 0.0,
+        "check_ms": 0.0,
+        "conflict_ms": 0.0,
+        "answer_ms": 0.0,
+        "drafts": 0,
+        "check_calls": 0
+      }
     }
   ]
 }

@@ -10,11 +10,12 @@ from langchain_chroma import Chroma
 from langchain_ollama import OllamaEmbeddings, ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.documents import Document
-from rank_bm25 import BM25Okapi, BM25Plus
+from rank_bm25 import BM25Okapi
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 DB_PATH = "./chroma_db"
 INDEX_VERSION_PATH = Path(DB_PATH) / "index.version"
+PAGE_REPORT_PATH = Path(DB_PATH) / "pages.json"
 EMBEDDING_MODEL = "nomic-embed-text"
 LLM_MODEL = os.getenv("LLM_MODEL", "llama3.2:3b")
 
@@ -109,20 +110,14 @@ def build_search_index(db: Chroma) -> SearchIndex:
     return SearchIndex(documents=documents, bm25=bm25, section_bm25=section_bm25)
 
 
-def filter_search_index(index: SearchIndex, sources: set[str]) -> SearchIndex:
-    """Build keyword scores only from the chosen documents."""
-    documents = [doc for doc in index.documents if doc.metadata.get("source") in sources]
-    return SearchIndex(
-        documents=documents,
-        bm25=BM25Plus([tokenize(doc.page_content) for doc in documents]) if documents else None,
-        section_bm25=BM25Plus([
-            tokenize_with_identifiers(f"{doc.metadata.get('section', '')} {doc.page_content}")
-            for doc in documents
-        ]) if documents else None,
-    )
+def bm25_search(
+    query: str, index: SearchIndex, k: int = 5, sources: set[str] | None = None
+) -> list[tuple[Document, float]]:
+    """Score against the whole corpus, then keep only the selected documents' chunks.
 
-
-def bm25_search(query: str, index: SearchIndex, k: int = 5) -> list[tuple[Document, float]]:
+    Scoring before filtering keeps scores on one scale whatever the selection, so the
+    thresholds in select_context and needs_clarification mean the same thing.
+    """
     section_query = bool(re.search(r"\b[A-Za-z][A-Za-z0-9]*-\d+\b", query)) and index.section_bm25 is not None
     scorer = index.section_bm25 if section_query else index.bm25
     words = tokenize_with_identifiers(query) if section_query else tokenize(query)
@@ -130,10 +125,14 @@ def bm25_search(query: str, index: SearchIndex, k: int = 5) -> list[tuple[Docume
         return []
     scores = scorer.get_scores(words)
     ranked = sorted(enumerate(scores), key=lambda item: item[1], reverse=True)
-    return [(index.documents[i], float(score)) for i, score in ranked[:k] if score > 0]
+    hits = (
+        (index.documents[i], float(score)) for i, score in ranked
+        if score > 0 and (sources is None or index.documents[i].metadata.get("source") in sources)
+    )
+    return [hit for _, hit in zip(range(k), hits)]
 
 
-def needs_clarification(query: str, index: SearchIndex) -> bool:
+def needs_clarification(query: str, index: SearchIndex, sources: set[str] | None = None) -> bool:
     """Ask for a jurisdiction when two sources score nearly alike on the query."""
     stopwords = {
         "a", "an", "are", "at", "do", "does", "for", "how", "in", "is",
@@ -142,7 +141,7 @@ def needs_clarification(query: str, index: SearchIndex) -> bool:
     words = [word for word in tokenize(query) if word not in stopwords]
     if not words:
         return False
-    hits = bm25_search(query, index, k=30)
+    hits = bm25_search(query, index, k=30, sources=sources)
     if not hits:
         return False
     top_document, _ = hits[0]
@@ -245,7 +244,7 @@ def hybrid_search(
     vector_results = db.similarity_search_with_score(query, k=k * 2, filter=search_filter) if search_filter else db.similarity_search_with_score(query, k=k * 2)
     vector_ms = (perf_counter() - started) * 1000
     started = perf_counter()
-    keyword_results = bm25_search(query, index, k=k * 2)
+    keyword_results = bm25_search(query, index, k=k * 2, sources=sources)
     keyword_ms = (perf_counter() - started) * 1000
     started = perf_counter()
     results = prioritize_section_matches(query, fuse_results(

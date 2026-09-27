@@ -1,3 +1,4 @@
+import json
 import tempfile
 import unittest
 import pymupdf
@@ -9,7 +10,7 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_core.embeddings import FakeEmbeddings
 
-from app.ingest import assign_sections, process_documents, publish_index_version, split_section_documents
+from app.ingest import assign_sections, page_report, process_documents, publish_index_version, section_headings, split_section_documents
 from app.pdf_extraction import extract_text_layout
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -160,6 +161,13 @@ class SectionLabelTests(unittest.TestCase):
             ["Sec. 54-100. Purpose", "Sec. 54-100. Purpose"],
         )
 
+    def test_page_footer_with_supplement_number_is_not_a_heading(self):
+        text = "Sec. 54-231.  Overlay zones.\nText.\n4-20.1 Supp. No. 6\n2-169 Supp. No. 25\n6-2 R-2 Residential"
+        self.assertEqual(
+            [heading for _, heading in section_headings(text)],
+            ["Sec. 54-231. Overlay zones.", "6-2 R-2 Residential"],
+        )
+
     def test_appendix_heading_ends_the_previous_section(self):
         self.assertEqual(
             self.label("Sec. 54-1060.  Design and construction requirements.\nText.", "APPENDIX C\nRules of procedure."),
@@ -192,15 +200,34 @@ class SectionLabelTests(unittest.TestCase):
         self.assertNotIn("900 square feet", chunks[0].page_content)
         self.assertNotIn("700 square feet", chunks[1].page_content)
 
-    def test_unreadable_page_remains_visible_to_document_catalog(self):
-        pages = [Document(
-            page_content="Source: code.pdf | Page: 2\n",
-            metadata={"source": "code.pdf", "page": 2, "low_text": True},
-        )]
+    def test_pages_without_text_make_no_chunks_but_appear_in_page_report(self):
+        pages = [
+            Document(page_content="Source: code.pdf | Page: 1\nRule text.", metadata={"source": "code.pdf", "page": 1, "low_text": False, "blank": False}),
+            Document(page_content="Source: code.pdf | Page: 2\n", metadata={"source": "code.pdf", "page": 2, "low_text": True, "blank": False}),
+            Document(page_content="Source: code.pdf | Page: 3\n", metadata={"source": "code.pdf", "page": 3, "low_text": False, "blank": True}),
+        ]
         chunks = split_section_documents(pages, RecursiveCharacterTextSplitter(chunk_size=800))
-        self.assertEqual(len(chunks), 1)
-        self.assertTrue(chunks[0].metadata["low_text"])
-        self.assertIn("little or no readable text", chunks[0].page_content)
+        self.assertEqual([chunk.metadata["page"] for chunk in chunks], [1])
+        self.assertEqual(page_report(pages), {
+            "code.pdf": {"pages": 3, "low_text_pages": [2], "blank_pages": [3]},
+        })
+
+    def test_ingestion_writes_the_page_report_beside_the_version_marker(self):
+        with tempfile.TemporaryDirectory() as temporary_dir:
+            root = Path(temporary_dir)
+            data_dir = root / "data"
+            data_dir.mkdir()
+            (data_dir / "code.pdf").touch()
+            marker = root / "db" / "index.version"
+            db = Chroma(collection_name=f"ingest_test_{uuid4().hex}", embedding_function=FakeEmbeddings(size=16))
+            pages = [
+                Document(page_content="Rule text for the page.", metadata={"source": "code.pdf", "page": 1, "low_text": False, "blank": False}),
+                Document(page_content="", metadata={"source": "code.pdf", "page": 2, "low_text": False, "blank": True}),
+            ]
+            with patch("app.ingest.extract_pdf", return_value=pages):
+                process_documents(data_dir=data_dir, db=db, marker_path=marker)
+            report = json.loads((marker.parent / "pages.json").read_text(encoding="utf-8"))
+        self.assertEqual(report, {"code.pdf": {"pages": 2, "low_text_pages": [], "blank_pages": [2]}})
 
     def test_pdf_line_wrapped_district_heading_labels_following_rule_page(self):
         path = Path(__file__).resolve().parents[1] / "data" / "zoning-ordinance-082024-rev.pdf"

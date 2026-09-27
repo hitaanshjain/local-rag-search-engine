@@ -11,7 +11,8 @@ RUN pip install --no-cache-dir uv
 COPY pyproject.toml uv.lock ./
 
 # 5. Install dependencies from the lockfile
-RUN uv sync --frozen
+# Skip the ingestion-only OCR group (PyMuPDF, RapidOCR, onnxruntime).
+RUN uv sync --frozen --no-group ingest
 
 # 6. Copy the rest of the application code
 COPY . .
@@ -20,4 +21,4 @@ COPY . .
 EXPOSE 8000
 
 # 8. The command to run the app using uv, pointing to the new app directory
-CMD ["uv", "run", "uvicorn", "app.api:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uv", "run", "--frozen", "--no-group", "ingest", "uvicorn", "app.api:app", "--host", "0.0.0.0", "--port", "8000"]

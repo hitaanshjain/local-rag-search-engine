@@ -7,15 +7,37 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_core.embeddings import FakeEmbeddings
 
-from app.engine import SearchIndex, SearchIndexCache, bm25_search, build_search_index, filter_search_index, needs_clarification, select_context, fuse_results, hybrid_search
+from app.engine import SearchIndex, SearchIndexCache, bm25_search, build_search_index, needs_clarification, select_context, fuse_results, hybrid_search
+
+
+class StoredDB:
+    """Minimal stand-in for Chroma's get() used to build a keyword index.
+
+    Unrelated filler chunks keep BM25Okapi term weights positive, as in the real corpus;
+    in a two- or three-chunk corpus a shared word gets a zero or negative weight.
+    """
+
+    def __init__(self, docs):
+        self.docs = docs + [
+            Document(id=f"filler-{number}", page_content=f"unrelated parking signage rule {number}", metadata={"source": "filler.pdf"})
+            for number in range(10)
+        ]
+
+    def get(self, include):
+        return {
+            "ids": [doc.id for doc in self.docs],
+            "documents": [doc.page_content for doc in self.docs],
+            "metadatas": [doc.metadata for doc in self.docs],
+        }
 
 
 class RetrievalTests(unittest.TestCase):
     def test_document_scope_filters_keyword_and_vector_candidates(self):
         city_a = Document(id="a", page_content="guest house 700 square feet", metadata={"source": "a.pdf"})
         city_b = Document(id="b", page_content="guest house 900 square feet", metadata={"source": "b.pdf"})
-        scoped = filter_search_index(SearchIndex(documents=[city_a, city_b], bm25=None), {"b.pdf"})
-        self.assertEqual([doc.metadata["source"] for doc, _ in bm25_search("guest house", scoped)], ["b.pdf"])
+        city_c = Document(id="c", page_content="shed 800 square feet", metadata={"source": "c.pdf"})
+        index = build_search_index(StoredDB([city_a, city_b, city_c]))
+        self.assertEqual([doc.metadata["source"] for doc, _ in bm25_search("guest house", index, sources={"b.pdf"})], ["b.pdf"])
 
         class FilteredDB:
             def similarity_search_with_score(self, query, k, filter=None):
@@ -23,13 +45,26 @@ class RetrievalTests(unittest.TestCase):
                 return [(city_b, 0.1)]
 
         db = FilteredDB()
-        self.assertEqual(hybrid_search("guest house", db, k=2, index=scoped, sources={"b.pdf"}), [city_b])
+        self.assertEqual(hybrid_search("guest house", db, k=2, index=index, sources={"b.pdf"}), [city_b])
         self.assertEqual(db.last_filter, {"source": "b.pdf"})
-
-        city_c = Document(id="c", page_content="guest house 800 square feet", metadata={"source": "c.pdf"})
-        two_files = filter_search_index(SearchIndex([city_a, city_b, city_c], None), {"a.pdf", "b.pdf"})
-        hybrid_search("guest house", db, k=2, index=two_files, sources={"b.pdf", "a.pdf"})
+        hybrid_search("guest house", db, k=2, index=index, sources={"b.pdf", "a.pdf"})
         self.assertEqual(db.last_filter, {"source": {"$in": ["a.pdf", "b.pdf"]}})
+
+    def test_scoped_keyword_scores_match_unscoped_scores(self):
+        docs = [
+            Document(id=str(number), page_content=text, metadata={"source": source})
+            for number, (text, source) in enumerate([
+                ("guest house limited to 900 square feet", "a.pdf"),
+                ("guest house limited to 700 square feet", "b.pdf"),
+                ("fence height limited to four feet", "b.pdf"),
+                ("sign area limited to 32 square feet", "c.pdf"),
+            ])
+        ]
+        index = build_search_index(StoredDB(docs))
+        unscoped = {doc.id: score for doc, score in bm25_search("guest house square feet", index, k=10)}
+        scoped = bm25_search("guest house square feet", index, k=10, sources={"b.pdf"})
+        self.assertEqual({doc.metadata["source"] for doc, _ in scoped}, {"b.pdf"})
+        self.assertTrue(all(score == unscoped[doc.id] for doc, score in scoped))
 
     def test_named_district_passage_precedes_a_general_rule(self):
         general = Document(id="general", page_content="Guest house: 700 square feet.")

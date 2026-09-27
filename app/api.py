@@ -14,7 +14,7 @@ from app.answering import ABSTAIN, cited_claims, collect_conflict_candidates, de
 from app.conversation import contextualize_query, format_history
 from app.engine import (
     LLM_MODEL, SearchIndexCache, bm25_search, get_vector_db, get_llm, get_rag_prompt,
-    hybrid_search, needs_clarification, select_context, filter_search_index,
+    PAGE_REPORT_PATH, hybrid_search, needs_clarification, select_context,
 )
 
 app = FastAPI(title="Local RAG API", version="1.0")
@@ -27,7 +27,6 @@ app.add_middleware(
     allow_credentials=False,
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type"],
-    expose_headers=["Server-Timing"],
 )
 
 db = get_vector_db()
@@ -43,6 +42,7 @@ def excerpt(text: str) -> str:
 
 
 STATUS_TEXT = {
+    "searching": "Searching the selected documents…",
     "drafting": "Drafting an answer…",
     "checking": "Checking each claim against its cited passage…",
     "comparing": "Comparing related rules…",
@@ -91,9 +91,17 @@ def document(filename: str):
     return FileResponse(path, media_type="application/pdf", content_disposition_type="inline")
 
 
+def read_page_report() -> dict:
+    try:
+        return json.loads(PAGE_REPORT_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+
+
 @app.get("/documents")
 async def list_documents():
     index = await run_in_threadpool(search_index.get)
+    report = read_page_report()
     catalog = {}
     for doc in index.documents:
         name = doc.metadata.get("source")
@@ -105,6 +113,11 @@ async def list_documents():
             entry["pages"] = max(entry["pages"], page)
             if doc.metadata.get("low_text"):
                 entry["low_text_pages"].add(page)
+    for name, entry in catalog.items():
+        # Ingestion's page report also covers pages that produced no chunks.
+        if name in report:
+            entry["pages"] = report[name]["pages"]
+            entry["low_text_pages"] = set(report[name]["low_text_pages"])
     return {"documents": [
         {**entry, "low_text_pages": sorted(entry["low_text_pages"])}
         for _, entry in sorted(catalog.items())
@@ -113,9 +126,9 @@ async def list_documents():
 
 @app.post("/chat")
 async def chat(request: QueryRequest):
-    retrieval_started = perf_counter()
+    request_started = perf_counter()
     index = await run_in_threadpool(search_index.get)
-    index_ms = (perf_counter() - retrieval_started) * 1000
+    index_ms = (perf_counter() - request_started) * 1000
     selected = None
     if request.documents is not None:
         selected = set(request.documents)
@@ -124,43 +137,55 @@ async def chat(request: QueryRequest):
             raise HTTPException(status_code=422, detail="Select one or more indexed documents.")
         if selected == available:
             selected = None
-    scoped_index = await run_in_threadpool(filter_search_index, index, selected) if selected is not None else index
     history = [turn.model_dump() for turn in request.history]
-    search_query = await contextualize_query(request.query, history, llm) if history else request.query
-    stage_times = {}
-    results = await run_in_threadpool(hybrid_search, search_query, db, k=3, index=scoped_index, timings=stage_times, sources=selected)
-    clarification_started = perf_counter()
-    clarify = await run_in_threadpool(needs_clarification, search_query, scoped_index)
-    ambiguity_ms = (perf_counter() - clarification_started) * 1000
-    context_started = perf_counter()
-    keyword_leaders = (
-        await run_in_threadpool(bm25_search, search_query, scoped_index, k=2)
-        if results and not clarify else []
-    )
-    context_results = select_context(results, keyword_leaders, search_query)
-    context_ms = (perf_counter() - context_started) * 1000
-    retrieval_ms = (perf_counter() - retrieval_started) * 1000
 
     async def stream_generator():
-        if clarify:
-            yield sse_event("sources", {"sources": []})
-            yield sse_event("token", {"text": "Which city or document do you mean?"})
-            yield sse_event("done", {})
-            return
-        if not context_results:
-            yield sse_event("sources", {"sources": []})
-            yield sse_event("token", {"text": ABSTAIN})
-            yield sse_event("done", {})
-            return
-
-        context_text = "\n\n".join(
-            f"[{number}] {doc.metadata.get('source')}, page {doc.metadata.get('page')}"
-            f"{', section ' + doc.metadata['section'] if doc.metadata.get('section') else ''}\n"
-            f"{doc.page_content}"
-            for number, doc in enumerate(context_results, start=1)
-        )
-        chain = prompt_template | llm
+        timing = {
+            "index_ms": index_ms, "rewrite_ms": 0.0, "retrieval_ms": 0.0, "vector_ms": 0.0,
+            "keyword_ms": 0.0, "fusion_ms": 0.0, "ambiguity_ms": 0.0, "context_ms": 0.0,
+            "draft_ms": 0.0, "check_ms": 0.0, "conflict_ms": 0.0, "answer_ms": 0.0,
+            "drafts": 0, "check_calls": 0,
+        }
+        checker = CountingLLM(llm)
         try:
+            # Report progress before the follow-up rewrite and retrieval, which take the first second.
+            yield status_event("searching")
+            started = perf_counter()
+            search_query = await contextualize_query(request.query, history, llm) if history else request.query
+            timing["rewrite_ms"] = (perf_counter() - started) * 1000
+
+            retrieval_started = perf_counter()
+            stage_times = {}
+            results = await run_in_threadpool(
+                hybrid_search, search_query, db, k=3, index=index, timings=stage_times, sources=selected
+            )
+            started = perf_counter()
+            clarify = await run_in_threadpool(needs_clarification, search_query, index, selected)
+            timing["ambiguity_ms"] = (perf_counter() - started) * 1000
+            started = perf_counter()
+            keyword_leaders = (
+                await run_in_threadpool(bm25_search, search_query, index, k=2, sources=selected)
+                if results and not clarify else []
+            )
+            context_results = select_context(results, keyword_leaders, search_query)
+            timing["context_ms"] = (perf_counter() - started) * 1000
+            timing["retrieval_ms"] = index_ms + (perf_counter() - retrieval_started) * 1000
+            timing.update({f"{stage}_ms": stage_times.get(stage, 0.0) for stage in ("vector", "keyword", "fusion")})
+
+            if clarify or not context_results:
+                yield sse_event("sources", {"sources": []})
+                yield sse_event("token", {"text": "Which city or document do you mean?" if clarify else ABSTAIN})
+                yield sse_event("timing", timing)
+                yield sse_event("done", {})
+                return
+
+            context_text = "\n\n".join(
+                f"[{number}] {doc.metadata.get('source')}, page {doc.metadata.get('page')}"
+                f"{', section ' + doc.metadata['section'] if doc.metadata.get('section') else ''}\n"
+                f"{doc.page_content}"
+                for number, doc in enumerate(context_results, start=1)
+            )
+            chain = prompt_template | llm
             citation_instruction = (
                 "Give a short answer using only facts explicitly supported by the numbered passages. "
                 "The only valid citation labels for this answer are: [1]. Cite the label of the supporting "
@@ -171,10 +196,7 @@ async def chat(request: QueryRequest):
                 "Add the number of the passage that states the answer in square brackets immediately after "
                 "each factual sentence, for example [1]. Never cite a passage that does not state the answer."
             )
-
             answer_started = perf_counter()
-            checker = CountingLLM(llm)
-            timing = {"draft_ms": 0.0, "check_ms": 0.0, "conflict_ms": 0.0, "drafts": 0}
 
             async def write_draft(instruction: str) -> str:
                 started = perf_counter()
@@ -217,7 +239,7 @@ async def chat(request: QueryRequest):
             if draft != ABSTAIN:
                 yield status_event("comparing")
                 started = perf_counter()
-                keyword_candidates = await run_in_threadpool(bm25_search, search_query, scoped_index, k=30)
+                keyword_candidates = await run_in_threadpool(bm25_search, search_query, index, k=30, sources=selected)
                 candidate_docs = collect_conflict_candidates(primary_doc, results, keyword_candidates)
                 conflicts = await detect_conflicts(search_query, primary_doc, candidate_docs, checker, draft)
                 timing["conflict_ms"] = (perf_counter() - started) * 1000
@@ -269,7 +291,7 @@ async def chat(request: QueryRequest):
             logger.info("Answer timing: %s", timing)
             yield sse_event("timing", timing)
         except Exception:
-            logger.exception("Chat answer verification or conflict check failed")
+            logger.exception("Chat search, answer verification, or conflict check failed")
             yield sse_event("error", {"message": "Answer generation failed."})
             return
         yield sse_event("done", {})
@@ -277,14 +299,5 @@ async def chat(request: QueryRequest):
     return StreamingResponse(
         stream_generator(),
         media_type="text/event-stream",
-        headers={
-            "Cache-Control": "no-cache",
-            "X-LLM-Model": LLM_MODEL,
-            "Server-Timing": ", ".join(
-                [f"retrieval;dur={retrieval_ms:.3f}", f"index;dur={index_ms:.3f}"]
-                + [f"{stage};dur={stage_times.get(stage, 0):.3f}" for stage in ("vector", "keyword", "fusion")]
-                + [f"ambiguity;dur={ambiguity_ms:.3f}"]
-                + [f"context;dur={context_ms:.3f}"]
-            ),
-        },
+        headers={"Cache-Control": "no-cache", "X-LLM-Model": LLM_MODEL},
     )

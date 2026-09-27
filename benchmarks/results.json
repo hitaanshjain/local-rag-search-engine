@@ -1,6 +1,6 @@
 {
-  "run_at_utc": "2026-09-27T03:30:11.196726+00:00",
-  "git_head_at_run": "cb070a41c7114bd22bffc35e307a7a620831e36a",
+  "run_at_utc": "2026-09-27T05:14:09.273078+00:00",
+  "git_head_at_run": "ce0bd071fe78e310c49169035b0a7d7bd960fe99",
   "models": {
     "embedding": "nomic-embed-text",
     "llm": "llama3.2:3b"
@@ -14,32 +14,32 @@
       "zoning.pdf": 18
     },
     "pages": 1070,
-    "chunks": 5007
+    "chunks": 4536
   },
   "query_count": 28,
   "summary": {
     "vector_only": {
       "source": {
-        "hit@3": 0.9285714285714286,
+        "hit@3": 1.0,
         "hit@5": 1.0,
-        "mrr": 0.8928571428571429
+        "mrr": 0.9107142857142857
       },
       "page": {
-        "hit@3": 0.6785714285714286,
-        "hit@5": 0.75,
-        "mrr": 0.6351190476190477
+        "hit@3": 0.75,
+        "hit@5": 0.8571428571428571,
+        "mrr": 0.655952380952381
       }
     },
     "substring_keyword": {
       "source": {
         "hit@3": 0.7857142857142857,
-        "hit@5": 0.8928571428571429,
-        "mrr": 0.7470238095238095
+        "hit@5": 0.8571428571428571,
+        "mrr": 0.744047619047619
       },
       "page": {
         "hit@3": 0.6785714285714286,
-        "hit@5": 0.7857142857142857,
-        "mrr": 0.6220238095238095
+        "hit@5": 0.75,
+        "mrr": 0.6130952380952381
       }
     },
     "bm25_keyword": {
@@ -51,19 +51,19 @@
       "page": {
         "hit@3": 0.8928571428571429,
         "hit@5": 0.9285714285714286,
-        "mrr": 0.8642857142857142
+        "mrr": 0.8660714285714286
       }
     },
     "hybrid_substring": {
       "source": {
         "hit@3": 0.8928571428571429,
         "hit@5": 0.8928571428571429,
-        "mrr": 0.8452380952380952
+        "mrr": 0.8511904761904762
       },
       "page": {
-        "hit@3": 0.75,
-        "hit@5": 0.75,
-        "mrr": 0.7023809523809524
+        "hit@3": 0.7857142857142857,
+        "hit@5": 0.7857142857142857,
+        "mrr": 0.6964285714285714
       }
     },
     "hybrid_bm25": {
@@ -73,9 +73,9 @@
         "mrr": 1.0
       },
       "page": {
-        "hit@3": 0.8928571428571429,
-        "hit@5": 0.8928571428571429,
-        "mrr": 0.8571428571428571
+        "hit@3": 0.9285714285714286,
+        "hit@5": 0.9285714285714286,
+        "mrr": 0.869047619047619
       }
     },
     "hybrid_bm25_50": {
@@ -85,21 +85,21 @@
         "mrr": 1.0
       },
       "page": {
-        "hit@3": 0.8928571428571429,
-        "hit@5": 0.8928571428571429,
-        "mrr": 0.8095238095238095
+        "hit@3": 0.9285714285714286,
+        "hit@5": 0.9285714285714286,
+        "mrr": 0.8214285714285714
       }
     },
     "hybrid_bm25_75": {
       "source": {
         "hit@3": 1.0,
         "hit@5": 1.0,
-        "mrr": 0.9821428571428571
+        "mrr": 1.0
       },
       "page": {
         "hit@3": 0.8928571428571429,
-        "hit@5": 0.8928571428571429,
-        "mrr": 0.7976190476190476
+        "hit@5": 0.9285714285714286,
+        "mrr": 0.8125
       }
     }
   },
@@ -146,8 +146,8 @@
               "page": 12
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 306
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 170
             }
           ]
         },
@@ -215,11 +215,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 129
+              "page": 251
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 251
+              "page": 129
             }
           ]
         },
@@ -305,17 +305,17 @@
             "page": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 1.0
+              "mrr": 0.5
             }
           },
           "top5": [
             {
               "source": "zoning.pdf",
-              "page": 2
+              "page": 11
             },
             {
               "source": "zoning.pdf",
-              "page": 11
+              "page": 2
             },
             {
               "source": "zoning.pdf",
@@ -362,8 +362,8 @@
               "page": 12
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 306
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 170
             }
           ]
         }
@@ -407,12 +407,12 @@
               "page": 144
             },
             {
-              "source": "zoning.pdf",
-              "page": 5
-            },
-            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 204
+            },
+            {
+              "source": "zoning.pdf",
+              "page": 5
             }
           ]
         },
@@ -623,12 +623,12 @@
               "page": 144
             },
             {
-              "source": "zoning.pdf",
-              "page": 5
-            },
-            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 204
+            },
+            {
+              "source": "zoning.pdf",
+              "page": 5
             }
           ]
         }
@@ -655,7 +655,7 @@
             "page": {
               "hit@3": 0,
               "hit@5": 1,
-              "mrr": 0.2
+              "mrr": 0.25
             }
           },
           "top5": [
@@ -672,12 +672,12 @@
               "page": 11
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 302
-            },
-            {
               "source": "zoning.pdf",
               "page": 4
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 302
             }
           ]
         },
@@ -713,7 +713,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 245
+              "page": 239
             }
           ]
         },
@@ -763,17 +763,17 @@
             "page": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 1.0
+              "mrr": 0.5
             }
           },
           "top5": [
             {
               "source": "zoning.pdf",
-              "page": 4
+              "page": 13
             },
             {
               "source": "zoning.pdf",
-              "page": 13
+              "page": 4
             },
             {
               "source": "zoning.pdf",
@@ -918,9 +918,9 @@
               "mrr": 0.5
             },
             "page": {
-              "hit@3": 1,
+              "hit@3": 0,
               "hit@5": 1,
-              "mrr": 0.3333333333333333
+              "mrr": 0.25
             }
           },
           "top5": [
@@ -930,15 +930,15 @@
             },
             {
               "source": "zoning.pdf",
+              "page": 2
+            },
+            {
+              "source": "zoning.pdf",
               "page": 11
             },
             {
               "source": "zoning.pdf",
               "page": 10
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 71
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
@@ -1013,8 +1013,8 @@
               "page": 622
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 615
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 231
             }
           ]
         },
@@ -1073,20 +1073,20 @@
               "page": 10
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 615
-            },
-            {
               "source": "zoning.pdf",
               "page": 2
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 622
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 200
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 622
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 231
             }
           ]
         },
@@ -1109,20 +1109,20 @@
               "page": 10
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 615
+              "source": "zoning.pdf",
+              "page": 2
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 622
             },
             {
-              "source": "zoning.pdf",
-              "page": 2
-            },
-            {
               "source": "Charleston, SC Zoning.pdf",
               "page": 200
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 231
             }
           ]
         },
@@ -1131,7 +1131,7 @@
             "source": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.5
+              "mrr": 1.0
             },
             "page": {
               "hit@3": 1,
@@ -1141,8 +1141,8 @@
           },
           "top5": [
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 615
+              "source": "zoning.pdf",
+              "page": 2
             },
             {
               "source": "zoning.pdf",
@@ -1153,12 +1153,12 @@
               "page": 622
             },
             {
-              "source": "zoning.pdf",
-              "page": 11
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 615
             },
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 71
+              "source": "zoning.pdf",
+              "page": 11
             }
           ]
         }
@@ -1180,34 +1180,34 @@
             "source": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.5
+              "mrr": 1.0
             },
             "page": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.5
+              "mrr": 1.0
             }
           },
           "top5": [
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 2
+            },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 33
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 2
+              "page": 5
             },
             {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 5
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 649
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
               "page": 6
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 636
             }
           ]
         },
@@ -1231,11 +1231,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 625
+              "page": 626
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 626
+              "page": 635
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -1278,17 +1278,17 @@
               "page": 5
             },
             {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 4
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 117
             }
           ]
         },
         "hybrid_substring": {
           "metrics": {
             "source": {
-              "hit@3": 0,
-              "hit@5": 0,
-              "mrr": 0.0
+              "hit@3": 1,
+              "hit@5": 1,
+              "mrr": 0.5
             },
             "page": {
               "hit@3": 0,
@@ -1299,15 +1299,15 @@
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 637
+              "page": 649
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 4
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 449
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 625
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -1346,8 +1346,8 @@
               "page": 5
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 636
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 4
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
@@ -1375,15 +1375,15 @@
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 6
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
               "page": 5
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 6
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 636
+              "page": 4
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
@@ -1411,15 +1411,15 @@
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 6
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
               "page": 5
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 6
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 636
+              "page": 4
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
@@ -1443,14 +1443,14 @@
         "vector_only": {
           "metrics": {
             "source": {
-              "hit@3": 0,
+              "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.25
+              "mrr": 0.5
             },
             "page": {
-              "hit@3": 0,
-              "hit@5": 0,
-              "mrr": 0.0
+              "hit@3": 1,
+              "hit@5": 1,
+              "mrr": 0.5
             }
           },
           "top5": [
@@ -1459,20 +1459,20 @@
               "page": 44
             },
             {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 3
+            },
+            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 217
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 215
-            },
-            {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 6
+              "page": 218
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 25
+              "page": 215
             }
           ]
         },
@@ -1532,11 +1532,11 @@
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 2
+              "page": 1
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 1
+              "page": 2
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -1604,15 +1604,15 @@
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 2
-            },
-            {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
               "page": 6
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
               "page": 1
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 2
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -1644,15 +1644,15 @@
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 2
-            },
-            {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
               "page": 1
             },
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 44
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 2
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 160
             }
           ]
         },
@@ -1688,7 +1688,7 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 215
+              "page": 218
             }
           ]
         }
@@ -1713,9 +1713,9 @@
               "mrr": 1.0
             },
             "page": {
-              "hit@3": 0,
-              "hit@5": 0,
-              "mrr": 0.0
+              "hit@3": 1,
+              "hit@5": 1,
+              "mrr": 0.3333333333333333
             }
           },
           "top5": [
@@ -1728,16 +1728,16 @@
               "page": 15
             },
             {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 4
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 5
+            },
+            {
               "source": "zoning.pdf",
               "page": 14
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 525
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 339
             }
           ]
         },
@@ -1809,7 +1809,7 @@
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 2
+              "page": 6
             }
           ]
         },
@@ -1832,6 +1832,10 @@
               "page": 4
             },
             {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 5
+            },
+            {
               "source": "zoning.pdf",
               "page": 14
             },
@@ -1842,10 +1846,6 @@
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 268
-            },
-            {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 2
             }
           ]
         },
@@ -1905,15 +1905,15 @@
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 5
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
               "page": 7
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
               "page": 6
-            },
-            {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 5
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
@@ -1941,6 +1941,10 @@
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 5
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
               "page": 7
             },
             {
@@ -1950,10 +1954,6 @@
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 15
-            },
-            {
-              "source": "zoning.pdf",
-              "page": 14
             }
           ]
         }
@@ -1989,20 +1989,20 @@
               "page": 7
             },
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 18
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 5
             },
             {
-              "source": "zoning.pdf",
-              "page": 12
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 18
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 605
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 275
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 3
             }
           ]
         },
@@ -2065,16 +2065,16 @@
               "page": 7
             },
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 242
-            },
-            {
               "source": "Charleston, SC Zoning.pdf",
               "page": 605
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 371
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 242
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 3
             }
           ]
         },
@@ -2133,20 +2133,20 @@
               "page": 7
             },
             {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 1
-            },
-            {
               "source": "Charleston, SC Zoning.pdf",
               "page": 605
             },
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 242
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 1
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 371
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 7
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 242
             }
           ]
         },
@@ -2174,15 +2174,15 @@
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 7
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
               "page": 1
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 242
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 371
             }
           ]
         },
@@ -2205,20 +2205,20 @@
               "page": 7
             },
             {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 7
+            },
+            {
               "source": "Charleston, SC Zoning.pdf",
               "page": 605
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 7
+              "page": 5
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 18
-            },
-            {
-              "source": "zoning.pdf",
-              "page": 12
             }
           ]
         }
@@ -2255,10 +2255,6 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 387
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
               "page": 527
             },
             {
@@ -2268,6 +2264,10 @@
             {
               "source": "zoning.pdf",
               "page": 13
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 333
             }
           ]
         },
@@ -2471,10 +2471,6 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 387
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
               "page": 527
             },
             {
@@ -2484,6 +2480,10 @@
             {
               "source": "zoning.pdf",
               "page": 13
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 333
             }
           ]
         }
@@ -2503,20 +2503,24 @@
         "vector_only": {
           "metrics": {
             "source": {
-              "hit@3": 0,
+              "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.25
+              "mrr": 0.5
             },
             "page": {
-              "hit@3": 0,
-              "hit@5": 0,
-              "mrr": 0.0
+              "hit@3": 1,
+              "hit@5": 1,
+              "mrr": 0.5
             }
           },
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 420
+            },
+            {
+              "source": "article_v_-_use_regulations.pdf",
+              "page": 3
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -2529,10 +2533,6 @@
             {
               "source": "article_v_-_use_regulations.pdf",
               "page": 2
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 333
             }
           ]
         },
@@ -2591,20 +2591,20 @@
               "page": 3
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 91
-            },
-            {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 2
-            },
-            {
               "source": "article_v_-_use_regulations.pdf",
               "page": 2
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 420
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 91
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 373
             }
           ]
         },
@@ -2676,7 +2676,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 91
+              "page": 333
             }
           ]
         },
@@ -2712,7 +2712,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 91
+              "page": 333
             }
           ]
         },
@@ -2748,7 +2748,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 469
+              "page": 333
             }
           ]
         }
@@ -2784,6 +2784,10 @@
               "page": 6
             },
             {
+              "source": "article_v_-_use_regulations.pdf",
+              "page": 6
+            },
+            {
               "source": "Charleston, SC Zoning.pdf",
               "page": 91
             },
@@ -2794,10 +2798,6 @@
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 360
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 359
             }
           ]
         },
@@ -2860,16 +2860,16 @@
               "page": 112
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 231
-            },
-            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 36
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 615
+              "page": 181
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 231
             }
           ]
         },
@@ -2932,16 +2932,16 @@
               "page": 112
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 231
-            },
-            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 36
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 615
+              "page": 181
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 231
             }
           ]
         },
@@ -2968,16 +2968,16 @@
               "page": 112
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 231
-            },
-            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 36
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 615
+              "page": 181
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 231
             }
           ]
         },
@@ -3000,6 +3000,10 @@
               "page": 6
             },
             {
+              "source": "article_v_-_use_regulations.pdf",
+              "page": 6
+            },
+            {
               "source": "Charleston, SC Zoning.pdf",
               "page": 91
             },
@@ -3010,10 +3014,6 @@
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 360
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 359
             }
           ]
         }
@@ -3053,8 +3053,8 @@
               "page": 8
             },
             {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 8
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 199
             },
             {
               "source": "article_v_-_use_regulations.pdf",
@@ -3129,12 +3129,12 @@
               "page": 8
             },
             {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 11
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 159
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 159
+              "page": 644
             }
           ]
         },
@@ -3161,16 +3161,16 @@
               "page": 8
             },
             {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 8
-            },
-            {
               "source": "Charleston, SC Zoning.pdf",
               "page": 159
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 644
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 420
             }
           ]
         },
@@ -3205,8 +3205,8 @@
               "page": 517
             },
             {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 8
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 159
             }
           ]
         },
@@ -3237,12 +3237,12 @@
               "page": 8
             },
             {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 8
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 517
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 160
+              "page": 159
             }
           ]
         },
@@ -3273,12 +3273,12 @@
               "page": 8
             },
             {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 8
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 199
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 160
+              "source": "article_v_-_use_regulations.pdf",
+              "page": 3
             }
           ]
         }
@@ -3314,20 +3314,20 @@
               "page": 74
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 417
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 219
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 392
             },
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 219
-            },
-            {
               "source": "article_v_-_use_regulations.pdf",
               "page": 5
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 3
             }
           ]
         },
@@ -3387,6 +3387,10 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 71
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
               "page": 58
             },
             {
@@ -3396,10 +3400,6 @@
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 66
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 71
             }
           ]
         },
@@ -3463,15 +3463,15 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 71
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
               "page": 58
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 62
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 66
             }
           ]
         },
@@ -3499,15 +3499,15 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 71
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
               "page": 58
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 62
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 66
             }
           ]
         },
@@ -3538,8 +3538,8 @@
               "page": 74
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 417
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 219
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -3565,18 +3565,18 @@
             "source": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 1.0
+              "mrr": 0.5
             },
             "page": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 1.0
+              "mrr": 0.5
             }
           },
           "top5": [
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 40
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 384
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
@@ -3588,20 +3588,20 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 124
+              "page": 40
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 77
+              "page": 124
             }
           ]
         },
         "substring_keyword": {
           "metrics": {
             "source": {
-              "hit@3": 1,
-              "hit@5": 1,
-              "mrr": 0.3333333333333333
+              "hit@3": 0,
+              "hit@5": 0,
+              "mrr": 0.0
             },
             "page": {
               "hit@3": 0,
@@ -3612,23 +3612,23 @@
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
+              "page": 384
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 385
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 386
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
               "page": 387
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 704
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 101
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 115
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 189
             }
           ]
         },
@@ -3671,9 +3671,9 @@
         "hybrid_substring": {
           "metrics": {
             "source": {
-              "hit@3": 1,
-              "hit@5": 1,
-              "mrr": 0.3333333333333333
+              "hit@3": 0,
+              "hit@5": 0,
+              "mrr": 0.0
             },
             "page": {
               "hit@3": 0,
@@ -3684,23 +3684,23 @@
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
+              "page": 384
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 385
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 386
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
               "page": 387
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 704
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 101
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 115
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 189
             }
           ]
         },
@@ -3735,8 +3735,8 @@
               "page": 704
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 150
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 136
             }
           ]
         },
@@ -3767,12 +3767,12 @@
               "page": 40
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 704
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 136
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 150
+              "page": 704
             }
           ]
         },
@@ -3804,11 +3804,11 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 124
+              "page": 136
             },
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 77
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 384
             }
           ]
         }
@@ -3857,7 +3857,7 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 101
+              "page": 142
             }
           ]
         },
@@ -4001,7 +4001,7 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 45
+              "page": 101
             }
           ]
         },
@@ -4033,11 +4033,11 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 45
+              "page": 185
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 185
+              "page": 101
             }
           ]
         },
@@ -4069,11 +4069,11 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 45
+              "page": 185
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 185
+              "page": 45
             }
           ]
         }
@@ -4122,7 +4122,7 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 34
+              "page": 45
             }
           ]
         },
@@ -4338,7 +4338,7 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 34
+              "page": 45
             }
           ]
         }
@@ -4375,7 +4375,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 325
+              "page": 624
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -4383,11 +4383,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 629
+              "page": 84
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 635
+              "page": 325
             }
           ]
         },
@@ -4411,10 +4411,6 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 655
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
               "page": 201
             },
             {
@@ -4424,6 +4420,10 @@
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 612
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 618
             }
           ]
         },
@@ -4447,19 +4447,19 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 202
+              "page": 201
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 201
             },
             {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 6
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 200
             },
             {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 8
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 202
             }
           ]
         },
@@ -4483,10 +4483,6 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 655
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
               "page": 201
             },
             {
@@ -4496,6 +4492,10 @@
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 612
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 618
             }
           ]
         },
@@ -4519,19 +4519,19 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 202
+              "page": 201
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 201
             },
             {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 6
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 200
             },
             {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 8
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 202
             }
           ]
         },
@@ -4555,7 +4555,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 202
+              "page": 201
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -4563,11 +4563,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 325
+              "page": 624
             },
             {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 6
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 200
             }
           ]
         },
@@ -4591,7 +4591,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 325
+              "page": 624
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -4599,11 +4599,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 629
+              "page": 84
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 635
+              "page": 325
             }
           ]
         }
@@ -4640,6 +4640,10 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
+              "page": 243
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
               "page": 402
             },
             {
@@ -4649,86 +4653,10 @@
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 407
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 396
             }
           ]
         },
         "substring_keyword": {
-          "metrics": {
-            "source": {
-              "hit@3": 1,
-              "hit@5": 1,
-              "mrr": 1.0
-            },
-            "page": {
-              "hit@3": 0,
-              "hit@5": 1,
-              "mrr": 0.25
-            }
-          },
-          "top5": [
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 303
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 396
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 399
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 400
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 402
-            }
-          ]
-        },
-        "bm25_keyword": {
-          "metrics": {
-            "source": {
-              "hit@3": 1,
-              "hit@5": 1,
-              "mrr": 1.0
-            },
-            "page": {
-              "hit@3": 0,
-              "hit@5": 1,
-              "mrr": 0.2
-            }
-          },
-          "top5": [
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 399
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 399
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 407
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 407
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 400
-            }
-          ]
-        },
-        "hybrid_substring": {
           "metrics": {
             "source": {
               "hit@3": 1,
@@ -4744,7 +4672,47 @@
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 402
+              "page": 303
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 384
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 385
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 386
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 387
+            }
+          ]
+        },
+        "bm25_keyword": {
+          "metrics": {
+            "source": {
+              "hit@3": 1,
+              "hit@5": 1,
+              "mrr": 1.0
+            },
+            "page": {
+              "hit@3": 0,
+              "hit@5": 1,
+              "mrr": 0.25
+            }
+          },
+          "top5": [
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 399
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 399
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -4752,7 +4720,39 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
+              "page": 400
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 407
+            }
+          ]
+        },
+        "hybrid_substring": {
+          "metrics": {
+            "source": {
+              "hit@3": 1,
+              "hit@5": 1,
+              "mrr": 1.0
+            },
+            "page": {
+              "hit@3": 1,
+              "hit@5": 1,
+              "mrr": 0.3333333333333333
+            }
+          },
+          "top5": [
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 402
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
               "page": 396
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 400
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -4772,15 +4772,19 @@
               "mrr": 1.0
             },
             "page": {
-              "hit@3": 0,
-              "hit@5": 0,
-              "mrr": 0.0
+              "hit@3": 1,
+              "hit@5": 1,
+              "mrr": 0.5
             }
           },
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 399
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 400
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -4793,10 +4797,6 @@
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 399
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 407
             }
           ]
         },
@@ -4808,15 +4808,19 @@
               "mrr": 1.0
             },
             "page": {
-              "hit@3": 0,
-              "hit@5": 0,
-              "mrr": 0.0
+              "hit@3": 1,
+              "hit@5": 1,
+              "mrr": 0.5
             }
           },
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 399
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 400
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -4829,10 +4833,6 @@
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 399
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 407
             }
           ]
         },
@@ -4845,8 +4845,8 @@
             },
             "page": {
               "hit@3": 0,
-              "hit@5": 0,
-              "mrr": 0.0
+              "hit@5": 1,
+              "mrr": 0.25
             }
           },
           "top5": [
@@ -4856,19 +4856,19 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 407
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
               "page": 243
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 339
+              "page": 407
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 402
+              "page": 400
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 339
             }
           ]
         }
@@ -4913,11 +4913,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 116
+              "page": 508
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 513
+              "page": 500
             }
           ]
         },
@@ -4945,15 +4945,15 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
+              "page": 499
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 506
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
               "page": 311
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 491
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 498
             }
           ]
         },
@@ -4985,11 +4985,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 508
+              "page": 501
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 499
+              "page": 508
             }
           ]
         },
@@ -5017,15 +5017,15 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 311
+              "page": 506
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 491
+              "page": 506
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 498
+              "page": 499
             }
           ]
         },
@@ -5053,11 +5053,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 501
+              "page": 500
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 500
+              "page": 501
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -5089,11 +5089,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 501
+              "page": 500
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 500
+              "page": 501
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -5129,11 +5129,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 116
+              "page": 500
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 513
+              "page": 508
             }
           ]
         }
@@ -5178,11 +5178,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 650
+              "page": 174
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 224
+              "page": 650
             }
           ]
         },
@@ -5394,11 +5394,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 650
+              "page": 174
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 224
+              "page": 650
             }
           ]
         }
@@ -5443,11 +5443,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 648
+              "page": 371
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 371
+              "page": 698
             }
           ]
         },
@@ -5466,10 +5466,6 @@
           },
           "top5": [
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 205
-            },
-            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 241
             },
@@ -5484,6 +5480,10 @@
             {
               "source": "article_v_-_use_regulations.pdf",
               "page": 2
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 89
             }
           ]
         },
@@ -5515,11 +5515,11 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 242
+              "page": 243
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 243
+              "page": 242
             }
           ]
         },
@@ -5538,10 +5538,6 @@
           },
           "top5": [
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 205
-            },
-            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 241
             },
@@ -5556,6 +5552,10 @@
             {
               "source": "article_v_-_use_regulations.pdf",
               "page": 2
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 89
             }
           ]
         },
@@ -5579,15 +5579,15 @@
             },
             {
               "source": "zoning.pdf",
+              "page": 4
+            },
+            {
+              "source": "zoning.pdf",
               "page": 11
             },
             {
-              "source": "zoning.pdf",
-              "page": 4
-            },
-            {
-              "source": "zoning.pdf",
-              "page": 4
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 243
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
@@ -5615,15 +5615,15 @@
             },
             {
               "source": "zoning.pdf",
+              "page": 4
+            },
+            {
+              "source": "zoning.pdf",
               "page": 11
             },
             {
-              "source": "zoning.pdf",
-              "page": 4
-            },
-            {
-              "source": "zoning.pdf",
-              "page": 4
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 243
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
@@ -5654,16 +5654,16 @@
               "page": 4
             },
             {
-              "source": "zoning.pdf",
-              "page": 11
-            },
-            {
               "source": "Charleston, SC Zoning.pdf",
               "page": 648
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 648
+              "page": 371
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 698
             }
           ]
         }
@@ -5690,10 +5690,14 @@
             "page": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 1.0
+              "mrr": 0.5
             }
           },
           "top5": [
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 2
+            },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
               "page": 6
@@ -5703,16 +5707,12 @@
               "page": 116
             },
             {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 2
-            },
-            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 108
             },
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 116
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 5
             }
           ]
         },
@@ -5740,15 +5740,15 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
+              "page": 155
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
               "page": 226
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 311
-            },
-            {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 4
+              "page": 247
             }
           ]
         },
@@ -5775,16 +5775,16 @@
               "page": 7
             },
             {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 2
-            },
-            {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 4
-            },
-            {
               "source": "Charleston, SC Zoning.pdf",
               "page": 226
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 5
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 5
             }
           ]
         },
@@ -5811,16 +5811,16 @@
               "page": 108
             },
             {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 4
+            },
+            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 216
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 150
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 226
             }
           ]
         },
@@ -5844,19 +5844,19 @@
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 5
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 4
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
               "page": 2
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 216
-            },
-            {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 7
-            },
-            {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 4
             }
           ]
         },
@@ -5883,16 +5883,16 @@
               "page": 2
             },
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 216
-            },
-            {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 7
+              "page": 5
             },
             {
               "source": "E Generalized Summary of Zoning Regulations.pdf",
               "page": 4
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 216
             }
           ]
         },
@@ -5919,16 +5919,16 @@
               "page": 2
             },
             {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 5
+            },
+            {
+              "source": "E Generalized Summary of Zoning Regulations.pdf",
+              "page": 4
+            },
+            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 216
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 116
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 108
             }
           ]
         }
@@ -5964,12 +5964,12 @@
               "page": 16
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 137
+              "source": "article_v_-_use_regulations.pdf",
+              "page": 3
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 155
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 104
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
@@ -5977,7 +5977,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 517
+              "page": 137
             }
           ]
         },
@@ -6013,7 +6013,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 90
+              "page": 100
             }
           ]
         },
@@ -6045,11 +6045,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 120
+              "page": 290
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 664
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 249
             }
           ]
         },
@@ -6108,12 +6108,12 @@
               "page": 16
             },
             {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 12
-            },
-            {
               "source": "Charleston, SC Zoning.pdf",
               "page": 137
+            },
+            {
+              "source": "article_v_-_use_regulations.pdf",
+              "page": 12
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -6121,7 +6121,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 120
+              "page": 290
             }
           ]
         },
@@ -6152,12 +6152,12 @@
               "page": 12
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 155
+              "source": "article_v_-_use_regulations.pdf",
+              "page": 3
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 57
+              "page": 104
             }
           ]
         },
@@ -6184,16 +6184,16 @@
               "page": 137
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 155
+              "source": "article_v_-_use_regulations.pdf",
+              "page": 3
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 104
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 57
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 517
             }
           ]
         }
@@ -6226,7 +6226,11 @@
           "top5": [
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 59
+              "page": 63
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 76
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
@@ -6234,11 +6238,7 @@
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 63
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 76
+              "page": 59
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
@@ -6249,9 +6249,9 @@
         "substring_keyword": {
           "metrics": {
             "source": {
-              "hit@3": 0,
+              "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.25
+              "mrr": 0.5
             },
             "page": {
               "hit@3": 0,
@@ -6265,20 +6265,20 @@
               "page": 576
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 576
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 636
-            },
-            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 74
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 138
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 153
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 165
             }
           ]
         },
@@ -6298,23 +6298,23 @@
           "top5": [
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 59
+              "page": 76
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 63
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 72
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 636
             },
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 59
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 76
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 63
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 576
             }
           ]
         },
@@ -6338,19 +6338,19 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 636
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 576
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
               "page": 576
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 138
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 153
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 165
             }
           ]
         },
@@ -6370,14 +6370,6 @@
           "top5": [
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 59
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 636
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
               "page": 100
             },
             {
@@ -6387,6 +6379,14 @@
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 76
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 63
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 72
             }
           ]
         },
@@ -6406,14 +6406,6 @@
           "top5": [
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 59
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 636
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
               "page": 100
             },
             {
@@ -6423,6 +6415,14 @@
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 76
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 63
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 72
             }
           ]
         },
@@ -6442,15 +6442,11 @@
           "top5": [
             {
               "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 59
-            },
-            {
-              "source": "zoning-ordinance-082024-rev.pdf",
               "page": 100
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 636
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 59
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
@@ -6459,6 +6455,10 @@
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 76
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 74
             }
           ]
         }
@@ -6498,12 +6498,12 @@
               "page": 182
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 635
-            },
-            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 182
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 635
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
@@ -6534,16 +6534,16 @@
               "page": 3
             },
             {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 3
-            },
-            {
               "source": "Charleston, SC Zoning.pdf",
               "page": 110
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 127
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 141
             }
           ]
         },
@@ -6566,12 +6566,12 @@
               "page": 53
             },
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 251
-            },
-            {
               "source": "article_v_-_use_regulations.pdf",
               "page": 10
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 251
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
@@ -6599,15 +6599,7 @@
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 170
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
               "page": 157
-            },
-            {
-              "source": "article_v_-_use_regulations.pdf",
-              "page": 3
             },
             {
               "source": "article_v_-_use_regulations.pdf",
@@ -6616,6 +6608,14 @@
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 110
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 127
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 141
             }
           ]
         },
@@ -6646,12 +6646,12 @@
               "page": 182
             },
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 251
-            },
-            {
               "source": "article_v_-_use_regulations.pdf",
               "page": 10
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 251
             }
           ]
         },
@@ -6682,12 +6682,12 @@
               "page": 53
             },
             {
-              "source": "zoning-ordinance-082024-rev.pdf",
-              "page": 251
-            },
-            {
               "source": "article_v_-_use_regulations.pdf",
               "page": 10
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 251
             }
           ]
         },
@@ -6718,12 +6718,12 @@
               "page": 127
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 635
-            },
-            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 182
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 635
             }
           ]
         }
@@ -6754,7 +6754,7 @@
             "page": {
               "hit@3": 0,
               "hit@5": 1,
-              "mrr": 0.25
+              "mrr": 0.2
             }
           },
           "top5": [
@@ -6768,15 +6768,15 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
+              "page": 400
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
               "page": 401
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 406
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 339
             }
           ]
         },
@@ -6836,19 +6836,19 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 379
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
               "page": 406
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 61
+              "page": 379
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 402
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 61
             }
           ]
         },
@@ -6898,7 +6898,7 @@
             "page": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.5
+              "mrr": 0.3333333333333333
             }
           },
           "top5": [
@@ -6908,7 +6908,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 405
+              "page": 401
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -6920,7 +6920,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 379
+              "page": 405
             }
           ]
         },
@@ -6934,13 +6934,17 @@
             "page": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.5
+              "mrr": 0.3333333333333333
             }
           },
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 402
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 401
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -6953,10 +6957,6 @@
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 405
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 379
             }
           ]
         },
@@ -6970,13 +6970,17 @@
             "page": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.5
+              "mrr": 0.3333333333333333
             }
           },
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 402
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 401
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -6989,10 +6993,6 @@
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 394
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 401
             }
           ]
         }
@@ -7041,7 +7041,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 242
+              "page": 516
             }
           ]
         },
@@ -7199,17 +7199,17 @@
             "page": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.5
+              "mrr": 1.0
             }
           },
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 504
+              "page": 505
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 505
+              "page": 504
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -7235,17 +7235,17 @@
             "page": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.5
+              "mrr": 1.0
             }
           },
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 504
+              "page": 505
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 505
+              "page": 504
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -7257,7 +7257,7 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 495
+              "page": 512
             }
           ]
         }
@@ -7284,13 +7284,17 @@
             "page": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.5
+              "mrr": 0.3333333333333333
             }
           },
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 207
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 204
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -7303,10 +7307,6 @@
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 206
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 202
             }
           ]
         },
@@ -7370,11 +7370,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 721
+              "page": 688
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 688
+              "page": 721
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -7442,11 +7442,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 721
+              "page": 688
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 688
+              "page": 721
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -7478,11 +7478,11 @@
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 721
+              "page": 688
             },
             {
               "source": "Charleston, SC Zoning.pdf",
-              "page": 688
+              "page": 721
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -7500,13 +7500,17 @@
             "page": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.5
+              "mrr": 0.3333333333333333
             }
           },
           "top5": [
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 207
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 204
             },
             {
               "source": "Charleston, SC Zoning.pdf",
@@ -7519,10 +7523,6 @@
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 206
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 202
             }
           ]
         }

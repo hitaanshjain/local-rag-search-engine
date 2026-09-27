@@ -64,11 +64,11 @@ class ChatEventsTests(unittest.TestCase):
         ):
             response = asyncio.run(chat(QueryRequest(query="What is the maximum fence height?")))
             events = asyncio.run(response_events(response))
-        self.assertEqual(events, [
-            ("sources", {"sources": []}),
-            ("token", {"text": "Which city or document do you mean?"}),
-            ("done", {}),
-        ])
+        self.assertEqual([name for name, _ in events], ["status", "sources", "token", "timing", "done"])
+        self.assertEqual(events[0][1]["stage"], "searching")
+        self.assertEqual(event_data(events, "sources"), {"sources": []})
+        self.assertEqual(event_data(events, "token"), {"text": "Which city or document do you mean?"})
+        self.assertEqual(event_data(events, "timing")["drafts"], 0)
 
     def test_unverified_claim_is_not_sent_to_the_client(self):
         class DraftChain:
@@ -256,8 +256,8 @@ class ChatEventsTests(unittest.TestCase):
         with patch("app.api.hybrid_search", return_value=docs), patch("app.api.prompt_template", FakePrompt()):
             events = asyncio.run(response_events(asyncio.run(chat(QueryRequest(query="What is the rule?")))))
         names = [event for event, _ in events]
-        self.assertEqual(names, ["status", "status", "status", "sources", "token", "timing", "done"])
-        self.assertEqual([data["stage"] for event, data in events if event == "status"], ["drafting", "checking", "comparing"])
+        self.assertEqual(names, ["status", "status", "status", "status", "sources", "token", "timing", "done"])
+        self.assertEqual([data["stage"] for event, data in events if event == "status"], ["searching", "drafting", "checking", "comparing"])
         self.assertTrue(all(data["text"] for event, data in events if event == "status"))
 
     def test_timing_reports_stage_durations_and_model_calls(self):
@@ -276,16 +276,26 @@ class ChatEventsTests(unittest.TestCase):
         ), patch("app.api.verify_answer", verify):
             events = asyncio.run(response_events(asyncio.run(chat(QueryRequest(query="What is the rule?")))))
         timing = event_data(events, "timing")
-        self.assertEqual(set(timing), {"draft_ms", "check_ms", "conflict_ms", "answer_ms", "drafts", "check_calls"})
+        self.assertEqual(set(timing), {
+            "index_ms", "rewrite_ms", "retrieval_ms", "vector_ms", "keyword_ms", "fusion_ms", "ambiguity_ms",
+            "context_ms", "draft_ms", "check_ms", "conflict_ms", "answer_ms", "drafts", "check_calls",
+        })
         self.assertEqual((timing["drafts"], timing["check_calls"]), (1, 2))
         self.assertTrue(all(timing[key] >= 0 for key in ("draft_ms", "check_ms", "conflict_ms", "answer_ms")))
+
+    def test_search_failure_is_sent_as_an_error_event(self):
+        with patch("app.api.hybrid_search", side_effect=ConnectionError("embedding service down")):
+            response = asyncio.run(chat(QueryRequest(query="What is the rule?")))
+            events = asyncio.run(response_events(response))
+        self.assertEqual([name for name, _ in events], ["status", "error"])
+        self.assertEqual(events[-1][1]["message"], "Answer generation failed.")
 
     def test_conflict_keyword_search_runs_off_the_event_loop(self):
         import threading
 
         threads = []
 
-        def keyword_search(query, index, k=5):
+        def keyword_search(query, index, k=5, sources=None):
             threads.append((k, threading.current_thread() is threading.main_thread()))
             return []
 
@@ -390,12 +400,20 @@ class ChatEventsTests(unittest.TestCase):
             Document(page_content="More text", metadata={"source": "a.pdf", "page": 2, "low_text": False}),
             Document(page_content="Other", metadata={"source": "b.pdf", "page": 3}),
         ]
-        with patch("app.api.search_index.get", return_value=SearchIndex(docs, None)):
-            with TestClient(app) as client:
-                response = client.get("/documents")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {"documents": [
+        with tempfile.TemporaryDirectory() as temporary_dir:
+            report = Path(temporary_dir) / "pages.json"
+            with patch("app.api.search_index.get", return_value=SearchIndex(docs, None)), patch("app.api.PAGE_REPORT_PATH", report):
+                with TestClient(app) as client:
+                    without_report = client.get("/documents").json()
+                    # The ingestion report also covers unreadable pages that produced no chunks.
+                    report.write_text(json.dumps({"a.pdf": {"pages": 4, "low_text_pages": [1, 4], "blank_pages": [3]}}), encoding="utf-8")
+                    with_report = client.get("/documents").json()
+        self.assertEqual(without_report, {"documents": [
             {"name": "a.pdf", "pages": 2, "low_text_pages": [1]},
+            {"name": "b.pdf", "pages": 3, "low_text_pages": []},
+        ]})
+        self.assertEqual(with_report, {"documents": [
+            {"name": "a.pdf", "pages": 4, "low_text_pages": [1, 4]},
             {"name": "b.pdf", "pages": 3, "low_text_pages": []},
         ]})
 
@@ -407,8 +425,10 @@ class ChatEventsTests(unittest.TestCase):
             events = asyncio.run(response_events(asyncio.run(chat(QueryRequest(query="Which rule?", documents=["b.pdf"])))))
         self.assertEqual(event_data(events, "sources")["sources"][0]["source"], "b.pdf")
         self.assertEqual(search.call_args.kwargs["sources"], {"b.pdf"})
-        self.assertEqual([doc.metadata["source"] for doc in search.call_args.kwargs["index"].documents], ["b.pdf"])
-        self.assertTrue(all([doc.metadata["source"] for doc in call.args[1].documents] == ["b.pdf"] for call in keyword.call_args_list))
+        # One shared keyword index is scored, then filtered to the selection.
+        self.assertIs(search.call_args.kwargs["index"], index)
+        self.assertTrue(keyword.call_args_list)
+        self.assertTrue(all(call.kwargs["sources"] == {"b.pdf"} for call in keyword.call_args_list))
 
         with patch("app.api.search_index.get", return_value=index):
             with self.assertRaises(HTTPException) as error:
@@ -466,11 +486,9 @@ class ChatEventsTests(unittest.TestCase):
             events = asyncio.run(response_events(response))
 
         self.assertEqual(response.media_type, "text/event-stream")
-        retrieval_timing = response.headers.get("server-timing", "")
-        self.assertTrue(retrieval_timing.startswith("retrieval;dur="))
-        self.assertGreaterEqual(float(retrieval_timing.split(",", 1)[0].split("=", 1)[1]), 0)
-        self.assertIn("index;dur=", retrieval_timing)
-        self.assertIn("vector;dur=", retrieval_timing)
+        timing = event_data(events, "timing")
+        self.assertTrue(all(timing[f"{stage}_ms"] >= 0 for stage in ("retrieval", "index", "vector", "keyword", "fusion")))
+        self.assertGreaterEqual(timing["retrieval_ms"], timing["index_ms"])
         self.assertEqual(
             [(event, data) for event, data in events if event not in {"status", "timing"}],
             [
@@ -486,14 +504,9 @@ class ChatEventsTests(unittest.TestCase):
             events = asyncio.run(response_events(response))
 
         self.assertEqual(response.media_type, "text/event-stream")
-        self.assertEqual(
-            events,
-            [
-                ("sources", {"sources": []}),
-                ("token", {"text": "I don't know based on these documents."}),
-                ("done", {}),
-            ],
-        )
+        self.assertEqual([name for name, _ in events], ["status", "sources", "token", "timing", "done"])
+        self.assertEqual(event_data(events, "sources"), {"sources": []})
+        self.assertEqual(event_data(events, "token"), {"text": "I don't know based on these documents."})
 
     def test_excerpt_drops_only_the_source_header(self):
         docs = [

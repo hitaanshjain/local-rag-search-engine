@@ -33,7 +33,7 @@ class PdfExtractionTests(unittest.TestCase):
         self.assertIn("6-2 R-2 Residential", pages[0].page_content)
         self.assertIn("| Guest house | 900 square feet |", pages[0].page_content)
 
-    def test_scanned_page_uses_ocr_and_blank_page_is_flagged(self):
+    def test_scanned_page_uses_ocr_and_blank_page_is_not_low_text(self):
         with tempfile.TemporaryDirectory() as temporary_dir:
             path = Path(temporary_dir) / "scans.pdf"
             source = pymupdf.open()
@@ -53,10 +53,10 @@ class PdfExtractionTests(unittest.TestCase):
         self.assertEqual(pages[0].metadata["extraction_method"], "ocr")
         self.assertIn("900 square feet", pages[0].page_content)
         self.assertFalse(pages[0].metadata["low_text"])
-        self.assertTrue(pages[1].metadata["low_text"])
-        self.assertIn("little or no text", pages[1].metadata["extraction_warning"])
+        self.assertTrue(pages[1].metadata["blank"])
+        self.assertFalse(pages[1].metadata["low_text"])
 
-    def test_empty_page_is_flagged_without_running_ocr(self):
+    def test_blank_page_is_marked_blank_without_running_ocr(self):
         with tempfile.TemporaryDirectory() as temporary_dir:
             path = Path(temporary_dir) / "empty.pdf"
             pdf = pymupdf.open()
@@ -64,7 +64,33 @@ class PdfExtractionTests(unittest.TestCase):
             pdf.save(path)
             pdf.close()
             pages = extract_pdf(path, ocr=lambda image: self.fail("OCR should not run on an empty page"))
+        self.assertTrue(pages[0].metadata["blank"])
+        self.assertFalse(pages[0].metadata["low_text"])
+        self.assertEqual(pages[0].metadata["extraction_warning"], "")
+
+    def test_image_page_that_ocr_cannot_read_is_low_text(self):
+        with tempfile.TemporaryDirectory() as temporary_dir:
+            path = Path(temporary_dir) / "unreadable.pdf"
+            pdf = pymupdf.open()
+            page = pdf.new_page(width=300, height=200)
+            white = pymupdf.Pixmap(pymupdf.csRGB, pymupdf.IRect(0, 0, 60, 40), False)
+            white.set_rect(white.irect, (255, 255, 255))
+            page.insert_image(page.rect, pixmap=white)
+            pdf.save(path)
+            pdf.close()
+            pages = extract_pdf(path, ocr=lambda image: None)
+        self.assertFalse(pages[0].metadata["blank"])
         self.assertTrue(pages[0].metadata["low_text"])
+        self.assertIn("little or no text", pages[0].metadata["extraction_warning"])
+
+    def test_undetected_table_keeps_each_row_together(self):
+        # The LA summary is a borderless table that table detection rejects; sorting its text
+        # blocks by position scattered each zone's row across the page and into other chunks.
+        path = Path(__file__).resolve().parents[1] / "data" / "E Generalized Summary of Zoning Regulations.pdf"
+        with pymupdf.open(path) as pdf:
+            text = " ".join(extract_text_layout(pdf[2]).split())
+        positions = [text.index(cell) for cell in ("R2", "Two Family Dwellings", "2 spaces, one covered", "RD1.5")]
+        self.assertEqual(positions, sorted(positions))
 
     def test_unruled_table_keeps_row_and_column_association(self):
         with tempfile.TemporaryDirectory() as temporary_dir:

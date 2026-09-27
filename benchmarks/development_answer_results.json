@@ -1,6 +1,6 @@
 {
-  "run_at_utc": "2026-09-27T03:29:22.921428+00:00",
-  "git_head_at_run": "cb070a41c7114bd22bffc35e307a7a620831e36a",
+  "run_at_utc": "2026-09-27T05:17:57.228550+00:00",
+  "git_head_at_run": "ce0bd071fe78e310c49169035b0a7d7bd960fe99",
   "models": {
     "embedding": "nomic-embed-text",
     "llm": "llama3.2:3b"
@@ -25,7 +25,7 @@
         "Level 2 Review",
         "Level two review"
       ],
-      "answer": "Jurisdiction: Issaquah | District: not specified | Document version: Updated 2-5-20 | Source: zoning.pdf\nP2 = Permitted with Level 2 Review, which means that an applicant must go through a Level 2 Review process. [1]",
+      "answer": "Jurisdiction: Issaquah | District: not specified | Document version: Updated 2-5-20 | Source: zoning.pdf\nP2 = Permitted with Level 2 Review. [1]",
       "sources": [
         {
           "source": "zoning.pdf",
@@ -35,14 +35,14 @@
         },
         {
           "source": "zoning.pdf",
-          "page": 11,
-          "excerpt": "in Central Issaquah. The District Standards Table found in IMC 18.07.360 does not apply in the \nCentral Issaquah zoning districts. Each structure, development, or activity in a Central Issaquah \nzoning district shall comply with these requirements except as otherwise provided in this \nSection. \n \nB. Floor Area Ratio.  The relationship between the amount of Gross Floor Area in a Building (or\n\nBuildings) and the Developable Site Area on which the Building(s) stands.  It is obtained by \ndividing th",
+          "page": 4,
+          "excerpt": "18\n\nTable 4.2B Intent of Overlays\n\nOverlay \nIntent\n\nCentral Plan\n\nDistrict(s) \nVertical \nMixed Use\n\nThe intent is to establish an overlay within the Urban Core where \nviable mixed use development is required. Where parcels shown to \nhave Required Ground Floor Frontages as indicated in Figure 4B \nCentral Issaquah Vertical Mixed Use Overlay map, buildings are \nrequired to be a minimum of two floors with the ground floor of \nbuildings comprised of active uses that ensure a dense, vibrant, \npedestri",
           "extraction_method": "text"
         },
         {
           "source": "zoning.pdf",
-          "page": 4,
-          "excerpt": "Table 4.2B Intent of Overlays\n\nCentral Plan\n\nDistrict(s) \nVertical \nMixed Use\n\nOverlay \nIntent\n\nThe intent is to establish an overlay within the Urban Core where \nviable mixed use development is required. Where parcels shown to \nhave Required Ground Floor Frontages as indicated in Figure 4B \nCentral Issaquah Vertical Mixed Use Overlay map, buildings are \nrequired to be a minimum of two floors with the ground floor of \nbuildings comprised of active uses that ensure a dense, vibrant, \npedestrian f",
+          "page": 11,
+          "excerpt": "in Central Issaquah. The District Standards Table found in IMC 18.07.360 does not apply in the \nCentral Issaquah zoning districts. Each structure, development, or activity in a Central Issaquah \nzoning district shall comply with these requirements except as otherwise provided in this \nSection. \n \nB. Floor Area Ratio.  The relationship between the amount of Gross Floor Area in a Building (or\n\nBuildings) and the Developable Site Area on which the Building(s) stands.  It is obtained by \ndividing th",
           "extraction_method": "text"
         }
       ],
@@ -53,12 +53,20 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 978.224999998929,
-        "check_ms": 488.91096000079415,
-        "conflict_ms": 663.3029590011574,
+        "index_ms": 7.277602002432104,
+        "rewrite_ms": 0.0019430008251219988,
+        "retrieval_ms": 290.8764780004276,
+        "vector_ms": 198.4918079979252,
+        "keyword_ms": 28.727364995575044,
+        "fusion_ms": 0.10399599705124274,
+        "ambiguity_ms": 30.076663999352604,
+        "context_ms": 25.55067399953259,
+        "draft_ms": 775.3913739943528,
+        "check_ms": 0.4712250010925345,
+        "conflict_ms": 1542.3553770015133,
+        "answer_ms": 2318.6727020001854,
         "drafts": 1,
-        "answer_ms": 2130.705333998776,
-        "check_calls": 2
+        "check_calls": 1
       }
     },
     {
@@ -73,7 +81,7 @@
         "10 feet",
         "ten feet"
       ],
-      "answer": "I don't know based on these documents.",
+      "answer": "Jurisdiction: Los Angeles | District: not specified | Document version: Adopted December 3, 2013 | Source: E Generalized Summary of Zoning Regulations.pdf\nFor a surface parking zone combined with an A or R Zone, there is no required front yard. [1]",
       "sources": [
         {
           "source": "E Generalized Summary of Zoning Regulations.pdf",
@@ -83,8 +91,8 @@
         },
         {
           "source": "E Generalized Summary of Zoning Regulations.pdf",
-          "page": 2,
-          "excerpt": "Appendix E Generalized Summary of Zoning Regulations \b\n\u0003Housing Element 2013–2021 - Appendices\n\nMaximum Height\nRequired yards\nMinimum Area\nMin.\n\nParking\n\nLot \nWidth\n\nZone\nUse\n\nReq’d.\nStories\nFeet\nFront\nSide\nRear\nPer Lot\nPer \nDwelling Unit\n\nAgricultural\n\nAgricultural \nOne-Family Dwellings, \nParks, Playgrounds, \nCommunity Centers, \nGolf Courses, \nTruck Gardening, \nExtensive Agricultural \nUses, \nHome Occupations\n\nUnlimited\n\n45 or(6),(8)\n20% lot \ndepth; 25 ft.\n\n10% lot \nwidth; 25 ft.\n\n25% lot depth;",
+          "page": 5,
+          "excerpt": "Zone\nUse\n\nMaximum Height\nRequired yards\nMinimum\n\nArea Per \nLot/ Unit\n\nMin.\n\nLot \nWidth\nStories\nFeet\nFront\nSide\nRear\n\nManufacturing\n\nMR1\n\nRestricted Industrial \nCM Uses, Limited Commercial \nandManufacturing, Clinics,  \nMedia Products, \nLimited Machine Shops, Animal \nHospitals and Kennels\n\nunlimited (8)\n\n5 ft. for lots <100 \nft. deep; 15 ft. for \nlots >100 ft. deep\n\nnone for industrial\n\nor commercial\n\nuses;same as\n\nR4 zone for \nresidential uses (5)\n\nnone for industrial\n\nor commercial \nuses; same a",
           "extraction_method": "text"
         },
         {
@@ -96,17 +104,25 @@
       ],
       "score": {
         "fact_match": false,
-        "citation_match": false,
+        "citation_match": true,
         "citation_refs_valid": true,
         "pass": false
       },
       "timing": {
-        "draft_ms": 1271.0050679997948,
-        "check_ms": 4641.484938001668,
-        "conflict_ms": 0.0,
-        "drafts": 2,
-        "answer_ms": 5912.872552002227,
-        "check_calls": 11
+        "index_ms": 5.311649998475332,
+        "rewrite_ms": 0.0009529976523481309,
+        "retrieval_ms": 323.4177889971761,
+        "vector_ms": 160.48225700069452,
+        "keyword_ms": 50.05308800173225,
+        "fusion_ms": 0.07463800284313038,
+        "ambiguity_ms": 44.10088500299025,
+        "context_ms": 62.915991999034304,
+        "draft_ms": 903.5615370012238,
+        "check_ms": 629.4566090000444,
+        "conflict_ms": 741.6997719992651,
+        "answer_ms": 2275.0661250029225,
+        "drafts": 1,
+        "check_calls": 2
       }
     },
     {
@@ -120,7 +136,7 @@
         "500 feet",
         "five hundred feet"
       ],
-      "answer": "Jurisdiction: Urbana | District: not specified | Document version: not identified | Source: article_v_-_use_regulations.pdf\nA proposed gaming hall in Urbana must be at least 500 feet from another licensed gaming hall. [1]",
+      "answer": "Jurisdiction: Urbana | District: not specified | Document version: not identified | Source: article_v_-_use_regulations.pdf\nIn Urbana, a proposed gaming hall must be at least 500 feet from any other licensed gaming hall. [1]",
       "sources": [
         {
           "source": "article_v_-_use_regulations.pdf",
@@ -136,12 +152,20 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 1030.1849360002961,
-        "check_ms": 6344.351697000093,
-        "conflict_ms": 408.17074900041916,
-        "drafts": 2,
-        "answer_ms": 7783.051320002414,
-        "check_calls": 7
+        "index_ms": 5.432098994788248,
+        "rewrite_ms": 0.0006740010576322675,
+        "retrieval_ms": 234.9844949931139,
+        "vector_ms": 164.1207270004088,
+        "keyword_ms": 20.36746699741343,
+        "fusion_ms": 0.07518300117226318,
+        "ambiguity_ms": 23.877466999692842,
+        "context_ms": 20.62628099520225,
+        "draft_ms": 779.3335019960068,
+        "check_ms": 4414.166889000626,
+        "conflict_ms": 429.9074910013587,
+        "answer_ms": 5623.910748996423,
+        "drafts": 1,
+        "check_calls": 3
       }
     },
     {
@@ -156,24 +180,24 @@
         "ten acres",
         "ten (10) acres"
       ],
-      "answer": "Jurisdiction: Union City, Georgia | District: R-3 | Document version: August 20, 2024, Rev. | Source: zoning-ordinance-082024-rev.pdf\nAccording to the zoning ordinance, a minimum lot area of ten (10) acres is required for a cemetery [1].",
+      "answer": "Jurisdiction: Union City, Georgia | District: GC | Document version: August 20, 2024, Rev. | Source: zoning-ordinance-082024-rev.pdf\nThe minimum lot area for a cemetery in Union City is ten (10) acres [1].",
       "sources": [
         {
           "source": "zoning-ordinance-082024-rev.pdf",
-          "page": 59,
-          "excerpt": "8. Cemetery, provided: \n \na. Minimum lot area shall be ten (10) acres;\n\nAugust 20, 2024, Rev. \nPage 50",
-          "extraction_method": "text"
-        },
-        {
-          "source": "Charleston, SC Zoning.pdf",
-          "page": 636,
-          "excerpt": "a.\nMinimum lot width (ft). The minimum lot width (ft) is measured and\nmaintained from the front lot line through the entire parcel to the OCRM Critical\nLine. All lots within a subdivision must meet the minimum lot width average.\n(Exception: Flag lots and lots served by cul-de-sacs). Lots fronting on cul-de-sacs\nshall meet the minimum lot width at the required minimum front setback. Flag\nlots are designed with a \"flag pole\" area with a minimum width of 20 feet. The flag\npole area is not required ",
+          "page": 100,
+          "excerpt": "acre of development. (Ordinance 2001-12, October 16, 2001)\n\n13. Cemetery, provided: \n \na. Minimum lot area shall be ten (10) acres;\n\nb. Gravesites shall be set back at least 50 feet from all property lines;",
           "extraction_method": "text"
         },
         {
           "source": "zoning-ordinance-082024-rev.pdf",
-          "page": 59,
-          "excerpt": "separated from any such property line, excluding thefront property line, by a \nplanted buffer strip; and\n\nc. Accessory schools and cemeteries are permissible provided an additional three\n\n(3) acres is provided in addition to the three (3) acre church requirement.\n\n7. Schools and their customary related uses, provided: \n \na. Minimum lot size is three (3) acres;\n\nb. Minimum lot frontage is at least 200 feet;\n\nc. All buildings are located on a lot fronting a major or collector street, as\n\ndetermine",
+          "page": 76,
+          "excerpt": "separated from any such property line, excluding the front property line, by a \nplanted buffer strip; and\n\nc. Accessory schools and cemeteries are permissible provided an additional three\n\n(3) acres is provided in addition to the three (3) acre church requirement.\n\n3. Schools and their customary related uses, provided: \n \na. Minimum lot size is three (3) acres;\n\nb. Minimum lot frontage is at least 200 feet;\n\nc. All buildings are located on a lot fronting a major or collector street, as\n\ndetermin",
+          "extraction_method": "text"
+        },
+        {
+          "source": "zoning-ordinance-082024-rev.pdf",
+          "page": 63,
+          "excerpt": "c. Accessory schools and cemeteries are permissible provided an additional three\n\n(3) acres is provided in addition to the three (3) acre church requirement.\n\n7. Schools and their customary related uses, provided: \n \na.  Minimum lot size is three (3) acres;\n\nb. Minimum lot frontage is at least 200 feet;\n\nc. All buildings are located on a lot fronting a major or collector street, as\n\ndetermined by the Planning Commission; and\n\nd. All buildings are placed not less than 50 feet from any property li",
           "extraction_method": "text"
         }
       ],
@@ -184,12 +208,20 @@
         "pass": false
       },
       "timing": {
-        "draft_ms": 607.8124820014636,
-        "check_ms": 2088.118920000852,
-        "conflict_ms": 566.4982499984035,
+        "index_ms": 4.357035999419168,
+        "rewrite_ms": 0.0006229965947568417,
+        "retrieval_ms": 217.0188780000899,
+        "vector_ms": 163.93195300042862,
+        "keyword_ms": 19.211315993743483,
+        "fusion_ms": 0.311859002977144,
+        "ambiguity_ms": 14.972345001297072,
+        "context_ms": 13.770137004030403,
+        "draft_ms": 594.298711999727,
+        "check_ms": 1463.9729030022863,
+        "conflict_ms": 602.7359130021068,
+        "answer_ms": 2661.2844629999017,
         "drafts": 1,
-        "answer_ms": 3262.6868639999884,
-        "check_calls": 5
+        "check_calls": 4
       }
     },
     {
@@ -223,11 +255,19 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 591.9868559976749,
-        "check_ms": 472.74171599929105,
-        "conflict_ms": 590.9225320028781,
+        "index_ms": 7.0724060060456395,
+        "rewrite_ms": 0.0005649999366141856,
+        "retrieval_ms": 261.09380501293344,
+        "vector_ms": 196.3140379957622,
+        "keyword_ms": 19.24345899897162,
+        "fusion_ms": 0.10384999768575653,
+        "ambiguity_ms": 17.012368996802252,
+        "context_ms": 20.95761000236962,
+        "draft_ms": 655.0409629999194,
+        "check_ms": 466.1901229992509,
+        "conflict_ms": 612.9659569996875,
+        "answer_ms": 1734.5648350019474,
         "drafts": 1,
-        "answer_ms": 1655.9305310001946,
         "check_calls": 2
       }
     },
@@ -246,7 +286,7 @@
         "thirty feet",
         "thirty (30) feet"
       ],
-      "answer": "Jurisdiction: not identified | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nThirty (30) feet [1].",
+      "answer": "Jurisdiction: not identified | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nThe minimum height for a principal structure in Charleston's 55/30 height district is thirty (30) feet [1].",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
@@ -256,14 +296,14 @@
         },
         {
           "source": "Charleston, SC Zoning.pdf",
-          "page": 379,
-          "excerpt": "Sec. 54-306.P. Height District 80/30. \nSec. 54-306.Q. Height District 50W. \nSec. 54-306.R. Height District W. \nSec. 54-306.S. Height District WP. \nSec. 54-306.T. Height District 56/30 V. \nSec. 54-306.U. Height District 120/30. \nSec. 54-306.V. Height District 55/30 S. \nSec. 54-306.W. Height District 55/30. \nSec. 54-306.X. Height district chart. \nSec. 54-306.Y. Height District 8-12(A), (B), and (C). \nSec. 54-307. \nView corridor protection. \nSec. 54-308. \nExceptions. \nSec. 54-309. \nReserved.",
+          "page": 406,
+          "excerpt": "§ 54-306.V \n § 54-306.X\nCHARLESTON ZONING ORDINANCE\n\n2. \nAll structures shall have no minimum set back from street right-of-way lines, subject \nto provisions of Article 3: Part 10. \n(Ord. No. 2017-085, § 1, 8-15-17; Ord. No. 2020-014, § 1, 1-28-20)\n\nSec. 54-306.W. Height District 55/30.\n\nIn this district:\n\n1. \nNo part of a structure shall exceed the height of fifty-five (55) feet, nor shall the \nprincipal structure be lower than thirty (30) feet.\n\n2. \nAll structures shall have no set back from s",
           "extraction_method": "text"
         },
         {
           "source": "Charleston, SC Zoning.pdf",
-          "page": 406,
-          "excerpt": "§ 54-306.V \n § 54-306.X\nCHARLESTON ZONING ORDINANCE\n\n2. \nAll structures shall have no minimum set back from street right-of-way lines, subject \nto provisions of Article 3: Part 10. \n(Ord. No. 2017-085, § 1, 8-15-17; Ord. No. 2020-014, § 1, 1-28-20)\n\nSec. 54-306.W. Height District 55/30.\n\nIn this district:\n\n1. \nNo part of a structure shall exceed the height of fifty-five (55) feet, nor shall the \nprincipal structure be lower than thirty (30) feet.\n\n2. \nAll structures shall have no set back from s",
+          "page": 379,
+          "excerpt": "Sec. 54-306.P. Height District 80/30. \nSec. 54-306.Q. Height District 50W. \nSec. 54-306.R. Height District W. \nSec. 54-306.S. Height District WP. \nSec. 54-306.T. Height District 56/30 V. \nSec. 54-306.U. Height District 120/30. \nSec. 54-306.V. Height District 55/30 S. \nSec. 54-306.W. Height District 55/30. \nSec. 54-306.X. Height district chart. \nSec. 54-306.Y. Height District 8-12(A), (B), and (C). \nSec. 54-307. \nView corridor protection. \nSec. 54-308. \nExceptions. \nSec. 54-309. \nReserved.",
           "extraction_method": "text"
         }
       ],
@@ -274,11 +314,19 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 1188.9484589992207,
-        "check_ms": 3403.73686899693,
-        "conflict_ms": 1554.076771997643,
-        "drafts": 2,
-        "answer_ms": 6147.130629997264,
+        "index_ms": 6.1320599997998215,
+        "rewrite_ms": 0.0013880053302273154,
+        "retrieval_ms": 337.0229619977181,
+        "vector_ms": 220.5242259951774,
+        "keyword_ms": 40.39870599808637,
+        "fusion_ms": 0.33038399851648137,
+        "ambiguity_ms": 34.967317995324265,
+        "context_ms": 33.79031899385154,
+        "draft_ms": 851.0749470005976,
+        "check_ms": 3355.3096109972103,
+        "conflict_ms": 2640.725940000266,
+        "answer_ms": 6847.686499997508,
+        "drafts": 1,
         "check_calls": 6
       }
     },
@@ -294,18 +342,18 @@
         "one hundred square feet",
         "one hundred (100) square feet"
       ],
-      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nFor a Charleston development with at least twenty business units, the per-face area limit for its monument sign is one hundred (100) square feet [2].",
+      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nFor a Charleston development with at least twenty business units, the per-face area limit for its monument sign is one hundred (100) square feet. [2]",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
           "page": 504,
-          "excerpt": "§ 54-415\n§ 54-415\nCHARLESTON ZONING ORDINANCE\n\n2.\nFor a development containing more than three (3) business units and fewer\nthan twenty (20) business units, one (1) monument sign shall be permitted as\nfollows:\n\n(a)\nNo sign shall exceed sixty (60) square feet per face or one hundred and\ntwenty (120) square feet of total sign face area. No sign shall exceed\nfourteen (14) feet in height.\n\n(b)\nMonument signs may be illuminated internally or with a shielded spot\nlight located at the base of the sign.",
+          "excerpt": "2.\nFor a development containing more than three (3) business units and fewer\nthan twenty (20) business units, one (1) monument sign shall be permitted as\nfollows:\n\n(a)\nNo sign shall exceed sixty (60) square feet per face or one hundred and\ntwenty (120) square feet of total sign face area. No sign shall exceed\nfourteen (14) feet in height.\n\n(b)\nMonument signs may be illuminated internally or with a shielded spot\nlight located at the base of the sign. Plastic face signs shall have opaque\nbackgroun",
           "extraction_method": "text"
         },
         {
           "source": "Charleston, SC Zoning.pdf",
           "page": 505,
-          "excerpt": "§ 54-415\n§ 54-415\nSIGN REGULATIONS\n\n3.\nFor a development containing twenty (20) or more business units, or 150,000\nsquare feet or more of floor area, one (1) monument sign shall be permitted as\nfollows:\n\n(a)\nNo sign shall exceed one hundred (100) square feet per face or two\nhundred (200) square feet of total sign face area. No sign shall exceed\nfourteen (14) feet in height.\n\n(b)\nMonument signs may be illuminated internally or with a shielded spot\nlight located at the base of the sign. Plastic fa",
+          "excerpt": "3.\nFor a development containing twenty (20) or more business units, or 150,000\nsquare feet or more of floor area, one (1) monument sign shall be permitted as\nfollows:\n\n(a)\nNo sign shall exceed one hundred (100) square feet per face or two\nhundred (200) square feet of total sign face area. No sign shall exceed\nfourteen (14) feet in height.\n\n(b)\nMonument signs may be illuminated internally or with a shielded spot\nlight located at the base of the sign. Plastic face signs shall have opaque\nbackgroun",
           "extraction_method": "text"
         },
         {
@@ -322,12 +370,20 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 782.5418710017402,
-        "check_ms": 4941.283567000937,
-        "conflict_ms": 685.5347669988987,
+        "index_ms": 6.543929994222708,
+        "rewrite_ms": 0.0008089991752058268,
+        "retrieval_ms": 295.52439199324,
+        "vector_ms": 190.62004500301555,
+        "keyword_ms": 29.058169995550998,
+        "fusion_ms": 0.4090610018465668,
+        "ambiguity_ms": 32.328043002053164,
+        "context_ms": 35.81437799584819,
+        "draft_ms": 1421.665376998135,
+        "check_ms": 859.2372389975935,
+        "conflict_ms": 733.3435420005117,
+        "answer_ms": 3014.5008049948956,
         "drafts": 1,
-        "answer_ms": 6409.616164000909,
-        "check_calls": 8
+        "check_calls": 2
       }
     },
     {
@@ -340,7 +396,7 @@
       "accepted_answers": [
         "Board of Zoning Appeals Site Design"
       ],
-      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nTo appeal an administrative decision about a sidewalk cafe permit in Charleston, you must file the appeal within ten (10) business days after actual notice of the decision, using an approved appeal form and fee, and delivering it to the Zoning Division office [1].",
+      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nTo appeal an administrative decision about a sidewalk cafe permit in Charleston, an appeal must be filed within ten (10) business days after actual notice of the decision by delivery of the approved appeal form and fee to the Zoning Division office [1].",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
@@ -351,13 +407,13 @@
         {
           "source": "Charleston, SC Zoning.pdf",
           "page": 721,
-          "excerpt": "Section 2. Time of Appeal.\n\nAn appeal from a Board decision or an administrative decision must be filed within fifteen \n(15) days from the making of such decision, order, requirement or determination.\n\nApp. K-3\nSupp. No. 25",
+          "excerpt": "Section 2. Time of Appeal.\n\nAn appeal from a Board decision or an administrative decision must be filed within fifteen \n(15) days from the making of such decision, order, requirement or determination.\n\nArt. II, § 3 \n Art. III, § 2",
           "extraction_method": "text"
         },
         {
           "source": "Charleston, SC Zoning.pdf",
-          "page": 721,
-          "excerpt": "Article III.\nAppeals Procedure\n\nSection 1. Form of Appeal—Administrative Decision.\n\nAppeals to the Board from an administrative decision may be taken by any person aggrieved \nby a determination of the administrative officer. Appeals shall be filed on forms approved by \nthe Board and provided by the Secretary of the Board. Appeal forms shall be made available \nin the City of Charleston Department of Planning and Preservation, 75 Calhoun Street, \nCharleston, South Carolina. A detailed narrative mu",
+          "page": 688,
+          "excerpt": "Section 2. Time for Appeal for an Administrative Decision.\n\nAn appeal from an administrative decision must be filed within fifteen (15) calendar days \nfrom the making of such decision, order, requirement or determination.\n\nSection 3. Calendar.\n\nAppeals shall be marked with the date of receipt and placed on the hearing calendar.\n\nSection 4. Withdrawal of Appeal.\n\nAny appeal may be withdrawn by written notice delivered to the secretary prior to action by \nthe Board. An appeal may not be re-filed a",
           "extraction_method": "text"
         }
       ],
@@ -368,11 +424,19 @@
         "pass": false
       },
       "timing": {
-        "draft_ms": 998.1418440002017,
-        "check_ms": 765.3788419993361,
-        "conflict_ms": 497.3420520000218,
-        "drafts": 1,
-        "answer_ms": 2261.1248110006272,
+        "index_ms": 6.835346997831948,
+        "rewrite_ms": 0.0003539971658028662,
+        "retrieval_ms": 241.29381099919556,
+        "vector_ms": 182.7716940024402,
+        "keyword_ms": 17.491981998318806,
+        "fusion_ms": 0.27847399906022474,
+        "ambiguity_ms": 18.902010000601877,
+        "context_ms": 14.646094001363963,
+        "draft_ms": 2949.783957999898,
+        "check_ms": 1178.724257995782,
+        "conflict_ms": 601.5100309959962,
+        "answer_ms": 4730.490150002879,
+        "drafts": 2,
         "check_calls": 2
       }
     },
@@ -408,11 +472,19 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 1000.3792169991357,
-        "check_ms": 0.005241996404947713,
+        "index_ms": 6.1164329963503405,
+        "rewrite_ms": 0.00053399708122015,
+        "retrieval_ms": 227.14688899577595,
+        "vector_ms": 164.61748100118712,
+        "keyword_ms": 20.483619002334308,
+        "fusion_ms": 0.1757950012688525,
+        "ambiguity_ms": 16.072406004241202,
+        "context_ms": 19.16188399627572,
+        "draft_ms": 1855.4342000061297,
+        "check_ms": 0.0014190009096637368,
         "conflict_ms": 0.0,
+        "answer_ms": 1855.7235789994593,
         "drafts": 2,
-        "answer_ms": 1000.6089140006225,
         "check_calls": 0
       }
     },
@@ -448,11 +520,19 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 821.4313339994987,
-        "check_ms": 0.0013830031093675643,
+        "index_ms": 6.035109996446408,
+        "rewrite_ms": 0.000719002855475992,
+        "retrieval_ms": 306.3912419966073,
+        "vector_ms": 237.7562219990068,
+        "keyword_ms": 17.594441000255756,
+        "fusion_ms": 0.22832000104244798,
+        "ambiguity_ms": 23.383053005090915,
+        "context_ms": 20.75563099788269,
+        "draft_ms": 1368.064921000041,
+        "check_ms": 0.0016280027921311557,
         "conflict_ms": 0.0,
+        "answer_ms": 1368.3425139970495,
         "drafts": 2,
-        "answer_ms": 821.6400130004331,
         "check_calls": 0
       }
     },
@@ -465,7 +545,7 @@
         {
           "source": "zoning-ordinance-082024-rev.pdf",
           "page": 242,
-          "excerpt": "iii. In what way are the extraordinary and exceptional conditions, identified above,\n\npeculiar to the use or development proposed or to the particular piece of \nproperty involved? \n \niv. What conditions, factors and/or circumstances give assurance that if the\n\nrequested variance were granted that such variance would not cause substantial \ndetriment to other property owners or tenants, or to the public good and would \nnot impair the purpose and intent of the ordinance? \n \nv. Does a literal interp",
+          "excerpt": "August 20, 2024, Rev. \nPage 233\n\niii. In what way are the extraordinary and exceptional conditions, identified above,\n\npeculiar to the use or development proposed or to the particular piece of \nproperty involved? \n \niv. What conditions, factors and/or circumstances give assurance that if the\n\nrequested variance were granted that such variance would not cause substantial \ndetriment to other property owners or tenants, or to the public good and would \nnot impair the purpose and intent of the ordin",
           "extraction_method": "text"
         },
         {
@@ -475,9 +555,9 @@
           "extraction_method": "text"
         },
         {
-          "source": "zoning.pdf",
-          "page": 12,
-          "excerpt": "------------------------------------------   = FAR \n \n \n \nDevelopable Site Area \n \nFor Sites separated by rights-of-way, FAR will be calculated based on the FAR across the entire \nSite, and density and impervious surface coverage may be transferred among parcels, provided \nthe Site meets other applicable regulations. For other unique or undefined configurations, the \nDirector will determine the definition of Site. In a mixed use development with different FAR \nlimits, the FAR will be the use wit",
+          "source": "Charleston, SC Zoning.pdf",
+          "page": 436,
+          "excerpt": "d.\nReplacement. Replacement is accomplished by planting the number, size and species of\na recommended tree in accordance with the conditions at the Board of Zoning\nAppeals—Site Design, on land under the same ownership which is to be developed\npursuant to the same development permit, within the right-of-way adjacent to the\nproperty subject to the approval of the appropriate government agency, or off-site\nwithin the general area of the trees being replaced.\n\ne.\nTree Planting Requirements. In the r",
           "extraction_method": "text"
         }
       ],
@@ -488,11 +568,19 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 814.6097809985804,
-        "check_ms": 0.0011179981811437756,
+        "index_ms": 5.94152800476877,
+        "rewrite_ms": 0.00045200431486591697,
+        "retrieval_ms": 211.01553800690453,
+        "vector_ms": 158.37348800414475,
+        "keyword_ms": 16.614154999842867,
+        "fusion_ms": 0.2303910005139187,
+        "ambiguity_ms": 13.51425499888137,
+        "context_ms": 15.888857000390999,
+        "draft_ms": 1423.539643001277,
+        "check_ms": 0.0013789976947009563,
         "conflict_ms": 0.0,
+        "answer_ms": 1423.8485919995583,
         "drafts": 2,
-        "answer_ms": 814.797022001585,
         "check_calls": 0
       }
     },
@@ -508,7 +596,22 @@
         "citation_refs_valid": true,
         "pass": true
       },
-      "timing": null
+      "timing": {
+        "index_ms": 5.981927999528125,
+        "rewrite_ms": 0.0017629936337471008,
+        "retrieval_ms": 194.18592999863904,
+        "vector_ms": 161.05883300042478,
+        "keyword_ms": 13.354719994822517,
+        "fusion_ms": 0.3887999992002733,
+        "ambiguity_ms": 12.863301999459509,
+        "context_ms": 0.0033309988793917,
+        "draft_ms": 0.0,
+        "check_ms": 0.0,
+        "conflict_ms": 0.0,
+        "answer_ms": 0.0,
+        "drafts": 0,
+        "check_calls": 0
+      }
     }
   ]
 }

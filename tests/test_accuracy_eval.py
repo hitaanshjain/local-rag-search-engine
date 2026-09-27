@@ -3,10 +3,21 @@ import unittest
 from langchain_core.documents import Document
 
 from app.engine import SearchIndex
-from benchmarks.accuracy_eval import keyword_search_substring, load_and_validate_queries, score_ranking
+from benchmarks.accuracy_eval import check_index_corpus, keyword_search_substring, load_and_validate_queries, score_ranking
 
 
 class AccuracyMetricTests(unittest.TestCase):
+    def test_corpus_check_allows_recorded_textless_pages_only(self):
+        index = SearchIndex([
+            Document(page_content="Rule", metadata={"source": "a.pdf", "page": 1}),
+            Document(page_content="Rule", metadata={"source": "a.pdf", "page": 3}),
+        ], None)
+        check_index_corpus(index, {"a.pdf": 3}, {"a.pdf": {"pages": 3, "blank_pages": [2], "low_text_pages": []}})
+        with self.assertRaises(ValueError):
+            check_index_corpus(index, {"a.pdf": 3}, {})
+        with self.assertRaises(ValueError):
+            check_index_corpus(index, {"a.pdf": 4}, {"a.pdf": {"pages": 4, "blank_pages": [2], "low_text_pages": []}})
+
     def test_retrieval_eval_includes_verified_additional_questions(self):
         queries, _, _ = load_and_validate_queries()
         self.assertEqual(len(queries), 28)

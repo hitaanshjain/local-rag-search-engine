@@ -987,12 +987,16 @@ dependencies = [
     { name = "langchain-core" },
     { name = "langchain-ollama" },
     { name = "pydantic" },
-    { name = "pymupdf" },
     { name = "pypdf" },
     { name = "rank-bm25" },
-    { name = "rapidocr" },
     { name = "requests" },
     { name = "uvicorn" },
+]
+
+[package.dev-dependencies]
+ingest = [
+    { name = "pymupdf" },
+    { name = "rapidocr" },
 ]
 
 [package.metadata]
@@ -1004,12 +1008,16 @@ requires-dist = [
     { name = "langchain-core", specifier = ">=1.2.14" },
     { name = "langchain-ollama", specifier = ">=1.0.1" },
     { name = "pydantic", specifier = ">=2.12.5" },
-    { name = "pymupdf", specifier = ">=1.28.2" },
     { name = "pypdf", specifier = ">=6.7.1" },
     { name = "rank-bm25", specifier = ">=0.2.2" },
-    { name = "rapidocr", specifier = ">=3.9.2" },
     { name = "requests", specifier = ">=2.32.5" },
     { name = "uvicorn", specifier = ">=0.41.0" },
+]
+
+[package.metadata.requires-dev]
+ingest = [
+    { name = "pymupdf", specifier = ">=1.28.2" },
+    { name = "rapidocr", specifier = ">=3.9.2" },
 ]
 
 [[package]]

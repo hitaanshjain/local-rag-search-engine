@@ -4,7 +4,7 @@ from benchmarks.latency_test import measure_stream
 
 
 class FakeResponse:
-    headers = {"Server-Timing": "retrieval;dur=12.5, index;dur=1.5, vector;dur=8.0, keyword;dur=2.0, fusion;dur=0.5"}
+    headers = {}
 
     def __enter__(self):
         return self
@@ -20,7 +20,8 @@ class FakeResponse:
         yield 'event: sources\ndata: {"sources":[]}\n\n'
         yield 'event: tok'
         yield 'en\ndata: {"text":"Hello"}\n\n'
-        yield 'event: timing\ndata: {"draft_ms":150.0,"check_ms":90.0,"conflict_ms":40.0,"answer_ms":285.0,"drafts":1,"check_calls":3}\n\n'
+        yield ('event: timing\ndata: {"retrieval_ms":12.5,"index_ms":1.5,"vector_ms":8.0,"keyword_ms":2.0,"fusion_ms":0.5,'
+               '"draft_ms":150.0,"check_ms":90.0,"conflict_ms":40.0,"answer_ms":285.0,"drafts":1,"check_calls":3}\n\n')
         yield 'event: done\ndata: {}\n\n'
 
 

@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Send, Bot, User, Loader2, Square, RotateCcw } from "lucide-react";
 import { citationParts, documentUrl, streamChat } from "./chatClient";
-import { DOCUMENT_KEY, MESSAGE_KEY, historyForRequest, readStoredJson, selectedAvailableDocuments } from "./conversation";
+import { DOCUMENT_KEY, MESSAGE_KEY, browserStorage, historyForRequest, readStoredJson, selectedAvailableDocuments, writeStoredJson } from "./conversation";
+
+const storage = browserStorage();
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
 export default function App() {
   const [messages, setMessages] = useState(() => {
-    const stored = readStoredJson(localStorage, MESSAGE_KEY, []);
+    const stored = readStoredJson(storage, MESSAGE_KEY, []);
     return Array.isArray(stored) ? stored : [];
   });
   const [documents, setDocuments] = useState([]);
@@ -28,7 +30,7 @@ export default function App() {
       .then((data) => {
         const catalog = data.documents || [];
         setDocuments(catalog);
-        setSelectedDocuments(selectedAvailableDocuments(readStoredJson(localStorage, DOCUMENT_KEY, null), catalog));
+        setSelectedDocuments(selectedAvailableDocuments(readStoredJson(storage, DOCUMENT_KEY, null), catalog));
       })
       .catch((error) => {
         if (error.name !== "AbortError") setDocumentError(error.message);
@@ -36,9 +38,9 @@ export default function App() {
     return () => controller.abort();
   }, []);
 
-  useEffect(() => { localStorage.setItem(MESSAGE_KEY, JSON.stringify(messages)); }, [messages]);
+  useEffect(() => { writeStoredJson(storage, MESSAGE_KEY, messages); }, [messages]);
   useEffect(() => {
-    if (selectedDocuments !== null) localStorage.setItem(DOCUMENT_KEY, JSON.stringify(selectedDocuments));
+    if (selectedDocuments !== null) writeStoredJson(storage, DOCUMENT_KEY, selectedDocuments);
   }, [selectedDocuments]);
 
   const newConversation = () => {

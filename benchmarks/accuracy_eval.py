@@ -10,6 +10,7 @@ from pypdf import PdfReader
 from app.engine import (
     EMBEDDING_MODEL,
     LLM_MODEL,
+    PAGE_REPORT_PATH,
     bm25_search,
     build_search_index,
     fuse_results,
@@ -105,7 +106,8 @@ def load_and_validate_queries():
     return queries, old_queries, page_counts
 
 
-def check_index_corpus(index, page_counts):
+def check_index_corpus(index, page_counts, page_report=None):
+    """Every page must have chunks unless ingestion recorded it as blank or unreadable."""
     observed = {(doc.metadata.get("source"), doc.metadata.get("page")) for doc in index.documents}
     sources = {source for source, _ in observed}
     if sources != set(page_counts):
@@ -113,8 +115,16 @@ def check_index_corpus(index, page_counts):
     for source, page in observed:
         if not isinstance(page, int) or not 1 <= page <= page_counts[source]:
             raise ValueError(f"Invalid stored source/page: {source}, {page}")
-    if len(observed) != sum(page_counts.values()):
-        raise ValueError("Chroma does not contain chunks for every PDF page; re-run ingestion")
+    textless = {
+        (source, page)
+        for source, entry in (page_report or {}).items()
+        for page in [*entry.get("blank_pages", []), *entry.get("low_text_pages", [])]
+    }
+    missing = {
+        (source, page) for source, count in page_counts.items() for page in range(1, count + 1)
+    } - observed - textless
+    if missing:
+        raise ValueError(f"Chroma has no chunks for {len(missing)} PDF pages with text; re-run ingestion")
 
 
 def evaluate_query(query, db, index):
@@ -222,7 +232,8 @@ def run_accuracy_benchmark():
     queries, old_queries, page_counts = load_and_validate_queries()
     db = get_vector_db()
     index = build_search_index(db)
-    check_index_corpus(index, page_counts)
+    page_report = json.loads(PAGE_REPORT_PATH.read_text(encoding="utf-8")) if PAGE_REPORT_PATH.exists() else {}
+    check_index_corpus(index, page_counts, page_report)
     per_query = [
         {**query, "results": evaluate_query(query, db, index)}
         for query in queries
