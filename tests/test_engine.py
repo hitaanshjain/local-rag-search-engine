@@ -7,10 +7,30 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_core.embeddings import FakeEmbeddings
 
-from app.engine import SearchIndex, SearchIndexCache, bm25_search, build_search_index, needs_clarification, select_context, fuse_results, hybrid_search
+from app.engine import SearchIndex, SearchIndexCache, bm25_search, build_search_index, filter_search_index, needs_clarification, select_context, fuse_results, hybrid_search
 
 
 class RetrievalTests(unittest.TestCase):
+    def test_document_scope_filters_keyword_and_vector_candidates(self):
+        city_a = Document(id="a", page_content="guest house 700 square feet", metadata={"source": "a.pdf"})
+        city_b = Document(id="b", page_content="guest house 900 square feet", metadata={"source": "b.pdf"})
+        scoped = filter_search_index(SearchIndex(documents=[city_a, city_b], bm25=None), {"b.pdf"})
+        self.assertEqual([doc.metadata["source"] for doc, _ in bm25_search("guest house", scoped)], ["b.pdf"])
+
+        class FilteredDB:
+            def similarity_search_with_score(self, query, k, filter=None):
+                self.last_filter = filter
+                return [(city_b, 0.1)]
+
+        db = FilteredDB()
+        self.assertEqual(hybrid_search("guest house", db, k=2, index=scoped, sources={"b.pdf"}), [city_b])
+        self.assertEqual(db.last_filter, {"source": "b.pdf"})
+
+        city_c = Document(id="c", page_content="guest house 800 square feet", metadata={"source": "c.pdf"})
+        two_files = filter_search_index(SearchIndex([city_a, city_b, city_c], None), {"a.pdf", "b.pdf"})
+        hybrid_search("guest house", db, k=2, index=two_files, sources={"b.pdf", "a.pdf"})
+        self.assertEqual(db.last_filter, {"source": {"$in": ["a.pdf", "b.pdf"]}})
+
     def test_named_district_passage_precedes_a_general_rule(self):
         general = Document(id="general", page_content="Guest house: 700 square feet.")
         district = Document(
@@ -105,6 +125,22 @@ class RetrievalTests(unittest.TestCase):
         )
         self.assertTrue(needs_clarification("What is the maximum fence height?", relevant))
         self.assertFalse(needs_clarification("What is the Tesla battery capacity?", unrelated))
+
+        class ModeratelyCloseScores:
+            def get_scores(self, words):
+                return [10.0, 9.2]
+
+        relevant.bm25 = ModeratelyCloseScores()
+        self.assertTrue(needs_clarification("What is the maximum fence height?", relevant))
+
+        named = SearchIndex(
+            documents=[
+                Document(page_content="Union City maximum fence height", metadata={"source": "union.pdf"}),
+                Document(page_content="Other City maximum fence height", metadata={"source": "other.pdf"}),
+            ],
+            bm25=ModeratelyCloseScores(),
+        )
+        self.assertFalse(needs_clarification("What is the Union City maximum fence height?", named))
 
     def test_hybrid_search_reports_vector_keyword_and_fusion_times(self):
         db = Chroma(

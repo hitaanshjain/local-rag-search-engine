@@ -8,9 +8,11 @@ from unittest.mock import AsyncMock, patch
 
 from langchain_core.documents import Document
 from fastapi.testclient import TestClient
+from fastapi import HTTPException
 
 from app.api import QueryRequest, app, chat
 from app.answering import Conflict, detect_conflicts, verify_answer
+from app.engine import SearchIndex
 
 
 class FakeChain:
@@ -381,6 +383,58 @@ class ChatEventsTests(unittest.TestCase):
         self.assertEqual(found.status_code, 200)
         self.assertEqual(found.headers["content-type"], "application/pdf")
         self.assertEqual(missing.status_code, 404)
+
+    def test_document_catalog_reports_low_text_pages(self):
+        docs = [
+            Document(page_content="Some text", metadata={"source": "a.pdf", "page": 1, "low_text": True}),
+            Document(page_content="More text", metadata={"source": "a.pdf", "page": 2, "low_text": False}),
+            Document(page_content="Other", metadata={"source": "b.pdf", "page": 3}),
+        ]
+        with patch("app.api.search_index.get", return_value=SearchIndex(docs, None)):
+            with TestClient(app) as client:
+                response = client.get("/documents")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"documents": [
+            {"name": "a.pdf", "pages": 2, "low_text_pages": [1]},
+            {"name": "b.pdf", "pages": 3, "low_text_pages": []},
+        ]})
+
+    def test_selected_documents_scope_search_and_conflict_candidates(self):
+        one = Document(id="one", page_content="One rule", metadata={"source": "a.pdf", "page": 1})
+        two = Document(id="two", page_content="Two rule", metadata={"source": "b.pdf", "page": 1})
+        index = SearchIndex([one, two], None)
+        with patch("app.api.search_index.get", return_value=index), patch("app.api.hybrid_search", return_value=[two]) as search, patch("app.api.prompt_template", FakePrompt()), patch("app.api.bm25_search", return_value=[]) as keyword:
+            events = asyncio.run(response_events(asyncio.run(chat(QueryRequest(query="Which rule?", documents=["b.pdf"])))))
+        self.assertEqual(event_data(events, "sources")["sources"][0]["source"], "b.pdf")
+        self.assertEqual(search.call_args.kwargs["sources"], {"b.pdf"})
+        self.assertEqual([doc.metadata["source"] for doc in search.call_args.kwargs["index"].documents], ["b.pdf"])
+        self.assertTrue(all([doc.metadata["source"] for doc in call.args[1].documents] == ["b.pdf"] for call in keyword.call_args_list))
+
+        with patch("app.api.search_index.get", return_value=index):
+            with self.assertRaises(HTTPException) as error:
+                asyncio.run(chat(QueryRequest(query="Which rule?", documents=["missing.pdf"])))
+        self.assertEqual(error.exception.status_code, 422)
+
+    def test_follow_up_uses_history_for_search_and_generation(self):
+        doc = Document(page_content="R-2 permits 900 square feet.", metadata={"source": "rules.pdf", "page": 1})
+        seen = {}
+
+        class RecordingChain:
+            async def astream(self, values):
+                seen.update(values)
+                yield SimpleNamespace(content="900 square feet [1].")
+
+        class RecordingPrompt:
+            def __or__(self, llm):
+                return RecordingChain()
+
+        with patch("app.api.contextualize_query", new_callable=AsyncMock, return_value="R-2 guest house size") as rewrite, patch("app.api.hybrid_search", return_value=[doc]) as search, patch("app.api.prompt_template", RecordingPrompt()):
+            response = asyncio.run(chat(QueryRequest(query="How large?", history=[{"role": "user", "text": "What about R-2 guest houses?"}, {"role": "assistant", "text": "R-2 permits them."}])))
+            asyncio.run(response_events(response))
+        self.assertEqual(search.call_args.args[0], "R-2 guest house size")
+        self.assertIn("What about R-2 guest houses?", seen["history"])
+        self.assertEqual(seen["question"], "How large?")
+        rewrite.assert_awaited_once()
 
     def test_generation_error_is_sent_as_an_event(self):
         class BrokenChain:

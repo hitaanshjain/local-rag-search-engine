@@ -1,10 +1,10 @@
 import { createSSEParser } from "./sse.js";
 
-export async function streamChat(query, onEvent, { fetchImpl = fetch, signal, apiBase = "http://localhost:8000" } = {}) {
+export async function streamChat(query, onEvent, { fetchImpl = fetch, signal, apiBase = "http://localhost:8000", history = [], documents = null } = {}) {
   const response = await fetchImpl(`${apiBase}/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query }),
+    body: JSON.stringify({ query, history, documents }),
     signal,
   });
   if (!response.ok || !response.body) throw new Error("Chat request failed.");

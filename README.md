@@ -8,7 +8,7 @@ The model and embedding requests are configured for a local Ollama service. Init
 
 ```mermaid
 flowchart LR
-    PDFs[PDF files in data/] --> Load[PyPDFLoader]
+    PDFs[PDF files in data/] --> Load[Per-page text extraction or OCR]
     Load --> Stamp[Source, page, section, jurisdiction, version]
     Stamp --> Split[Text chunks]
     Split --> Embed[nomic-embed-text via Ollama]
@@ -27,9 +27,13 @@ flowchart LR
     Browser -->|open cited PDF page| API
 ```
 
-Ingestion reads the PDFs in `data/`, assigns `source` and one-based `page` metadata, labels each chunk with the section heading (`6-15 TCMU…`, `Sec. 54-269.…`, or `APPENDIX C`) that covers most of its text, and extracts jurisdiction and document version from title material when available. Numbered lines that start lowercase, start with a year, or end in table-of-contents dot leaders are not treated as headings, and a "Place, State" line counts as a jurisdiction only when the state is a US state. Re-running ingestion uses stable chunk IDs, updates changed chunks, and removes chunks absent from the current PDFs. After a successful corpus change, it atomically writes `chroma_db/index.version`, retrying transient Windows permission errors when replacing the marker. The API caches the BM25 index and rebuilds it only when that version changes. Reingest existing PDFs to add scope metadata to an older index. The generated `chroma_db/` directory is ignored by Git.
+Ingestion reads the PDFs in `data/`, assigns `source` and one-based `page` metadata, labels chunks by their section heading (`6-15 TCMU…`, `Sec. 54-269.…`, or `APPENDIX C`), and extracts jurisdiction and document version from title material when available. Numbered lines that start lowercase, start with a year, or end in table-of-contents dot leaders are not treated as headings, and a "Place, State" line counts as a jurisdiction only when the state is a US state. Re-running ingestion uses stable chunk IDs, updates changed chunks, and removes chunks absent from the current PDFs. After a successful corpus change, it atomically writes `chroma_db/index.version`, retrying transient Windows permission errors when replacing the marker. The API caches the BM25 index and rebuilds it only when that version changes. The generated `chroma_db/` directory is ignored by Git.
 
 For a chat query, Chroma supplies vector candidates and `rank-bm25` scores the stored chunk corpus. Queries naming a section code use section headings and match codes such as `R-2` as whole terms; other queries retain the ordinary BM25 index. Retrieval combines normalized vector and BM25 scores at **0.25 vector / 0.75 BM25** by default, ranks **chunks**, and keeps keyword-only hits. `/chat` uses up to three retrieved chunks as context. When the top BM25 passage has a clear lead, or matches an explicitly named section, and is the top fused result, it sends that passage alone to reduce conflicting context for the small model. When two different source files match a broad question nearly equally, it asks which city or document the user means. Retrieval runs in a thread pool so its synchronous Chroma and BM25 work does not block the API event loop.
+
+Extraction now reads each PDF page with PyMuPDF and uses RapidOCR when its native text is weak. It keeps the more complete result, renders detected tables as Markdown rows, and preserves recognized section headings as chunk boundaries. The ingestion log and `GET /documents` flag pages with little or no readable text after both methods. OCR and complex table layout are best effort; check the cited PDF for uncertain passages. Re-run ingestion to apply this extraction to existing PDFs.
+
+The browser saves conversation turns and the selected PDF names locally. It sends recent turns with each follow-up so the API can resolve references for retrieval, while answer claims remain tied to retrieved passages. Users can select one or more indexed PDFs; the selection scopes vector search, keyword search, and conflict comparison. **New conversation** clears the turns and stops an in-progress response. The API itself is stateless, and query-only requests still search all indexed PDFs.
 
 The API sends valid server-sent event frames over its POST response:
 
@@ -65,26 +69,26 @@ The API buffers the draft before sending any answer text. It checks each cited c
 
 ## Measured retrieval accuracy
 
-The [retrieval results](benchmarks/results.md) and [raw results](benchmarks/results.json) cover the five checked-in PDFs: **1,070 physical pages and 3,639 stored chunks**. The development set has **28 questions**: 20 original replacements and eight additional questions. Each answerable label has an excerpt checked against its physical PDF page; one question has two verified pages. The [query-change record](benchmarks/results.md#query-changes) also lists the 50 removed queries from the earlier mislabeled set. These labels do not enumerate every relevant page, and the additional questions were used during development.
+The [retrieval results](benchmarks/results.md) and [raw results](benchmarks/results.json) cover the five checked-in PDFs: **1,070 physical pages and 5,007 stored chunks** (section-aware chunks from the per-page extractor). The development set has **28 questions**: 20 original replacements and eight additional questions. Each answerable label has an excerpt checked against its physical PDF page; one question has two verified pages. The [query-change record](benchmarks/results.md#query-changes) also lists the 50 removed queries from the earlier mislabeled set. These labels do not enumerate every relevant page, and the additional questions were used during development.
 
 | Method | Source hit@3 | Source hit@5 | Source MRR | Page hit@3 | Page hit@5 | Page MRR |
 |---|---:|---:|---:|---:|---:|---:|
-| Vector only | 96.4% | 100.0% | 0.954 | 82.1% | 89.3% | 0.718 |
-| Substring keyword baseline | 75.0% | 85.7% | 0.736 | 64.3% | 71.4% | 0.550 |
-| BM25 keyword only | 100.0% | 100.0% | 1.000 | 89.3% | 92.9% | 0.866 |
-| Hybrid with substring baseline | 85.7% | 89.3% | 0.846 | 71.4% | 75.0% | 0.668 |
-| Hybrid, 0.25 vector / 0.75 BM25 | 100.0% | 100.0% | 1.000 | 92.9% | 92.9% | 0.851 |
-| Hybrid, 0.50 vector / 0.50 BM25 | 100.0% | 100.0% | 1.000 | 89.3% | 92.9% | 0.795 |
-| Hybrid, 0.75 vector / 0.25 BM25 | 100.0% | 100.0% | 1.000 | 85.7% | 92.9% | 0.798 |
+| Vector only | 92.9% | 100.0% | 0.893 | 67.9% | 75.0% | 0.635 |
+| Substring keyword baseline | 78.6% | 89.3% | 0.747 | 67.9% | 78.6% | 0.622 |
+| BM25 keyword only | 100.0% | 100.0% | 1.000 | 89.3% | 92.9% | 0.864 |
+| Hybrid with substring baseline | 89.3% | 89.3% | 0.845 | 75.0% | 75.0% | 0.702 |
+| Hybrid, 0.25 vector / 0.75 BM25 | 100.0% | 100.0% | 1.000 | 89.3% | 89.3% | 0.857 |
+| Hybrid, 0.50 vector / 0.50 BM25 | 100.0% | 100.0% | 1.000 | 89.3% | 89.3% | 0.810 |
+| Hybrid, 0.75 vector / 0.25 BM25 | 100.0% | 100.0% | 0.982 | 89.3% | 89.3% | 0.798 |
 
-The 0.25/0.75 blend had higher page hit@3 than the 0.50/0.50 blend on this set; BM25 alone still had slightly higher page MRR. Hit@k checks retrieved chunks against the labeled file or file/page pair; MRR uses the first matching rank. The small development set does not establish performance on other documents or questions.
+The 0.25/0.75 blend had the highest page MRR of the hybrid variants on this set; BM25 alone still had slightly higher page MRR and page hit@5. Compared with the earlier PyPDF chunks, the production blend lost one page hit (`cha_02` now ranks the adjacent page 399 above labeled page 400) and vector-only page hit@3 fell from 82.1% to 67.9%, since the smaller section-bounded chunks carry less surrounding text for embeddings. Hit@k checks retrieved chunks against the labeled file or file/page pair; MRR uses the first matching rank. The small development set does not establish performance on other documents or questions.
 
 ## Measured answer quality
 
 Three question sets are used, and only the first two may guide changes:
 
-- **Development** ([`development_queries.json`](benchmarks/development_queries.json), 12 items). The [results](benchmarks/development_answer_results.md) passed **9/12** screening checks with claim verification enabled, down from 10/12 before that check. The Los Angeles front-yard question retrieved its labeled table page, but the draft said only "10 ft." without naming the front yard; the text check requires a subject word, the model check rejected it, and the API abstained. One answer cited a different page that states the same numeric limit but is outside the labeled pages, and the sidewalk-cafe appeal question abstained.
-- **Regression** ([`regression_queries.json`](benchmarks/regression_queries.json), 10 items). This was the final holdout until the claim-verification and conflict changes were tuned against its Union City R-2 miss, so it no longer measures unseen questions. The [results](benchmarks/regression_answer_results.md) passed **10/10**: the R-2 guest-house answer states 900 square feet, cites physical PDF page 54, and explains the differing 700-square-foot heated and finished area rule on page 38. Its two questions outside the PDFs and its underspecified setback question received the expected abstention or clarification. Results recorded before the rename still name the dataset `heldout_queries.json`.
+- **Development** ([`development_queries.json`](benchmarks/development_queries.json), 12 items). The [results](benchmarks/development_answer_results.md) passed **9/12** screening checks with claim verification enabled and the per-page extraction index, the same count as before extraction changed. The Los Angeles front-yard question abstained after its draft failed verification. The Union City cemetery answer states the correct ten acres but cites page 59, which repeats that limit outside the labeled pages. The sidewalk-cafe appeal question now answers with the ten-business-day filing limit instead of naming where the appeal goes.
+- **Regression** ([`regression_queries.json`](benchmarks/regression_queries.json), 10 items). This was the final holdout until the claim-verification and conflict changes were tuned against its Union City R-2 miss, so it no longer measures unseen questions. The [results](benchmarks/regression_answer_results.md) passed **9/10** on the per-page extraction index (10/10 before it). The miss is a phrasing miss: the Charleston home-occupation answer says "the maximum number of nonresident employees is one" and cites the labeled page 201, but no accepted phrase matches that wording; the labels were left unchanged. The R-2 guest-house answer states 900 square feet, cites physical PDF page 54, and explains the differing 700-square-foot heated and finished area rule on page 38. Its two questions outside the PDFs and its underspecified setback question received the expected abstention or clarification. Results recorded before the rename still name the dataset `heldout_queries.json`.
 - **Final holdout** ([`heldout_queries.json`](benchmarks/heldout_queries.json), 26 items, not yet run). Written on September 26, 2026 after the regression set was spent. Answerable pages were drawn with `random.Random(20260926)`, four per PDF, skipping pages used by the other sets, pages under 600 characters, and table-of-contents pages. Pages were skipped only when no unambiguous answer could be labeled: two Charleston amendment-history tables, an Urbana and an Issaquah use table whose columns do not survive text extraction, and a Los Angeles row where the phrase "5 acres" also matches "2.5 acres". Each evidence excerpt is checked against its physical page, and every other page containing the same excerpt is listed as an alternate. The four unanswerable questions are zoning near-misses (an impact-fee amount, chicken limits, rooftop solar setbacks, EV charger counts) confirmed absent by searching all extracted page text; the two ambiguous questions have different answers in different PDFs. A test checks that it shares no questions or answer pages with the development and regression sets.
 
 Run the final holdout once, after the pipeline for a result is settled, and report that run. Do not change retrieval, prompts, or checks in response to its individual misses; if that becomes necessary, move it to the regression set and write a new holdout.

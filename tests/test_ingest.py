@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+import pymupdf
 from uuid import uuid4
 from pathlib import Path
 from unittest.mock import patch
@@ -8,7 +9,9 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_core.embeddings import FakeEmbeddings
 
-from app.ingest import assign_sections, process_documents, publish_index_version
+from app.ingest import assign_sections, process_documents, publish_index_version, split_section_documents
+from app.pdf_extraction import extract_text_layout
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
 class IngestTests(unittest.TestCase):
@@ -27,8 +30,7 @@ class IngestTests(unittest.TestCase):
                 Document(page_content="3. Guest house. Limit: 800 square feet.", metadata={"page": 3}),
                 Document(page_content="7-1 Definitions.\nA separate topic.", metadata={"page": 4}),
             ]
-            with patch("app.ingest.PyPDFLoader") as loader:
-                loader.return_value.load.return_value = pages
+            with patch("app.ingest.extract_pdf", return_value=pages):
                 process_documents(data_dir=data_dir, db=db)
 
             stored = db.get(include=["documents", "metadatas"])
@@ -95,8 +97,7 @@ class IngestTests(unittest.TestCase):
                     Document(page_content="Second page has a setback rule.", metadata={"page": 1}),
                 ]
 
-            with patch("app.ingest.PyPDFLoader") as loader:
-                loader.return_value.load.side_effect = load_pages
+            with patch("app.ingest.extract_pdf", side_effect=lambda path: load_pages()):
                 process_documents(data_dir=data_dir, db=db)
                 first = db.get(include=["documents", "metadatas"])
                 process_documents(data_dir=data_dir, db=db)
@@ -175,6 +176,43 @@ class SectionLabelTests(unittest.TestCase):
             ),
             ["6-2 R-1 Residential", "6-2 R-1 Residential", "6-3 R-2 Residential"],
         )
+
+    def test_chunks_do_not_cross_section_boundaries(self):
+        pages = [
+            Document(page_content="Source: code.pdf | Page: 1\n6-2 R-1 Residential\nThe R-1 limit is 700 square feet.\n6-3 R-2 Residential\nThe R-2 limit is 900 square feet.", metadata={"source": "code.pdf", "page": 1}),
+            Document(page_content="Source: code.pdf | Page: 2\nThe R-2 rule continues on this page.", metadata={"source": "code.pdf", "page": 2}),
+        ]
+        splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=0)
+
+        chunks = split_section_documents(pages, splitter)
+
+        self.assertEqual([chunk.metadata["section"] for chunk in chunks], [
+            "6-2 R-1 Residential", "6-3 R-2 Residential", "6-3 R-2 Residential",
+        ])
+        self.assertNotIn("900 square feet", chunks[0].page_content)
+        self.assertNotIn("700 square feet", chunks[1].page_content)
+
+    def test_unreadable_page_remains_visible_to_document_catalog(self):
+        pages = [Document(
+            page_content="Source: code.pdf | Page: 2\n",
+            metadata={"source": "code.pdf", "page": 2, "low_text": True},
+        )]
+        chunks = split_section_documents(pages, RecursiveCharacterTextSplitter(chunk_size=800))
+        self.assertEqual(len(chunks), 1)
+        self.assertTrue(chunks[0].metadata["low_text"])
+        self.assertIn("little or no readable text", chunks[0].page_content)
+
+    def test_pdf_line_wrapped_district_heading_labels_following_rule_page(self):
+        path = Path(__file__).resolve().parents[1] / "data" / "zoning-ordinance-082024-rev.pdf"
+        with pymupdf.open(path) as pdf:
+            pages = [Document(
+                page_content=extract_text_layout(pdf[page - 1]),
+                metadata={"source": path.name, "page": page},
+            ) for page in (53, 54, 57, 58)]
+        chunks = split_section_documents(pages, RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=0))
+        by_page = {page: {chunk.metadata.get("section") for chunk in chunks if chunk.metadata["page"] == page} for page in (54, 58)}
+        self.assertEqual(by_page[54], {"6-2 R-2 Single-Family Residential."})
+        self.assertEqual(by_page[58], {"6-3 R-3 Single-Family Residential."})
 
 
 if __name__ == "__main__":

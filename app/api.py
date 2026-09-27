@@ -3,16 +3,18 @@ import logging
 import os
 from pathlib import Path
 from time import perf_counter
+from typing import Literal
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.concurrency import run_in_threadpool
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 from app.answering import ABSTAIN, cited_claims, collect_conflict_candidates, detect_conflicts, format_scope, repair_answer, resolve_conflict, verify_answer
+from app.conversation import contextualize_query, format_history
 from app.engine import (
     LLM_MODEL, SearchIndexCache, bm25_search, get_vector_db, get_llm, get_rag_prompt,
-    hybrid_search, needs_clarification, select_context,
+    hybrid_search, needs_clarification, select_context, filter_search_index,
 )
 
 app = FastAPI(title="Local RAG API", version="1.0")
@@ -23,7 +25,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[os.getenv("FRONTEND_ORIGIN", "http://localhost:3000")],
     allow_credentials=False,
-    allow_methods=["POST"],
+    allow_methods=["GET", "POST"],
     allow_headers=["Content-Type"],
     expose_headers=["Server-Timing"],
 )
@@ -63,8 +65,15 @@ class CountingLLM:
         return await self.llm.ainvoke(*args, **kwargs)
 
 
+class ChatTurn(BaseModel):
+    role: Literal["user", "assistant"]
+    text: str = Field(max_length=4000)
+
+
 class QueryRequest(BaseModel):
     query: str
+    documents: list[str] | None = None
+    history: list[ChatTurn] = Field(default_factory=list, max_length=12)
 
 
 def sse_event(name: str, data: dict) -> str:
@@ -82,22 +91,53 @@ def document(filename: str):
     return FileResponse(path, media_type="application/pdf", content_disposition_type="inline")
 
 
+@app.get("/documents")
+async def list_documents():
+    index = await run_in_threadpool(search_index.get)
+    catalog = {}
+    for doc in index.documents:
+        name = doc.metadata.get("source")
+        if not name:
+            continue
+        entry = catalog.setdefault(name, {"name": name, "pages": 0, "low_text_pages": set()})
+        page = doc.metadata.get("page")
+        if isinstance(page, int):
+            entry["pages"] = max(entry["pages"], page)
+            if doc.metadata.get("low_text"):
+                entry["low_text_pages"].add(page)
+    return {"documents": [
+        {**entry, "low_text_pages": sorted(entry["low_text_pages"])}
+        for _, entry in sorted(catalog.items())
+    ]}
+
+
 @app.post("/chat")
 async def chat(request: QueryRequest):
     retrieval_started = perf_counter()
     index = await run_in_threadpool(search_index.get)
     index_ms = (perf_counter() - retrieval_started) * 1000
+    selected = None
+    if request.documents is not None:
+        selected = set(request.documents)
+        available = {doc.metadata.get("source") for doc in index.documents}
+        if not selected or not selected <= available:
+            raise HTTPException(status_code=422, detail="Select one or more indexed documents.")
+        if selected == available:
+            selected = None
+    scoped_index = await run_in_threadpool(filter_search_index, index, selected) if selected is not None else index
+    history = [turn.model_dump() for turn in request.history]
+    search_query = await contextualize_query(request.query, history, llm) if history else request.query
     stage_times = {}
-    results = await run_in_threadpool(hybrid_search, request.query, db, k=3, index=index, timings=stage_times)
+    results = await run_in_threadpool(hybrid_search, search_query, db, k=3, index=scoped_index, timings=stage_times, sources=selected)
     clarification_started = perf_counter()
-    clarify = await run_in_threadpool(needs_clarification, request.query, index)
+    clarify = await run_in_threadpool(needs_clarification, search_query, scoped_index)
     ambiguity_ms = (perf_counter() - clarification_started) * 1000
     context_started = perf_counter()
     keyword_leaders = (
-        await run_in_threadpool(bm25_search, request.query, index, k=2)
+        await run_in_threadpool(bm25_search, search_query, scoped_index, k=2)
         if results and not clarify else []
     )
-    context_results = select_context(results, keyword_leaders, request.query)
+    context_results = select_context(results, keyword_leaders, search_query)
     context_ms = (perf_counter() - context_started) * 1000
     retrieval_ms = (perf_counter() - retrieval_started) * 1000
 
@@ -140,7 +180,7 @@ async def chat(request: QueryRequest):
                 started = perf_counter()
                 parts = []
                 async for chunk in chain.astream({
-                    "context": context_text, "question": request.query, "citation_instruction": instruction,
+                    "context": context_text, "question": request.query, "history": format_history(history), "citation_instruction": instruction,
                 }):
                     parts.append(chunk.content)
                 timing["draft_ms"] += (perf_counter() - started) * 1000
@@ -177,12 +217,12 @@ async def chat(request: QueryRequest):
             if draft != ABSTAIN:
                 yield status_event("comparing")
                 started = perf_counter()
-                keyword_candidates = await run_in_threadpool(bm25_search, request.query, index, k=30)
+                keyword_candidates = await run_in_threadpool(bm25_search, search_query, scoped_index, k=30)
                 candidate_docs = collect_conflict_candidates(primary_doc, results, keyword_candidates)
-                conflicts = await detect_conflicts(request.query, primary_doc, candidate_docs, checker, draft)
+                conflicts = await detect_conflicts(search_query, primary_doc, candidate_docs, checker, draft)
                 timing["conflict_ms"] = (perf_counter() - started) * 1000
                 for conflict in conflicts:
-                    decision = resolve_conflict(request.query, primary_doc, conflict.other)
+                    decision = resolve_conflict(search_query, primary_doc, conflict.other)
                     if decision is None:
                         unresolved = True
                         break
@@ -209,7 +249,9 @@ async def chat(request: QueryRequest):
 
             sources = [
                 {"source": doc.metadata.get("source"), "page": doc.metadata.get("page"),
-                 "excerpt": excerpt(doc.page_content)}
+                 "excerpt": excerpt(doc.page_content),
+                 **({"low_text": True} if doc.metadata.get("low_text") else {}),
+                 **({"extraction_method": doc.metadata["extraction_method"]} if doc.metadata.get("extraction_method") else {})}
                 for doc in shown_docs
             ]
             yield sse_event("sources", {"sources": sources})
@@ -218,7 +260,7 @@ async def chat(request: QueryRequest):
             elif draft == ABSTAIN:
                 answer = ABSTAIN
             else:
-                answer = f"{format_scope(scope_doc, request.query)}\n{draft}"
+                answer = f"{format_scope(scope_doc, search_query)}\n{draft}"
                 if conflict_notes:
                     answer += "\n" + "\n".join(conflict_notes)
             yield sse_event("token", {"text": answer})

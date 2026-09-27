@@ -10,7 +10,7 @@ from langchain_chroma import Chroma
 from langchain_ollama import OllamaEmbeddings, ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.documents import Document
-from rank_bm25 import BM25Okapi
+from rank_bm25 import BM25Okapi, BM25Plus
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 DB_PATH = "./chroma_db"
@@ -50,6 +50,9 @@ def get_rag_prompt() -> ChatPromptTemplate:
 
     Context:
     {context}
+
+    Earlier conversation (for understanding the question; verify every answer against the context above):
+    {history}
 
     Question: {question}
     """)
@@ -106,6 +109,19 @@ def build_search_index(db: Chroma) -> SearchIndex:
     return SearchIndex(documents=documents, bm25=bm25, section_bm25=section_bm25)
 
 
+def filter_search_index(index: SearchIndex, sources: set[str]) -> SearchIndex:
+    """Build keyword scores only from the chosen documents."""
+    documents = [doc for doc in index.documents if doc.metadata.get("source") in sources]
+    return SearchIndex(
+        documents=documents,
+        bm25=BM25Plus([tokenize(doc.page_content) for doc in documents]) if documents else None,
+        section_bm25=BM25Plus([
+            tokenize_with_identifiers(f"{doc.metadata.get('section', '')} {doc.page_content}")
+            for doc in documents
+        ]) if documents else None,
+    )
+
+
 def bm25_search(query: str, index: SearchIndex, k: int = 5) -> list[tuple[Document, float]]:
     section_query = bool(re.search(r"\b[A-Za-z][A-Za-z0-9]*-\d+\b", query)) and index.section_bm25 is not None
     scorer = index.section_bm25 if section_query else index.bm25
@@ -134,13 +150,15 @@ def needs_clarification(query: str, index: SearchIndex) -> bool:
     coverage = sum(word in document_words for word in words) / len(words)
     if coverage < 0.6:
         return False
-    best_by_source: dict[str, float] = {}
+    best_by_source: dict[str, tuple[float, float]] = {}
     for document, score in hits:
         source = document.metadata.get("source")
-        if source is not None:
-            best_by_source[source] = max(score, best_by_source.get(source, 0))
+        if source is not None and score > best_by_source.get(source, (0, 0))[0]:
+            terms = set(tokenize(document.page_content))
+            match_coverage = sum(word in terms for word in words) / len(words)
+            best_by_source[source] = (score, match_coverage)
     best = sorted(best_by_source.values(), reverse=True)
-    return len(best) > 1 and best[1] >= best[0] * 0.95
+    return len(best) > 1 and best[1][0] >= best[0][0] * 0.9 and best[1][1] >= best[0][1]
 
 
 def select_context(
@@ -217,10 +235,14 @@ def hybrid_search(
     keyword_weight: float = 0.75,
     index: SearchIndex | None = None,
     timings: dict[str, float] | None = None,
+    sources: set[str] | None = None,
 ) -> list[Document]:
     index = index if index is not None else build_search_index(db)
     started = perf_counter()
-    vector_results = db.similarity_search_with_score(query, k=k * 2)
+    search_filter = None
+    if sources:
+        search_filter = {"source": next(iter(sources))} if len(sources) == 1 else {"source": {"$in": sorted(sources)}}
+    vector_results = db.similarity_search_with_score(query, k=k * 2, filter=search_filter) if search_filter else db.similarity_search_with_score(query, k=k * 2)
     vector_ms = (perf_counter() - started) * 1000
     started = perf_counter()
     keyword_results = bm25_search(query, index, k=k * 2)

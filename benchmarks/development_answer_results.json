@@ -1,6 +1,6 @@
 {
-  "run_at_utc": "2026-09-27T01:42:54.012609+00:00",
-  "git_head_at_run": "3f2fd87b8c608c3a90bcec28a7a4b045685b1e90",
+  "run_at_utc": "2026-09-27T03:29:22.921428+00:00",
+  "git_head_at_run": "cb070a41c7114bd22bffc35e307a7a620831e36a",
   "models": {
     "embedding": "nomic-embed-text",
     "llm": "llama3.2:3b"
@@ -25,22 +25,25 @@
         "Level 2 Review",
         "Level two review"
       ],
-      "answer": "Jurisdiction: Issaquah | District: not specified | Document version: Updated 2-5-20 | Source: zoning.pdf\nP2 = Permitted with Level 2 Review [1].",
+      "answer": "Jurisdiction: Issaquah | District: not specified | Document version: Updated 2-5-20 | Source: zoning.pdf\nP2 = Permitted with Level 2 Review, which means that an applicant must go through a Level 2 Review process. [1]",
       "sources": [
         {
           "source": "zoning.pdf",
           "page": 5,
-          "excerpt": "B. Table 4.3B Table of Permitted Land Uses \n1. Permitted Uses:  P = PERMITTED; P(Number) = PERMITTED with Level of Review \n(0, 1, 2, 3) [i.e. P2 = Permitted with Level 2 Review]; Empty box = NOT PERMITTED. \n2. Unclassified Uses. Those uses which are not listed on the table below but are listed in IMC \n18.06.130, Table of Permitted Land Uses, are Not Permitted in any Central Issaquah zone.  \nThose remaining uses which are not listed on the table below and are also not listed in IMC \n18.06.130, Ta"
+          "excerpt": "1. Permitted Uses:  P = PERMITTED; P(Number) = PERMITTED with Level of Review \n(0, 1, 2, 3) [i.e. P2 = Permitted with Level 2 Review]; Empty box = NOT PERMITTED. \n2. Unclassified Uses. Those uses which are not listed on the table below but are listed in IMC \n18.06.130, Table of Permitted Land Uses, are Not Permitted in any Central Issaquah zone.  \nThose remaining uses which are not listed on the table below and are also not listed in IMC \n18.06.130, Table of Permitted Land Uses, shall be determi",
+          "extraction_method": "text"
         },
         {
           "source": "zoning.pdf",
           "page": 11,
-          "excerpt": "Issaquah Zoning Map and 4B Vertical Mixed Use Overlay. \n24. Refer to 4.4.F Standards for Vertical Mixed Use Overlay for Ground Floor Use requirements.  \n25. Parcels fronting East Lake Sammamish Parkway SE or 221st Place SE only \n \n4.4 District Standards \nA. Applicability. This subsection sets forth the dimensional requirements for each zoning district \nin Central Issaquah. The District Standards Table found in IMC 18.07.360 does not apply in the \nCentral Issaquah zoning districts. Each structure"
+          "excerpt": "in Central Issaquah. The District Standards Table found in IMC 18.07.360 does not apply in the \nCentral Issaquah zoning districts. Each structure, development, or activity in a Central Issaquah \nzoning district shall comply with these requirements except as otherwise provided in this \nSection. \n \nB. Floor Area Ratio.  The relationship between the amount of Gross Floor Area in a Building (or\n\nBuildings) and the Developable Site Area on which the Building(s) stands.  It is obtained by \ndividing th",
+          "extraction_method": "text"
         },
         {
-          "source": "zoning-ordinance-082024-rev.pdf",
-          "page": 242,
-          "excerpt": "August 20, 2024, Rev. Page 233 \n \niii. In what way are the extraordinary and exceptional conditions, identified above, \npeculiar to the use or development proposed or to the particular piece of \nproperty involved? \n \niv. What conditions, factors and/or circumstances give assurance that if the \nrequested variance were granted that such variance would not cause substantial \ndetriment to other property owners or tenants, or to the public good and would \nnot impair the purpose and intent of the ordi"
+          "source": "zoning.pdf",
+          "page": 4,
+          "excerpt": "Table 4.2B Intent of Overlays\n\nCentral Plan\n\nDistrict(s) \nVertical \nMixed Use\n\nOverlay \nIntent\n\nThe intent is to establish an overlay within the Urban Core where \nviable mixed use development is required. Where parcels shown to \nhave Required Ground Floor Frontages as indicated in Figure 4B \nCentral Issaquah Vertical Mixed Use Overlay map, buildings are \nrequired to be a minimum of two floors with the ground floor of \nbuildings comprised of active uses that ensure a dense, vibrant, \npedestrian f",
+          "extraction_method": "text"
         }
       ],
       "score": {
@@ -50,12 +53,12 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 1796.080947999144,
-        "check_ms": 4294.287762997556,
-        "conflict_ms": 542.1164049985236,
-        "drafts": 2,
-        "answer_ms": 6632.802772001014,
-        "check_calls": 9
+        "draft_ms": 978.224999998929,
+        "check_ms": 488.91096000079415,
+        "conflict_ms": 663.3029590011574,
+        "drafts": 1,
+        "answer_ms": 2130.705333998776,
+        "check_calls": 2
       }
     },
     {
@@ -75,7 +78,20 @@
         {
           "source": "E Generalized Summary of Zoning Regulations.pdf",
           "page": 6,
-          "excerpt": "Zone Use\nMaximum Height Required yards Minimum \nArea Per \nl ot/ Unit\nMin. \nl ot \nWidthstories feet front side Rear\nPARking\nP\nAutomobile Parking–Surface and \nUnderground  \nSurface Parking;  \nLand in a P Zone may also be \nClassified in A or R Zone\nunlimited (8)\n10 ft. in combination \nwith an A or R Zone; \notherwise none\nnone none, unless also in \nan A or R Zone\nPB\nParking Building  \nP Zone Uses,  \nAutomobile Parking Within aBuilding\n0 ft., 5 ft., or 10 ft., \ndepending on zoning \nfrontage and zonin"
+          "excerpt": "Appendix E Generalized Summary of Zoning Regulations \b\n\u0003Housing Element 2013–2021 - Appendices\n\nMaximum Height\nRequired yards\nMinimum\n\nMin.\n\nZone\nUse\n\nLot \nWidth\nStories\nFeet\nFront\nSide\nRear\n\nArea Per \nLot/ Unit\n\nParking\n\nAutomobile Parking–Surface and\n\nUnderground \nSurface Parking; \nLand in a P Zone may also be\n\n10 ft. in combination \nwith an A or R Zone;\n\nnone\nnone, unless also in\n\nP\n\nan A or R Zone\n\notherwise none\n\nClassified in A or R Zone\n\nunlimited (8)\n\n5 ft. + 1 ft. each \nstory above 2nd\n",
+          "extraction_method": "text"
+        },
+        {
+          "source": "E Generalized Summary of Zoning Regulations.pdf",
+          "page": 2,
+          "excerpt": "Appendix E Generalized Summary of Zoning Regulations \b\n\u0003Housing Element 2013–2021 - Appendices\n\nMaximum Height\nRequired yards\nMinimum Area\nMin.\n\nParking\n\nLot \nWidth\n\nZone\nUse\n\nReq’d.\nStories\nFeet\nFront\nSide\nRear\nPer Lot\nPer \nDwelling Unit\n\nAgricultural\n\nAgricultural \nOne-Family Dwellings, \nParks, Playgrounds, \nCommunity Centers, \nGolf Courses, \nTruck Gardening, \nExtensive Agricultural \nUses, \nHome Occupations\n\nUnlimited\n\n45 or(6),(8)\n20% lot \ndepth; 25 ft.\n\n10% lot \nwidth; 25 ft.\n\n25% lot depth;",
+          "extraction_method": "text"
+        },
+        {
+          "source": "E Generalized Summary of Zoning Regulations.pdf",
+          "page": 7,
+          "excerpt": "Housing Element 2013–2021 - Appendices\b\nAppendix E Generalized Summary of Zoning Regulations\n\nTransitional Height: \nPortions of buildings in C or M zones within certain distances of RW1 or more restrictive zones shall not exceed the \nfollowing height limits, in accordance with Section 12.21.1 A 10 of the Zoning Code:\n\nDistance (ft)\nHeight (ft)\n\n0–49\n25\n50–99\n33\n100–199\n61\n\nZone Prefixes \n(Section 12.32 of the Zoning Code)\n\n(T), [T], T\nTentative Zone Classification\nCity Council requirements for p",
+          "extraction_method": "text"
         }
       ],
       "score": {
@@ -85,12 +101,12 @@
         "pass": false
       },
       "timing": {
-        "draft_ms": 729.4455349983764,
-        "check_ms": 4134.933003999322,
+        "draft_ms": 1271.0050679997948,
+        "check_ms": 4641.484938001668,
         "conflict_ms": 0.0,
         "drafts": 2,
-        "answer_ms": 4864.7416249987145,
-        "check_calls": 8
+        "answer_ms": 5912.872552002227,
+        "check_calls": 11
       }
     },
     {
@@ -104,12 +120,13 @@
         "500 feet",
         "five hundred feet"
       ],
-      "answer": "Jurisdiction: Urbana | District: not specified | Document version: not identified | Source: article_v_-_use_regulations.pdf\nIn Urbana, a proposed gaming hall must be at least 500 feet from another licensed gaming hall. [1]",
+      "answer": "Jurisdiction: Urbana | District: not specified | Document version: not identified | Source: article_v_-_use_regulations.pdf\nA proposed gaming hall in Urbana must be at least 500 feet from another licensed gaming hall. [1]",
       "sources": [
         {
           "source": "article_v_-_use_regulations.pdf",
           "page": 16,
-          "excerpt": "****See Table VII-1 for Standards for Specific Conditional Uses \n***** The establishment requesting a license for a principal use gaming hall shall be a minimum of five hundred feet from any other licensed \ngaming hall or pre-existing Day Care Facility, Day Care Home, School, or Place of Worship, as defined under the Religious Corporation Act \n(805 ILCS 110/0.01 et seq.). The establishment requesting a license for a principal use gaming hall shall also be a minimum of two \nhundred and fifty feet"
+          "excerpt": "****See Table VII-1 for Standards for Specific Conditional Uses\n\n***** The establishment requesting a license for a principal use gaming hall shall be a minimum of five hundred feet from any other licensed \ngaming hall or pre-existing Day Care Facility, Day Care Home, School, or Place of Worship, as defined under the Religious Corporation Act \n(805 ILCS 110/0.01 et seq.). The establishment requesting a license for a principal use gaming hall shall also be a minimum of two \nhundred and fifty feet",
+          "extraction_method": "text"
         }
       ],
       "score": {
@@ -119,11 +136,11 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 1092.2605439991457,
-        "check_ms": 7287.702133999119,
-        "conflict_ms": 265.1622990015312,
+        "draft_ms": 1030.1849360002961,
+        "check_ms": 6344.351697000093,
+        "conflict_ms": 408.17074900041916,
         "drafts": 2,
-        "answer_ms": 8645.467572998314,
+        "answer_ms": 7783.051320002414,
         "check_calls": 7
       }
     },
@@ -139,22 +156,25 @@
         "ten acres",
         "ten (10) acres"
       ],
-      "answer": "Jurisdiction: Union City, Georgia | District: R-4 | Document version: August 20, 2024, Rev. | Source: zoning-ordinance-082024-rev.pdf\nAccording to the context, Union City requires a minimum lot area of ten (10) acres for a cemetery [1].",
+      "answer": "Jurisdiction: Union City, Georgia | District: R-3 | Document version: August 20, 2024, Rev. | Source: zoning-ordinance-082024-rev.pdf\nAccording to the zoning ordinance, a minimum lot area of ten (10) acres is required for a cemetery [1].",
       "sources": [
         {
           "source": "zoning-ordinance-082024-rev.pdf",
-          "page": 63,
-          "excerpt": "planted buffer strip. \n \n8. Cemetery, provided: \n \na. Minimum lot area shall be ten (10) acres; \n \nb. Gravesites shall be set back at least 50 feet from all property lines; \n \nc. No structure other than grave markers shall be located within 35 feetof property \nzoned for residential use;"
+          "page": 59,
+          "excerpt": "8. Cemetery, provided: \n \na. Minimum lot area shall be ten (10) acres;\n\nAugust 20, 2024, Rev. \nPage 50",
+          "extraction_method": "text"
+        },
+        {
+          "source": "Charleston, SC Zoning.pdf",
+          "page": 636,
+          "excerpt": "a.\nMinimum lot width (ft). The minimum lot width (ft) is measured and\nmaintained from the front lot line through the entire parcel to the OCRM Critical\nLine. All lots within a subdivision must meet the minimum lot width average.\n(Exception: Flag lots and lots served by cul-de-sacs). Lots fronting on cul-de-sacs\nshall meet the minimum lot width at the required minimum front setback. Flag\nlots are designed with a \"flag pole\" area with a minimum width of 20 feet. The flag\npole area is not required ",
+          "extraction_method": "text"
         },
         {
           "source": "zoning-ordinance-082024-rev.pdf",
-          "page": 76,
-          "excerpt": "3. Schools and their customary related uses, provided: \n \na. Minimum lot size is three (3) acres; \n \nb. Minimum lot frontage is at least 200 feet; \n \nc. All buildings are located on a lot fronting a major or collector street, as \ndetermined by the Planning Commission; and \n \nd. All buildings are placed not less than 50 feet from any property line and are \nseparated from any such property line, excluding the front property line, by a \nplanted buffer strip. \n \n4. Cemetery, provided: \n \na. Minimum "
-        },
-        {
-          "source": "zoning-ordinance-082024-rev.pdf",
-          "page": 16,
-          "excerpt": "August 20, 2024, Rev. Page 7 \n \nand including four-inch caliper size, and twelve (12) inches above the ground for larger \nsizes. \n \n3-39 Car Wash. An establishment used for washing and cleaning of passenger vehicles, \nrecreational vehicles, and other light duty equipment, including facilities containing \nmechanical devices for washing and those that are self-service/coin operated. (Ordinance \n2022-03; 12/08/22) \n \n3-40 Cemetery. A burial ground. \n \n3-41 Cemetery, Commercial. The operation of a b"
+          "page": 59,
+          "excerpt": "separated from any such property line, excluding thefront property line, by a \nplanted buffer strip; and\n\nc. Accessory schools and cemeteries are permissible provided an additional three\n\n(3) acres is provided in addition to the three (3) acre church requirement.\n\n7. Schools and their customary related uses, provided: \n \na. Minimum lot size is three (3) acres;\n\nb. Minimum lot frontage is at least 200 feet;\n\nc. All buildings are located on a lot fronting a major or collector street, as\n\ndetermine",
+          "extraction_method": "text"
         }
       ],
       "score": {
@@ -164,12 +184,12 @@
         "pass": false
       },
       "timing": {
-        "draft_ms": 678.6992529996496,
-        "check_ms": 1044.7439029994712,
-        "conflict_ms": 453.42561999859754,
+        "draft_ms": 607.8124820014636,
+        "check_ms": 2088.118920000852,
+        "conflict_ms": 566.4982499984035,
         "drafts": 1,
-        "answer_ms": 2177.2245120009757,
-        "check_calls": 3
+        "answer_ms": 3262.6868639999884,
+        "check_calls": 5
       }
     },
     {
@@ -192,7 +212,8 @@
         {
           "source": "zoning-ordinance-082024-rev.pdf",
           "page": 53,
-          "excerpt": "August 20, 2024, Rev. Page 44 \n \n6-2 R-2 Single-Family Residential. \n \nA. Description of District. The R-2 single-family residential district is intended to provide \nsuitable open areas for single-family, detached dwellings at low to moderate densities, \nwith access to public water and sewerage. \n \nB. Permitted Uses. Within the R-2 Zoning District, the following Permitted uses shall be \nallowed: \n \n1. Single-family detached dwellings; \n \n2. Accessory buildings and uses; \n \n3. Clubs and recreatio"
+          "excerpt": "6-2 R-2 Single-Family Residential.\n\nA. Description of District. \nThe R-2 single-family residential district is intended to provide \nsuitable open areas for single-family, detached dwellings at low to moderate densities, \nwith access to public water and sewerage. \n \nB. Permitted Uses. \nWithin the R-2 Zoning District, the following Permitted uses shall be \nallowed:\n\n1. Single-family detached dwellings; \n \n2. Accessory buildings and uses;\n\n3. Clubs and recreation uses when part of the overall resid",
+          "extraction_method": "text"
         }
       ],
       "score": {
@@ -202,11 +223,11 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 669.7907839989057,
-        "check_ms": 513.5028749973571,
-        "conflict_ms": 591.0126460003085,
+        "draft_ms": 591.9868559976749,
+        "check_ms": 472.74171599929105,
+        "conflict_ms": 590.9225320028781,
         "drafts": 1,
-        "answer_ms": 1774.5652300000074,
+        "answer_ms": 1655.9305310001946,
         "check_calls": 2
       }
     },
@@ -225,22 +246,25 @@
         "thirty feet",
         "thirty (30) feet"
       ],
-      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nIn Charleston's 55/30 height district, the minimum height for a principal structure is thirty (30) feet [1].",
+      "answer": "Jurisdiction: not identified | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nThirty (30) feet [1].",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
           "page": 405,
-          "excerpt": "(Ord. No. 2017-085, § 1, 8-15-17; Ord. No. 2020-014, § 1, 1-28 -20) \nSec. 54-306.V.  Height District 55/30 S. \nIn this district: \n1. No part of a structure shall exceed the height of fifty-fiv e (55) feet, nor shall the \nprincipal structure be lower than thirty (30) feet. \n§ 54-306.T  § 54-306.VSITE REGULATIONS\n3-20.5Supp. No. 19"
+          "excerpt": "3. \nAll principal structures fifty (50) feet or less in height shall have no set back from \nstreet right-of-way lines, subject to provisions of Article 3: Part 10; except such \nstructures may be set back from street right-of-way a distance no greater than the \nleast such set back of the two adjoining buildings on either side. \n(Ord. No. 2017-085, § 1, 8-15-17; Ord. No. 2020-014, § 1, 1-28-20)\n\nSec. 54-306.V. Height District 55/30 S.\n\nIn this district:\n\n1. \nNo part of a structure shall exceed the",
+          "extraction_method": "text"
+        },
+        {
+          "source": "Charleston, SC Zoning.pdf",
+          "page": 379,
+          "excerpt": "Sec. 54-306.P. Height District 80/30. \nSec. 54-306.Q. Height District 50W. \nSec. 54-306.R. Height District W. \nSec. 54-306.S. Height District WP. \nSec. 54-306.T. Height District 56/30 V. \nSec. 54-306.U. Height District 120/30. \nSec. 54-306.V. Height District 55/30 S. \nSec. 54-306.W. Height District 55/30. \nSec. 54-306.X. Height district chart. \nSec. 54-306.Y. Height District 8-12(A), (B), and (C). \nSec. 54-307. \nView corridor protection. \nSec. 54-308. \nExceptions. \nSec. 54-309. \nReserved.",
+          "extraction_method": "text"
         },
         {
           "source": "Charleston, SC Zoning.pdf",
           "page": 406,
-          "excerpt": "2. All structures shall have no minimum set back from street ri ght-of-way lines, subject \nto provisions of Article 3: Part 10. \n(Ord. No. 2017-085, § 1, 8-15-17; Ord. No. 2020-014, § 1, 1-28 -20) \nSec. 54-306.W.  Height District 55/30. \nIn this district: \n1. No part of a structure shall exceed the height of fifty-fiv e (55) feet, nor shall the \nprincipal structure be lower than thirty (30) feet. \n2. All structures shall have no set back from street right-of- way lines, subject to \nprovisions of"
-        },
-        {
-          "source": "Charleston, SC Zoning.pdf",
-          "page": 402,
-          "excerpt": "Sec. 54-306.O.  Height District 100/30. \nIn this district: \n1. The minimum height for a structure fronting on a street is t hirty (30) feet, and the \nminimum height on the ground floor of a structure fifteen (15 ) feet. \n2. The maximum height of a structure along north-south orien ted streets is four (4) \nstories. The height along north-south oriented streets sha ll be maintained from the \nedge of the right-of-way into the interior of the lot for a dist ance of one hundred (100) \nfeet, except as"
+          "excerpt": "§ 54-306.V \n § 54-306.X\nCHARLESTON ZONING ORDINANCE\n\n2. \nAll structures shall have no minimum set back from street right-of-way lines, subject \nto provisions of Article 3: Part 10. \n(Ord. No. 2017-085, § 1, 8-15-17; Ord. No. 2020-014, § 1, 1-28-20)\n\nSec. 54-306.W. Height District 55/30.\n\nIn this district:\n\n1. \nNo part of a structure shall exceed the height of fifty-five (55) feet, nor shall the \nprincipal structure be lower than thirty (30) feet.\n\n2. \nAll structures shall have no set back from s",
+          "extraction_method": "text"
         }
       ],
       "score": {
@@ -250,12 +274,12 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 873.967530002119,
-        "check_ms": 969.734996000625,
-        "conflict_ms": 662.6570990010805,
-        "drafts": 1,
-        "answer_ms": 2506.6192199992656,
-        "check_calls": 2
+        "draft_ms": 1188.9484589992207,
+        "check_ms": 3403.73686899693,
+        "conflict_ms": 1554.076771997643,
+        "drafts": 2,
+        "answer_ms": 6147.130629997264,
+        "check_calls": 6
       }
     },
     {
@@ -270,22 +294,25 @@
         "one hundred square feet",
         "one hundred (100) square feet"
       ],
-      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nFor a Charleston development with at least twenty business units, no sign shall exceed one hundred (100) square feet per face [2].",
+      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nFor a Charleston development with at least twenty business units, the per-face area limit for its monument sign is one hundred (100) square feet [2].",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
           "page": 504,
-          "excerpt": "2. For a development containing more than three (3) business units and fewer\nthan twenty (20) business units, one (1) monument sign shall be permitted as\nfollows:\n(a) No sign shall exceed sixty (60) square feet per face or one hundred and\ntwenty (120) square feet of total sign face area. No sign shal l exceed\nfourteen (14) feet in height.\n(b) Monument signs may be illuminated internally or with a shi elded spot\nlight located at the base of the sign. Plastic face signs shal l have opaque\nbackgrou"
+          "excerpt": "§ 54-415\n§ 54-415\nCHARLESTON ZONING ORDINANCE\n\n2.\nFor a development containing more than three (3) business units and fewer\nthan twenty (20) business units, one (1) monument sign shall be permitted as\nfollows:\n\n(a)\nNo sign shall exceed sixty (60) square feet per face or one hundred and\ntwenty (120) square feet of total sign face area. No sign shall exceed\nfourteen (14) feet in height.\n\n(b)\nMonument signs may be illuminated internally or with a shielded spot\nlight located at the base of the sign.",
+          "extraction_method": "text"
         },
         {
           "source": "Charleston, SC Zoning.pdf",
           "page": 505,
-          "excerpt": "3. For a development containing twenty (20) or more business units, or 150,000\nsquare feet or more of floor area, one (1) monument sign shall be permitted as\nfollows:\n(a) No sign shall exceed one hundred (100) square feet per fac e or two\nhundred (200) square feet of total sign face area. No sign sha ll exceed\nfourteen (14) feet in height.\n(b) Monument signs may be illuminated internally or with a shi elded spot\nlight located at the base of the sign. Plastic face signs shal l have opaque\nbackgro"
+          "excerpt": "§ 54-415\n§ 54-415\nSIGN REGULATIONS\n\n3.\nFor a development containing twenty (20) or more business units, or 150,000\nsquare feet or more of floor area, one (1) monument sign shall be permitted as\nfollows:\n\n(a)\nNo sign shall exceed one hundred (100) square feet per face or two\nhundred (200) square feet of total sign face area. No sign shall exceed\nfourteen (14) feet in height.\n\n(b)\nMonument signs may be illuminated internally or with a shielded spot\nlight located at the base of the sign. Plastic fa",
+          "extraction_method": "text"
         },
         {
           "source": "Charleston, SC Zoning.pdf",
-          "page": 503,
-          "excerpt": "property owner of the parcel on which the sign is to be located stating\nthat the property owner will allow the sign to be erected at th e location\nindicated on the site plan.\n(Ord. No. 2018-031, § 8, 4-10-18)\nSec. 54-415. Regulations for signs within all other distric ts.\nIn all other districts, only the following signs shall be per mitted:\na. Freestanding signs shall be permitted as follows:\n1. For a development containing three (3) or fewer business u nits, one (1)\nmonument sign shall be permi"
+          "page": 242,
+          "excerpt": "f.\nSignage. Requirements for signage shall apply per Article 4, Part 3, Sign Regulations\nfor the base zoning district unless noted otherwise below.\n\n1.\nFor a development containing three or fewer business units, one freestanding\nmonument style sign with a maximum height of twelve (12) feet and a maximum\nsize of forty (40) square feet per face shall be allowed.\n\n2.\nFor a development containing more than three business units, one monument\nstyle sign with a maximum height of fourteen feet (14') and",
+          "extraction_method": "text"
         }
       ],
       "score": {
@@ -295,12 +322,12 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 905.2838979987428,
-        "check_ms": 619.750452999142,
-        "conflict_ms": 664.5578569987265,
+        "draft_ms": 782.5418710017402,
+        "check_ms": 4941.283567000937,
+        "conflict_ms": 685.5347669988987,
         "drafts": 1,
-        "answer_ms": 2189.8915250021673,
-        "check_calls": 2
+        "answer_ms": 6409.616164000909,
+        "check_calls": 8
       }
     },
     {
@@ -313,22 +340,25 @@
       "accepted_answers": [
         "Board of Zoning Appeals Site Design"
       ],
-      "answer": "I don't know based on these documents.",
+      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nTo appeal an administrative decision about a sidewalk cafe permit in Charleston, you must file the appeal within ten (10) business days after actual notice of the decision, using an approved appeal form and fee, and delivering it to the Zoning Division office [1].",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
           "page": 681,
-          "excerpt": "Meeting agendas are limited to no more than twenty-five (25) new applications and appeals. \nEach application or appeal shall require a fee as set by City C ouncil. \nSection 2.  Time Limit for Appeal of an Administrative Decis ion. \nAn appeal from an administrative decision must be filed with in ten (10) business days after \nactual notice of the decision by delivery of the approved app eal form and fee to the Zoning \nDivision office. \nSection 3.  Time Limit and Procedure for Appeal for Reconsid e"
+          "excerpt": "Section 2. Time Limit for Appeal of an Administrative Decision.\n\nAn appeal from an administrative decision must be filed within ten (10) business days after \nactual notice of the decision by delivery of the approved appeal form and fee to the Zoning \nDivision office.\n\nSection 3. Time Limit and Procedure for Appeal for Reconsideration of a Board\n\nDecision to the Board.",
+          "extraction_method": "text"
         },
         {
           "source": "Charleston, SC Zoning.pdf",
           "page": 721,
-          "excerpt": "provided by the Rules of Procedure. \n   Article III.\nAppeals Procedure \nSection 1.  Form of Appeal—Administrative Decision. \nAppeals to the Board from an administrative decision may be ta ken by any person aggrieved \nby a determination of the administrative officer. Appeals s hall be filed on forms approved by \nthe Board and provided by the Secretary of the Board. Appeal f orms shall be made available \nin the City of Charleston Department of Planning and Preserv ation, 75 Calhoun Street, \nCharle"
+          "excerpt": "Section 2. Time of Appeal.\n\nAn appeal from a Board decision or an administrative decision must be filed within fifteen \n(15) days from the making of such decision, order, requirement or determination.\n\nApp. K-3\nSupp. No. 25",
+          "extraction_method": "text"
         },
         {
           "source": "Charleston, SC Zoning.pdf",
-          "page": 688,
-          "excerpt": "Section 2.  Time for Appeal for an Administrative Decision. \nAn appeal from an administrative decision must be filed with in fifteen (15) calendar days \nfrom the making of such decision, order, requirement or dete rmination. \nSection 3.  Calendar. \nAppeals shall be marked with the date of receipt and placed on the hearing calendar. \nSection 4.  Withdrawal of Appeal. \nAny appeal may be withdrawn by written notice delivered to the s ecretary prior to action by \nthe Board. An appeal may not be re-f"
+          "page": 721,
+          "excerpt": "Article III.\nAppeals Procedure\n\nSection 1. Form of Appeal—Administrative Decision.\n\nAppeals to the Board from an administrative decision may be taken by any person aggrieved \nby a determination of the administrative officer. Appeals shall be filed on forms approved by \nthe Board and provided by the Secretary of the Board. Appeal forms shall be made available \nin the City of Charleston Department of Planning and Preservation, 75 Calhoun Street, \nCharleston, South Carolina. A detailed narrative mu",
+          "extraction_method": "text"
         }
       ],
       "score": {
@@ -338,12 +368,12 @@
         "pass": false
       },
       "timing": {
-        "draft_ms": 3036.5606900013518,
-        "check_ms": 0.13215299986768514,
-        "conflict_ms": 0.0,
-        "drafts": 2,
-        "answer_ms": 3037.013704997662,
-        "check_calls": 0
+        "draft_ms": 998.1418440002017,
+        "check_ms": 765.3788419993361,
+        "conflict_ms": 497.3420520000218,
+        "drafts": 1,
+        "answer_ms": 2261.1248110006272,
+        "check_calls": 2
       }
     },
     {
@@ -353,19 +383,22 @@
       "answer": "I don't know based on these documents.",
       "sources": [
         {
-          "source": "zoning-ordinance-082024-rev.pdf",
-          "page": 242,
-          "excerpt": "August 20, 2024, Rev. Page 233 \n \niii. In what way are the extraordinary and exceptional conditions, identified above, \npeculiar to the use or development proposed or to the particular piece of \nproperty involved? \n \niv. What conditions, factors and/or circumstances give assurance that if the \nrequested variance were granted that such variance would not cause substantial \ndetriment to other property owners or tenants, or to the public good and would \nnot impair the purpose and intent of the ordi"
-        },
-        {
           "source": "Charleston, SC Zoning.pdf",
           "page": 355,
-          "excerpt": "system meets the capacity required and is functioning prope rly before a\ncertificate of occupancy is given.(c) Certificate of occup ancy . If the\ncommitted points in this category are not achieved, the owne r shall be\nrequired to substitute incentive options and earn all point s necessary to\njustify bonuses before a certificate of occupancy will be is sued. (d)\nLongevity . This incentive option shall exist and be maintai ned to its full\ncapacity by the owner for the life of the corresponding bui"
+          "excerpt": "(a)\nThe owner shall execute and provide the Department a restrictive\ncovenant committing to achieve and maintain the specified rating.\n\n(b)\nThe owner shall provide the Department with certified evidence the\nsystem meets the capacity required and is functioning properly before a\ncertificate of occupancy is given.(c) Certificate of occupancy. If the\ncommitted points in this category are not achieved, the owner shall be\nrequired to substitute incentive options and earn all points necessary to\njusti",
+          "extraction_method": "text"
+        },
+        {
+          "source": "zoning-ordinance-082024-rev.pdf",
+          "page": 24,
+          "excerpt": "A. That has no visible from the exterior of the structure and no other advertising that\n\nindicates a nude or semi-nude person is available for viewing; and\n\nB. Where in order to participate in a class a student must enroll at least three (3) days\n\nin advance of the class; and \n \nC. Where no more than one (1) nude or semi-nude model is on the premises at any one\n\ntime.",
+          "extraction_method": "text"
         },
         {
           "source": "Charleston, SC Zoning.pdf",
-          "page": 415,
-          "excerpt": "USE NUMBER OF SPACES REQUIRED\n- Day care centers 2 per employee\n- Church, synagogue, place of worship (other\nthan on the peninsula)\n1 per 4 seats design capacity of the principal\nplace of worship; 80 percent of the required\nspaces may be provided at an off-site\npublic or private parking lot which is\naccessory to another use not open or operat-\ning during the time of weekend services\nand within 400 feet of the place of wor-\nship. Written permission from owner of lot\nindicating times parking is to"
+          "page": 251,
+          "excerpt": "The Conservation sub-area extends from Battery Island Drive to the Folly River. This\narea is intended to be the least intensely developed area of the overlay zoning district and is\nto provide a natural scenic open space before entering the City of Folly Beach by preserving\nthe marsh views and vistas of this area. This portion of the overlay zoning district is\nintended to provide an appropriate transition from the more intense commercial develop-\nment in the North Village, Commercial Core, and So",
+          "extraction_method": "text"
         }
       ],
       "score": {
@@ -375,11 +408,11 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 1014.9480590007443,
-        "check_ms": 0.001887001417344436,
+        "draft_ms": 1000.3792169991357,
+        "check_ms": 0.005241996404947713,
         "conflict_ms": 0.0,
         "drafts": 2,
-        "answer_ms": 1015.2622060013528,
+        "answer_ms": 1000.6089140006225,
         "check_calls": 0
       }
     },
@@ -390,19 +423,22 @@
       "answer": "I don't know based on these documents.",
       "sources": [
         {
-          "source": "zoning-ordinance-082024-rev.pdf",
-          "page": 173,
-          "excerpt": "August 20, 2024, Rev. Page 164 \n \nb. Roads, parking lots and impervious surfaces, except as specifically authorized in the \nprevious sections; \n \nc. Agricultural and forestry activities not conducted according to accepted Best \nManagement Practices; and \n \nd. Other activities as determined by the Applicant and recorded onthe legal instrument \nproviding for permanent protection. \n \n9. Ownership and Management of Open Space. \n \na. Ownership of Open Space. The applicant must identify the ownerof th"
+          "source": "Charleston, SC Zoning.pdf",
+          "page": 201,
+          "excerpt": "8.\nSuch occupation shall be carried on by a resident, members of his family living on\nthe premises, and no more than one full-time or part-time nonresident employee\nwho works at the residence used for the home occupation. The home occupation\nmay have other employees who are not working at the residence, but work at other\noff-site locations, if applicable. For the purpose of this section, the term \"nonresident\nemployee\" includes an employee, business partner, co-owner, or other person\naffiliated ",
+          "extraction_method": "text"
         },
         {
           "source": "Charleston, SC Zoning.pdf",
           "page": 607,
-          "excerpt": "property damage and compromise public safety. Notwithstan ding ongoing efforts by the City \nto study and model the drainage conditions in the Basin and to update and implement \nregulations to alleviate flooding conditions there, it is e vident that, absent a thorough \nevaluation of the drainage patterns in portions of the Basin , of the development and \ninfrastructure in place, and of development that will reaso nably occur in these areas in the \nimmediate future, development in the Basin, both "
+          "excerpt": "to study and model the drainage conditions in the Basin and to update and implement \nregulations to alleviate flooding conditions there, it is evident that, absent a thorough \nevaluation of the drainage patterns in portions of the Basin, of the development and \ninfrastructure in place, and of development that will reasonably occur in these areas in the \nimmediate future, development in the Basin, both existing and planned, will be threatened, \nas well as the quality of life of those who live and",
+          "extraction_method": "text"
         },
         {
           "source": "Charleston, SC Zoning.pdf",
-          "page": 286,
-          "excerpt": "approval requirements of the Design Review District and the requirements of part \n11 of this ordinance. \n(Ord. No. 2011-45, § 1, 6-21-11; Ord. No. 2012-386, §§ 1, 2, 10 -23-12; Ord. No. 2024-185, § 1, \n12-3-24) \nSec. 54-269.  Design Review Board created; composition, ap pointment and terms of \nmembers. \na. A Design Review Board is hereby established. Such board sh all consist of seven (7) \nboard members and two (2) alternates who do not hold any other public office or \nposition in the City of Ch"
+          "page": 633,
+          "excerpt": "6.\nOnly one full-time or part-time employee, who is not a full-time resident of\nthe home where the bed and breakfast is located, is allowed. For the purpose\nof this provision, the term \"nonresident employee\" includes an employee,\nbusiness partner, co-owner, or other person affiliated with the bed and\nbreakfast, who does not live at the site, but who visits the site as part of the\nbed and breakfast.\n\n7.\nThe operator of the bed and breakfast shall be a full-time resident of the\ndwelling unit.\n\n8.\n",
+          "extraction_method": "text"
         }
       ],
       "score": {
@@ -412,11 +448,11 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 986.4353000011761,
-        "check_ms": 0.0014510005712509155,
+        "draft_ms": 821.4313339994987,
+        "check_ms": 0.0013830031093675643,
         "conflict_ms": 0.0,
         "drafts": 2,
-        "answer_ms": 986.6522530028305,
+        "answer_ms": 821.6400130004331,
         "check_calls": 0
       }
     },
@@ -427,19 +463,22 @@
       "answer": "I don't know based on these documents.",
       "sources": [
         {
-          "source": "Charleston, SC Zoning.pdf",
-          "page": 631,
-          "excerpt": "to protect ground and surface water quality; buffer strips, oil/\ngrease separators or other recommended techniques for park ing\narea drainage systems; grease traps and other recommended\ntechnologies for facilities such as golf cart maintenance o r wash\nareas to prevent untreated runoff from entering the natural\naquatic environmental berms, vegetative strips, grease tr aps, or\nother recommended technologies in parking areas for draina ge\ncontrols to minimize pollution to nearby riparian areas ad "
+          "source": "zoning-ordinance-082024-rev.pdf",
+          "page": 242,
+          "excerpt": "iii. In what way are the extraordinary and exceptional conditions, identified above,\n\npeculiar to the use or development proposed or to the particular piece of \nproperty involved? \n \niv. What conditions, factors and/or circumstances give assurance that if the\n\nrequested variance were granted that such variance would not cause substantial \ndetriment to other property owners or tenants, or to the public good and would \nnot impair the purpose and intent of the ordinance? \n \nv. Does a literal interp",
+          "extraction_method": "text"
         },
         {
-          "source": "zoning-ordinance-082024-rev.pdf",
-          "page": 16,
-          "excerpt": "treatment, but where there is no overnight lodging. \n \n3-52 Club, or Lodge, private. All incorporated or un-incorporated associations for civic, \nsocial, cultural, religious, fraternal, literary, political, and recreational or like activities \noperated for the benefit of its members and not open to the general public. \n \n3-53 Reserved. (Ordinance 2023-01; 05/16/23)"
+          "source": "Charleston, SC Zoning.pdf",
+          "page": 535,
+          "excerpt": "a.\nThere is a stormwater management plan which addresses, to the satisfaction of\nthe Board based upon a review of the plan by the Technical Review Committee, the\ndesign, construction, future maintenance and future monitoring of storm water\nrunoff resulting from the development of the Lot, which has been certified by an\nengineer licensed by the State of South Carolina.\n\nb.\nThe project's engineer certifies that the adverse impact on water quality in the\nadjacent water body of the project is equal ",
+          "extraction_method": "text"
         },
         {
           "source": "zoning.pdf",
           "page": 12,
-          "excerpt": "Director will determine the definition of Site. In a mixed use development with different FAR \nlimits, the FAR will be the use with the majority square footage.  For example, if 50.6 % of the \nbuilding area is residential, then the whole project will use the residential FAR. \n \nC. Base FAR. The base FAR is what is allowable by right in each district.  The base FAR may not \nbe exceeded without providing significant amenities as defined in Chapter 5.0 Density Bonus \nProgram. \n \nD. Minimum FAR. The"
+          "excerpt": "------------------------------------------   = FAR \n \n \n \nDevelopable Site Area \n \nFor Sites separated by rights-of-way, FAR will be calculated based on the FAR across the entire \nSite, and density and impervious surface coverage may be transferred among parcels, provided \nthe Site meets other applicable regulations. For other unique or undefined configurations, the \nDirector will determine the definition of Site. In a mixed use development with different FAR \nlimits, the FAR will be the use wit",
+          "extraction_method": "text"
         }
       ],
       "score": {
@@ -449,11 +488,11 @@
         "pass": true
       },
       "timing": {
-        "draft_ms": 931.0227889982343,
-        "check_ms": 0.0011970005289185792,
+        "draft_ms": 814.6097809985804,
+        "check_ms": 0.0011179981811437756,
         "conflict_ms": 0.0,
         "drafts": 2,
-        "answer_ms": 931.2070330015558,
+        "answer_ms": 814.797022001585,
         "check_calls": 0
       }
     },

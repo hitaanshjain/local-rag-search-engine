@@ -4,9 +4,9 @@ from pathlib import Path
 import re
 from time import sleep
 from uuid import uuid4
-from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from app.engine import INDEX_VERSION_PATH, get_vector_db
+from app.pdf_extraction import extract_pdf
 from app.provenance import infer_document_provenance
 
 DATA_DIR = "./data"
@@ -48,6 +48,36 @@ def assign_sections(chunks):
         if coverage:
             chunk.metadata["section"] = max(coverage, key=coverage.get)
 
+
+def split_section_documents(pages, splitter):
+    """Split each page at section headings before applying the size limit."""
+    segments = []
+    current_source = None
+    current_section = None
+    for page in pages:
+        source = page.metadata.get("source")
+        if source != current_source:
+            current_source, current_section = source, None
+        text = page.page_content
+        header, separator, body = text.partition("\n") if text.startswith("Source: ") else ("", "", text)
+        headings = section_headings(body)
+        boundaries = [(0, current_section)] + [(start, heading) for start, heading in headings]
+        for (start, section), (end, _) in zip(boundaries, boundaries[1:] + [(len(body), None)]):
+            content = body[start:end].strip()
+            if not content:
+                if not page.metadata.get("low_text") or start != 0:
+                    continue
+                content = "[This page has little or no readable text after extraction and OCR.]"
+            metadata = dict(page.metadata)
+            if section:
+                metadata["section"] = section
+            else:
+                metadata.pop("section", None)
+            segments.append(type(page)(page_content=f"{header}{separator}{content}" if header else content, metadata=metadata))
+        if headings:
+            current_section = headings[-1][1]
+    return splitter.split_documents(segments)
+
 def publish_index_version(marker_path):
     marker_path = Path(marker_path)
     marker_path.parent.mkdir(parents=True, exist_ok=True)
@@ -79,8 +109,7 @@ def process_documents(data_dir=DATA_DIR, db=None, marker_path=None):
     for path in sorted(data_dir.iterdir()):
         if path.is_file() and path.suffix.lower() == ".pdf":
             filename = path.name
-            loader = PyPDFLoader(str(path))
-            docs = loader.load()
+            docs = extract_pdf(path)
             provenance = infer_document_provenance([doc.page_content for doc in docs[:2]])
             
             for i, doc in enumerate(docs):
@@ -90,6 +119,9 @@ def process_documents(data_dir=DATA_DIR, db=None, marker_path=None):
                 doc.page_content = f"Source: {filename} | Page: {i + 1}\n{doc.page_content}"
             
             all_docs.extend(docs)
+            weak_pages = [doc.metadata["page"] for doc in docs if doc.metadata.get("low_text")]
+            if weak_pages:
+                print(f"Warning: {filename} has little or no extracted text on pages {weak_pages}.")
     
     if not all_docs:
         if db is None:
@@ -109,8 +141,7 @@ def process_documents(data_dir=DATA_DIR, db=None, marker_path=None):
         separators=["\n\n", "\n", ".", "!", "?", ",", " "]
     )
     
-    chunks = text_splitter.split_documents(all_docs)
-    assign_sections(chunks)
+    chunks = split_section_documents(all_docs, text_splitter)
     print(f"Split {len(all_docs)} pages into {len(chunks)} contextualized chunks.")
 
     print("Step 3: Ingesting into Vector Store...")

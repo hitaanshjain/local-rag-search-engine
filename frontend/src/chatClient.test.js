@@ -33,6 +33,21 @@ test("streamChat passes the abort signal to fetch", async () => {
   });
 });
 
+test("streamChat sends selected documents and prior turns", async () => {
+  const fetchImpl = async (_url, options) => {
+    assert.deepEqual(JSON.parse(options.body), {
+      query: "How large?",
+      history: [{ role: "user", text: "R-2 guest house?" }],
+      documents: ["rules.pdf"],
+    });
+    return { ok: true, body: new ReadableStream({ start(controller) {
+      controller.enqueue(new TextEncoder().encode('event: done\\ndata: {}\\n\\n'.replaceAll('\\n', '\n')));
+      controller.close();
+    } }) };
+  };
+  await streamChat("How large?", () => {}, { fetchImpl, history: [{ role: "user", text: "R-2 guest house?" }], documents: ["rules.pdf"] });
+});
+
 test("streamChat rejects a connection that closes before done", async () => {
   const body = new ReadableStream({
     start(controller) {
