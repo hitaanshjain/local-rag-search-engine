@@ -456,6 +456,20 @@ class ChatEventsTests(unittest.TestCase):
         self.assertEqual(seen["question"], "How large?")
         rewrite.assert_awaited_once()
 
+    def test_follow_up_rewrite_receives_the_corpus_place_names(self):
+        docs = [
+            Document(page_content="Rule", metadata={"source": "a.pdf", "page": 1, "jurisdiction": "Union City, Georgia"}),
+            Document(page_content="Rule", metadata={"source": "b.pdf", "page": 1, "jurisdiction": "Charleston, South Carolina"}),
+            Document(page_content="Rule", metadata={"source": "c.pdf", "page": 1}),
+        ]
+        with patch("app.api.search_index.get", return_value=SearchIndex(docs, None)), patch(
+            "app.api.contextualize_query", new_callable=AsyncMock, return_value="guest house size in Charleston"
+        ) as rewrite, patch("app.api.hybrid_search", return_value=[]):
+            asyncio.run(response_events(asyncio.run(chat(QueryRequest(
+                query="And in Charleston?", history=[{"role": "user", "text": "Union City R-2 guest house size?"}],
+            )))))
+        self.assertEqual(sorted(rewrite.await_args.args[3]), ["Charleston", "Union City"])
+
     def test_generation_error_is_sent_as_an_event(self):
         class BrokenChain:
             async def astream(self, values):

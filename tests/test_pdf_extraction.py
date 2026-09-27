@@ -31,7 +31,7 @@ class PdfExtractionTests(unittest.TestCase):
         self.assertEqual(len(pages), 1)
         self.assertEqual(pages[0].metadata["extraction_method"], "text")
         self.assertIn("6-2 R-2 Residential", pages[0].page_content)
-        self.assertIn("| Guest house | 900 square feet |", pages[0].page_content)
+        self.assertIn("Use: Guest house; Limit: 900 square feet", pages[0].page_content)
 
     def test_scanned_page_uses_ocr_and_blank_page_is_not_low_text(self):
         with tempfile.TemporaryDirectory() as temporary_dir:
@@ -83,6 +83,15 @@ class PdfExtractionTests(unittest.TestCase):
         self.assertTrue(pages[0].metadata["low_text"])
         self.assertIn("little or no text", pages[0].metadata["extraction_warning"])
 
+    def test_sparse_ruled_table_keeps_values_in_their_columns(self):
+        # Zoning tables leave many cells empty; the Los Angeles summary's "none" cells were
+        # misread as the front yard once the rejected table's text lost its columns.
+        path = Path(__file__).resolve().parents[1] / "data" / "E Generalized Summary of Zoning Regulations.pdf"
+        with pymupdf.open(path) as pdf:
+            text = extract_text_layout(pdf[5])
+        self.assertIn("Zone: P;", text)
+        self.assertIn("Required yards Front: 10 ft. in combination with an A or R Zone; otherwise none; Required yards Side: none", text)
+
     def test_undetected_table_keeps_each_row_together(self):
         # The LA summary is a borderless table that table detection rejects; sorting its text
         # blocks by position scattered each zone's row across the page and into other chunks.
@@ -108,7 +117,7 @@ class PdfExtractionTests(unittest.TestCase):
             pdf.save(path)
             pdf.close()
             pages = extract_pdf(path)
-        self.assertIn("| Guest house | 900 square feet |", pages[0].page_content)
+        self.assertIn("Use: Guest house; Limit: 900 square feet", pages[0].page_content)
 
     def test_paragraph_columns_do_not_break_a_rule_sentence(self):
         path = Path(__file__).resolve().parents[1] / "data" / "zoning-ordinance-082024-rev.pdf"

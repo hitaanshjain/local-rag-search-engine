@@ -1,7 +1,7 @@
 # Regression (former holdout) answer evaluation
 
-Run at: 2026-09-27T05:18:22.765468+00:00
-Git HEAD at run: `ce0bd071fe78e310c49169035b0a7d7bd960fe99` (worktree changes may have been present).
+Run at: 2026-09-27T06:26:32.607867+00:00
+Git HEAD at run: `e38fc9aff5db132d7d181a163495cbb24ebe94ba` (worktree changes may have been present).
 Dataset: `regression_queries.json`.
 Models: `llama3.2:3b` and `nomic-embed-text`.
 Queries: 10 (7 answerable, 2 unanswerable, 1 ambiguous).

@@ -1,6 +1,6 @@
 {
-  "run_at_utc": "2026-09-27T05:17:57.228550+00:00",
-  "git_head_at_run": "ce0bd071fe78e310c49169035b0a7d7bd960fe99",
+  "run_at_utc": "2026-09-27T06:25:36.531528+00:00",
+  "git_head_at_run": "e38fc9aff5db132d7d181a163495cbb24ebe94ba",
   "models": {
     "embedding": "nomic-embed-text",
     "llm": "llama3.2:3b"
@@ -12,7 +12,7 @@
     "unanswerable": 3,
     "ambiguous": 1
   },
-  "passed": 9,
+  "passed": 10,
   "queries": [
     {
       "id": "held_iss_01",
@@ -25,7 +25,7 @@
         "Level 2 Review",
         "Level two review"
       ],
-      "answer": "Jurisdiction: Issaquah | District: not specified | Document version: Updated 2-5-20 | Source: zoning.pdf\nP2 = Permitted with Level 2 Review. [1]",
+      "answer": "Jurisdiction: Issaquah | District: not specified | Document version: Updated 2-5-20 | Source: zoning.pdf\nP2 indicates that a use is Permitted with Level 2 Review. [1]",
       "sources": [
         {
           "source": "zoning.pdf",
@@ -35,14 +35,14 @@
         },
         {
           "source": "zoning.pdf",
-          "page": 4,
-          "excerpt": "18\n\nTable 4.2B Intent of Overlays\n\nOverlay \nIntent\n\nCentral Plan\n\nDistrict(s) \nVertical \nMixed Use\n\nThe intent is to establish an overlay within the Urban Core where \nviable mixed use development is required. Where parcels shown to \nhave Required Ground Floor Frontages as indicated in Figure 4B \nCentral Issaquah Vertical Mixed Use Overlay map, buildings are \nrequired to be a minimum of two floors with the ground floor of \nbuildings comprised of active uses that ensure a dense, vibrant, \npedestri",
+          "page": 11,
+          "excerpt": "in Central Issaquah. The District Standards Table found in IMC 18.07.360 does not apply in the \nCentral Issaquah zoning districts. Each structure, development, or activity in a Central Issaquah \nzoning district shall comply with these requirements except as otherwise provided in this \nSection. \n \nB. Floor Area Ratio.  The relationship between the amount of Gross Floor Area in a Building (or\n\nBuildings) and the Developable Site Area on which the Building(s) stands.  It is obtained by \ndividing th",
           "extraction_method": "text"
         },
         {
           "source": "zoning.pdf",
-          "page": 11,
-          "excerpt": "in Central Issaquah. The District Standards Table found in IMC 18.07.360 does not apply in the \nCentral Issaquah zoning districts. Each structure, development, or activity in a Central Issaquah \nzoning district shall comply with these requirements except as otherwise provided in this \nSection. \n \nB. Floor Area Ratio.  The relationship between the amount of Gross Floor Area in a Building (or\n\nBuildings) and the Developable Site Area on which the Building(s) stands.  It is obtained by \ndividing th",
+          "page": 4,
+          "excerpt": "Table 4.2B Intent of Overlays\nCentral Plan: District(s)\nOverlay: Vertical Mixed Use; Intent: The intent is to establish an overlay within the Urban Core where viable mixed use development is required. Where parcels shown to have Required Ground Floor Frontages as indicated in Figure 4B Central Issaquah Vertical Mixed Use Overlay map, buildings are required to be a minimum of two floors with the ground floor of buildings comprised of active uses that ensure a dense, vibrant, pedestrian friendly u",
           "extraction_method": "text"
         }
       ],
@@ -53,20 +53,20 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 7.277602002432104,
-        "rewrite_ms": 0.0019430008251219988,
-        "retrieval_ms": 290.8764780004276,
-        "vector_ms": 198.4918079979252,
-        "keyword_ms": 28.727364995575044,
-        "fusion_ms": 0.10399599705124274,
-        "ambiguity_ms": 30.076663999352604,
-        "context_ms": 25.55067399953259,
-        "draft_ms": 775.3913739943528,
-        "check_ms": 0.4712250010925345,
-        "conflict_ms": 1542.3553770015133,
-        "answer_ms": 2318.6727020001854,
+        "index_ms": 6.85914699715795,
+        "rewrite_ms": 0.0023519969545304775,
+        "retrieval_ms": 357.0478799956618,
+        "vector_ms": 237.1973980043549,
+        "keyword_ms": 37.93421199952718,
+        "fusion_ms": 0.2061240011244081,
+        "ambiguity_ms": 36.88974000397138,
+        "context_ms": 37.37596800056053,
+        "draft_ms": 2394.3087919979007,
+        "check_ms": 2917.6145190067473,
+        "conflict_ms": 1803.0816030004644,
+        "answer_ms": 7115.497525999672,
         "drafts": 1,
-        "check_calls": 1
+        "check_calls": 3
       }
     },
     {
@@ -81,18 +81,12 @@
         "10 feet",
         "ten feet"
       ],
-      "answer": "Jurisdiction: Los Angeles | District: not specified | Document version: Adopted December 3, 2013 | Source: E Generalized Summary of Zoning Regulations.pdf\nFor a surface parking zone combined with an A or R Zone, there is no required front yard. [1]",
+      "answer": "Jurisdiction: Los Angeles | District: not specified | Document version: Adopted December 3, 2013 | Source: E Generalized Summary of Zoning Regulations.pdf\nAccording to the context, a surface parking zone combined with an A or R zone requires a front yard of 10 ft. [1].",
       "sources": [
         {
           "source": "E Generalized Summary of Zoning Regulations.pdf",
           "page": 6,
-          "excerpt": "Appendix E Generalized Summary of Zoning Regulations \b\n\u0003Housing Element 2013–2021 - Appendices\n\nMaximum Height\nRequired yards\nMinimum\n\nMin.\n\nZone\nUse\n\nLot \nWidth\nStories\nFeet\nFront\nSide\nRear\n\nArea Per \nLot/ Unit\n\nParking\n\nAutomobile Parking–Surface and\n\nUnderground \nSurface Parking; \nLand in a P Zone may also be\n\n10 ft. in combination \nwith an A or R Zone;\n\nnone\nnone, unless also in\n\nP\n\nan A or R Zone\n\notherwise none\n\nClassified in A or R Zone\n\nunlimited (8)\n\n5 ft. + 1 ft. each \nstory above 2nd\n",
-          "extraction_method": "text"
-        },
-        {
-          "source": "E Generalized Summary of Zoning Regulations.pdf",
-          "page": 5,
-          "excerpt": "Zone\nUse\n\nMaximum Height\nRequired yards\nMinimum\n\nArea Per \nLot/ Unit\n\nMin.\n\nLot \nWidth\nStories\nFeet\nFront\nSide\nRear\n\nManufacturing\n\nMR1\n\nRestricted Industrial \nCM Uses, Limited Commercial \nandManufacturing, Clinics,  \nMedia Products, \nLimited Machine Shops, Animal \nHospitals and Kennels\n\nunlimited (8)\n\n5 ft. for lots <100 \nft. deep; 15 ft. for \nlots >100 ft. deep\n\nnone for industrial\n\nor commercial\n\nuses;same as\n\nR4 zone for \nresidential uses (5)\n\nnone for industrial\n\nor commercial \nuses; same a",
+          "excerpt": "Zone: Parking\nZone: P; Use: Automobile Parking–Surface and Underground Surface Parking; Land in a P Zone may also be Classified in A or R Zone; Maximum Height Stories: unlimited (8); Required yards Front: 10 ft. in combination with an A or R Zone; otherwise none; Required yards Side: none; Minimum Area Per Lot/ Unit: none, unless also in an A or R Zone\nZone: PB; Use: Parking Building P Zone Uses, Automobile Parking Within aBuilding; Required yards Front: 0 ft., 5 ft., or 10 ft., depending on zon",
           "extraction_method": "text"
         },
         {
@@ -100,27 +94,33 @@
           "page": 7,
           "excerpt": "Housing Element 2013–2021 - Appendices\b\nAppendix E Generalized Summary of Zoning Regulations\n\nTransitional Height: \nPortions of buildings in C or M zones within certain distances of RW1 or more restrictive zones shall not exceed the \nfollowing height limits, in accordance with Section 12.21.1 A 10 of the Zoning Code:\n\nDistance (ft)\nHeight (ft)\n\n0–49\n25\n50–99\n33\n100–199\n61\n\nZone Prefixes \n(Section 12.32 of the Zoning Code)\n\n(T), [T], T\nTentative Zone Classification\nCity Council requirements for p",
           "extraction_method": "text"
+        },
+        {
+          "source": "E Generalized Summary of Zoning Regulations.pdf",
+          "page": 5,
+          "excerpt": "Housing Element 2013–2021 - Appendices\b\nAppendix E Generalized Summary of Zoning Regulations\n\nZone: Manufacturing",
+          "extraction_method": "text"
         }
       ],
       "score": {
-        "fact_match": false,
+        "fact_match": true,
         "citation_match": true,
         "citation_refs_valid": true,
-        "pass": false
+        "pass": true
       },
       "timing": {
-        "index_ms": 5.311649998475332,
-        "rewrite_ms": 0.0009529976523481309,
-        "retrieval_ms": 323.4177889971761,
-        "vector_ms": 160.48225700069452,
-        "keyword_ms": 50.05308800173225,
-        "fusion_ms": 0.07463800284313038,
-        "ambiguity_ms": 44.10088500299025,
-        "context_ms": 62.915991999034304,
-        "draft_ms": 903.5615370012238,
-        "check_ms": 629.4566090000444,
-        "conflict_ms": 741.6997719992651,
-        "answer_ms": 2275.0661250029225,
+        "index_ms": 7.221433996164706,
+        "rewrite_ms": 0.0006890040822327137,
+        "retrieval_ms": 487.1762149996357,
+        "vector_ms": 231.50023100606631,
+        "keyword_ms": 74.97082599729765,
+        "fusion_ms": 0.10786899656523019,
+        "ambiguity_ms": 91.45597099995939,
+        "context_ms": 81.36094500514446,
+        "draft_ms": 2765.1422579947393,
+        "check_ms": 2066.8456579951453,
+        "conflict_ms": 1685.1411370007554,
+        "answer_ms": 6517.451555999287,
         "drafts": 1,
         "check_calls": 2
       }
@@ -136,7 +136,7 @@
         "500 feet",
         "five hundred feet"
       ],
-      "answer": "Jurisdiction: Urbana | District: not specified | Document version: not identified | Source: article_v_-_use_regulations.pdf\nIn Urbana, a proposed gaming hall must be at least 500 feet from any other licensed gaming hall. [1]",
+      "answer": "Jurisdiction: Urbana | District: not specified | Document version: not identified | Source: article_v_-_use_regulations.pdf\nA proposed gaming hall in Urbana must be at least 500 feet from another licensed gaming hall. [1]",
       "sources": [
         {
           "source": "article_v_-_use_regulations.pdf",
@@ -152,20 +152,20 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 5.432098994788248,
-        "rewrite_ms": 0.0006740010576322675,
-        "retrieval_ms": 234.9844949931139,
-        "vector_ms": 164.1207270004088,
-        "keyword_ms": 20.36746699741343,
-        "fusion_ms": 0.07518300117226318,
-        "ambiguity_ms": 23.877466999692842,
-        "context_ms": 20.62628099520225,
-        "draft_ms": 779.3335019960068,
-        "check_ms": 4414.166889000626,
-        "conflict_ms": 429.9074910013587,
-        "answer_ms": 5623.910748996423,
-        "drafts": 1,
-        "check_calls": 3
+        "index_ms": 6.340703999740072,
+        "rewrite_ms": 0.021159998141229153,
+        "retrieval_ms": 382.72344099823385,
+        "vector_ms": 221.86116100056097,
+        "keyword_ms": 54.70303899346618,
+        "fusion_ms": 0.1852309942478314,
+        "ambiguity_ms": 45.923944999231026,
+        "context_ms": 53.111481000087224,
+        "draft_ms": 4239.785612997366,
+        "check_ms": 24950.86346899916,
+        "conflict_ms": 1086.6864830022678,
+        "answer_ms": 30277.757768999436,
+        "drafts": 2,
+        "check_calls": 7
       }
     },
     {
@@ -208,18 +208,18 @@
         "pass": false
       },
       "timing": {
-        "index_ms": 4.357035999419168,
-        "rewrite_ms": 0.0006229965947568417,
-        "retrieval_ms": 217.0188780000899,
-        "vector_ms": 163.93195300042862,
-        "keyword_ms": 19.211315993743483,
-        "fusion_ms": 0.311859002977144,
-        "ambiguity_ms": 14.972345001297072,
-        "context_ms": 13.770137004030403,
-        "draft_ms": 594.298711999727,
-        "check_ms": 1463.9729030022863,
-        "conflict_ms": 602.7359130021068,
-        "answer_ms": 2661.2844629999017,
+        "index_ms": 6.566545998794027,
+        "rewrite_ms": 0.0009089999366551638,
+        "retrieval_ms": 329.4293229992036,
+        "vector_ms": 196.97895599529147,
+        "keyword_ms": 33.31477199390065,
+        "fusion_ms": 0.13272499927552417,
+        "ambiguity_ms": 43.21205599990208,
+        "context_ms": 48.68521200114628,
+        "draft_ms": 1731.1576010033605,
+        "check_ms": 4322.830730998248,
+        "conflict_ms": 2083.532163997006,
+        "answer_ms": 8137.932773002831,
         "drafts": 1,
         "check_calls": 4
       }
@@ -255,18 +255,18 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 7.0724060060456395,
-        "rewrite_ms": 0.0005649999366141856,
-        "retrieval_ms": 261.09380501293344,
-        "vector_ms": 196.3140379957622,
-        "keyword_ms": 19.24345899897162,
-        "fusion_ms": 0.10384999768575653,
-        "ambiguity_ms": 17.012368996802252,
-        "context_ms": 20.95761000236962,
-        "draft_ms": 655.0409629999194,
-        "check_ms": 466.1901229992509,
-        "conflict_ms": 612.9659569996875,
-        "answer_ms": 1734.5648350019474,
+        "index_ms": 7.714398001553491,
+        "rewrite_ms": 0.001124004484154284,
+        "retrieval_ms": 352.7306550022331,
+        "vector_ms": 217.3012720013503,
+        "keyword_ms": 36.80296799575444,
+        "fusion_ms": 0.23608699848409742,
+        "ambiguity_ms": 49.69352199987043,
+        "context_ms": 40.409419998468366,
+        "draft_ms": 1605.539823998697,
+        "check_ms": 1182.6419080025516,
+        "conflict_ms": 2030.9903500019573,
+        "answer_ms": 4819.491228001425,
         "drafts": 1,
         "check_calls": 2
       }
@@ -286,8 +286,14 @@
         "thirty feet",
         "thirty (30) feet"
       ],
-      "answer": "Jurisdiction: not identified | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nThe minimum height for a principal structure in Charleston's 55/30 height district is thirty (30) feet [1].",
+      "answer": "Jurisdiction: not identified | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nThe minimum height for a principal structure in Charleston's 55/30 height district is 30 feet [2].",
       "sources": [
+        {
+          "source": "Charleston, SC Zoning.pdf",
+          "page": 402,
+          "excerpt": "Sec. 54-306.N. Height District 85/30.\n\nIn this district:\n\n1. \nFor structures located in Mixed-Use Workforce Housing (MU-1/WH and MU-2/WH) \nbase zoning districts and for structures having principal uses of Health Services, as \nlisted on the Table of Permitted Uses in Section 54, Article 2, Part 3. at 801, 805, 806, \nand 807, no part of a structure, including elevator penthouses and mechanical \npenthouses, shall exceed the height of one eighty-five (85) feet, nor shall the principal \nstructure be ",
+          "extraction_method": "text"
+        },
         {
           "source": "Charleston, SC Zoning.pdf",
           "page": 405,
@@ -299,12 +305,6 @@
           "page": 406,
           "excerpt": "§ 54-306.V \n § 54-306.X\nCHARLESTON ZONING ORDINANCE\n\n2. \nAll structures shall have no minimum set back from street right-of-way lines, subject \nto provisions of Article 3: Part 10. \n(Ord. No. 2017-085, § 1, 8-15-17; Ord. No. 2020-014, § 1, 1-28-20)\n\nSec. 54-306.W. Height District 55/30.\n\nIn this district:\n\n1. \nNo part of a structure shall exceed the height of fifty-five (55) feet, nor shall the \nprincipal structure be lower than thirty (30) feet.\n\n2. \nAll structures shall have no set back from s",
           "extraction_method": "text"
-        },
-        {
-          "source": "Charleston, SC Zoning.pdf",
-          "page": 379,
-          "excerpt": "Sec. 54-306.P. Height District 80/30. \nSec. 54-306.Q. Height District 50W. \nSec. 54-306.R. Height District W. \nSec. 54-306.S. Height District WP. \nSec. 54-306.T. Height District 56/30 V. \nSec. 54-306.U. Height District 120/30. \nSec. 54-306.V. Height District 55/30 S. \nSec. 54-306.W. Height District 55/30. \nSec. 54-306.X. Height district chart. \nSec. 54-306.Y. Height District 8-12(A), (B), and (C). \nSec. 54-307. \nView corridor protection. \nSec. 54-308. \nExceptions. \nSec. 54-309. \nReserved.",
-          "extraction_method": "text"
         }
       ],
       "score": {
@@ -314,20 +314,20 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 6.1320599997998215,
-        "rewrite_ms": 0.0013880053302273154,
-        "retrieval_ms": 337.0229619977181,
-        "vector_ms": 220.5242259951774,
-        "keyword_ms": 40.39870599808637,
-        "fusion_ms": 0.33038399851648137,
-        "ambiguity_ms": 34.967317995324265,
-        "context_ms": 33.79031899385154,
-        "draft_ms": 851.0749470005976,
-        "check_ms": 3355.3096109972103,
-        "conflict_ms": 2640.725940000266,
-        "answer_ms": 6847.686499997508,
+        "index_ms": 7.05690400354797,
+        "rewrite_ms": 0.0014040051610209048,
+        "retrieval_ms": 321.07787700078916,
+        "vector_ms": 187.0477190022939,
+        "keyword_ms": 41.552203001629096,
+        "fusion_ms": 0.13237999519333243,
+        "ambiguity_ms": 44.67689199373126,
+        "context_ms": 40.07890899811173,
+        "draft_ms": 2611.3874510047026,
+        "check_ms": 13263.95247400069,
+        "conflict_ms": 2397.3787580034696,
+        "answer_ms": 18272.98449099908,
         "drafts": 1,
-        "check_calls": 6
+        "check_calls": 5
       }
     },
     {
@@ -370,18 +370,18 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 6.543929994222708,
-        "rewrite_ms": 0.0008089991752058268,
-        "retrieval_ms": 295.52439199324,
-        "vector_ms": 190.62004500301555,
-        "keyword_ms": 29.058169995550998,
-        "fusion_ms": 0.4090610018465668,
-        "ambiguity_ms": 32.328043002053164,
-        "context_ms": 35.81437799584819,
-        "draft_ms": 1421.665376998135,
-        "check_ms": 859.2372389975935,
-        "conflict_ms": 733.3435420005117,
-        "answer_ms": 3014.5008049948956,
+        "index_ms": 5.981795002298895,
+        "rewrite_ms": 0.0006440022843889892,
+        "retrieval_ms": 351.7722620017594,
+        "vector_ms": 188.25090899917996,
+        "keyword_ms": 47.91300500073703,
+        "fusion_ms": 0.10078999912366271,
+        "ambiguity_ms": 59.22766600269824,
+        "context_ms": 49.764297997171525,
+        "draft_ms": 3407.7876240044134,
+        "check_ms": 2477.455749998626,
+        "conflict_ms": 1999.0998420034884,
+        "answer_ms": 7884.651894994022,
         "drafts": 1,
         "check_calls": 2
       }
@@ -396,7 +396,7 @@
       "accepted_answers": [
         "Board of Zoning Appeals Site Design"
       ],
-      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nTo appeal an administrative decision about a sidewalk cafe permit in Charleston, an appeal must be filed within ten (10) business days after actual notice of the decision by delivery of the approved appeal form and fee to the Zoning Division office [1].",
+      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nTo appeal an administrative decision about a sidewalk cafe permit in Charleston, you must file the appeal within ten (10) business days after actual notice of the decision, and the appeal form and fee must be delivered to the Zoning Division office [1].",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
@@ -412,8 +412,8 @@
         },
         {
           "source": "Charleston, SC Zoning.pdf",
-          "page": 688,
-          "excerpt": "Section 2. Time for Appeal for an Administrative Decision.\n\nAn appeal from an administrative decision must be filed within fifteen (15) calendar days \nfrom the making of such decision, order, requirement or determination.\n\nSection 3. Calendar.\n\nAppeals shall be marked with the date of receipt and placed on the hearing calendar.\n\nSection 4. Withdrawal of Appeal.\n\nAny appeal may be withdrawn by written notice delivered to the secretary prior to action by \nthe Board. An appeal may not be re-filed a",
+          "page": 721,
+          "excerpt": "Article III.\nAppeals Procedure\n\nSection 1. Form of Appeal—Administrative Decision.\n\nAppeals to the Board from an administrative decision may be taken by any person aggrieved \nby a determination of the administrative officer. Appeals shall be filed on forms approved by \nthe Board and provided by the Secretary of the Board. Appeal forms shall be made available \nin the City of Charleston Department of Planning and Preservation, 75 Calhoun Street, \nCharleston, South Carolina. A detailed narrative mu",
           "extraction_method": "text"
         }
       ],
@@ -424,19 +424,19 @@
         "pass": false
       },
       "timing": {
-        "index_ms": 6.835346997831948,
-        "rewrite_ms": 0.0003539971658028662,
-        "retrieval_ms": 241.29381099919556,
-        "vector_ms": 182.7716940024402,
-        "keyword_ms": 17.491981998318806,
-        "fusion_ms": 0.27847399906022474,
-        "ambiguity_ms": 18.902010000601877,
-        "context_ms": 14.646094001363963,
-        "draft_ms": 2949.783957999898,
-        "check_ms": 1178.724257995782,
-        "conflict_ms": 601.5100309959962,
-        "answer_ms": 4730.490150002879,
-        "drafts": 2,
+        "index_ms": 7.299372999113984,
+        "rewrite_ms": 0.0007910057320259511,
+        "retrieval_ms": 327.3686680040555,
+        "vector_ms": 200.51704100478673,
+        "keyword_ms": 35.97313100181054,
+        "fusion_ms": 0.12760599929606542,
+        "ambiguity_ms": 43.47656900063157,
+        "context_ms": 39.360153998131864,
+        "draft_ms": 3800.14630399819,
+        "check_ms": 3385.326208997867,
+        "conflict_ms": 2474.3995370008633,
+        "answer_ms": 9660.181020000891,
+        "drafts": 1,
         "check_calls": 2
       }
     },
@@ -447,15 +447,15 @@
       "answer": "I don't know based on these documents.",
       "sources": [
         {
-          "source": "Charleston, SC Zoning.pdf",
-          "page": 355,
-          "excerpt": "(a)\nThe owner shall execute and provide the Department a restrictive\ncovenant committing to achieve and maintain the specified rating.\n\n(b)\nThe owner shall provide the Department with certified evidence the\nsystem meets the capacity required and is functioning properly before a\ncertificate of occupancy is given.(c) Certificate of occupancy. If the\ncommitted points in this category are not achieved, the owner shall be\nrequired to substitute incentive options and earn all points necessary to\njusti",
-          "extraction_method": "text"
-        },
-        {
           "source": "zoning-ordinance-082024-rev.pdf",
           "page": 24,
           "excerpt": "A. That has no visible from the exterior of the structure and no other advertising that\n\nindicates a nude or semi-nude person is available for viewing; and\n\nB. Where in order to participate in a class a student must enroll at least three (3) days\n\nin advance of the class; and \n \nC. Where no more than one (1) nude or semi-nude model is on the premises at any one\n\ntime.",
+          "extraction_method": "text"
+        },
+        {
+          "source": "Charleston, SC Zoning.pdf",
+          "page": 355,
+          "excerpt": "(a)\nThe owner shall execute and provide the Department a restrictive\ncovenant committing to achieve and maintain the specified rating.\n\n(b)\nThe owner shall provide the Department with certified evidence the\nsystem meets the capacity required and is functioning properly before a\ncertificate of occupancy is given.(c) Certificate of occupancy. If the\ncommitted points in this category are not achieved, the owner shall be\nrequired to substitute incentive options and earn all points necessary to\njusti",
           "extraction_method": "text"
         },
         {
@@ -472,18 +472,18 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 6.1164329963503405,
-        "rewrite_ms": 0.00053399708122015,
-        "retrieval_ms": 227.14688899577595,
-        "vector_ms": 164.61748100118712,
-        "keyword_ms": 20.483619002334308,
-        "fusion_ms": 0.1757950012688525,
-        "ambiguity_ms": 16.072406004241202,
-        "context_ms": 19.16188399627572,
-        "draft_ms": 1855.4342000061297,
-        "check_ms": 0.0014190009096637368,
+        "index_ms": 6.716625000990462,
+        "rewrite_ms": 0.0013079989003017545,
+        "retrieval_ms": 266.0941180001828,
+        "vector_ms": 175.34262299886905,
+        "keyword_ms": 23.720621997199487,
+        "fusion_ms": 0.08358899503946304,
+        "ambiguity_ms": 28.640373006055597,
+        "context_ms": 30.901169004209805,
+        "draft_ms": 3057.8990559952217,
+        "check_ms": 0.0016839985619299114,
         "conflict_ms": 0.0,
-        "answer_ms": 1855.7235789994593,
+        "answer_ms": 3058.194104996801,
         "drafts": 2,
         "check_calls": 0
       }
@@ -520,18 +520,18 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 6.035109996446408,
-        "rewrite_ms": 0.000719002855475992,
-        "retrieval_ms": 306.3912419966073,
-        "vector_ms": 237.7562219990068,
-        "keyword_ms": 17.594441000255756,
-        "fusion_ms": 0.22832000104244798,
-        "ambiguity_ms": 23.383053005090915,
-        "context_ms": 20.75563099788269,
-        "draft_ms": 1368.064921000041,
-        "check_ms": 0.0016280027921311557,
+        "index_ms": 8.292691003589425,
+        "rewrite_ms": 0.0011689990060403943,
+        "retrieval_ms": 402.39584800292505,
+        "vector_ms": 295.35391299577896,
+        "keyword_ms": 27.78753299935488,
+        "fusion_ms": 0.1016020032693632,
+        "ambiguity_ms": 35.02462400501827,
+        "context_ms": 35.229089997301344,
+        "draft_ms": 3360.384483996313,
+        "check_ms": 0.0018300052033737302,
         "conflict_ms": 0.0,
-        "answer_ms": 1368.3425139970495,
+        "answer_ms": 3360.7025540040922,
         "drafts": 2,
         "check_calls": 0
       }
@@ -568,18 +568,18 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 5.94152800476877,
-        "rewrite_ms": 0.00045200431486591697,
-        "retrieval_ms": 211.01553800690453,
-        "vector_ms": 158.37348800414475,
-        "keyword_ms": 16.614154999842867,
-        "fusion_ms": 0.2303910005139187,
-        "ambiguity_ms": 13.51425499888137,
-        "context_ms": 15.888857000390999,
-        "draft_ms": 1423.539643001277,
-        "check_ms": 0.0013789976947009563,
+        "index_ms": 9.093583001231309,
+        "rewrite_ms": 0.0015069963410496712,
+        "retrieval_ms": 367.8398440024466,
+        "vector_ms": 257.2171029969468,
+        "keyword_ms": 29.190852997999173,
+        "fusion_ms": 0.11599000572459772,
+        "ambiguity_ms": 40.475531000993215,
+        "context_ms": 31.04530599375721,
+        "draft_ms": 2845.435515002464,
+        "check_ms": 0.0019700019038282335,
         "conflict_ms": 0.0,
-        "answer_ms": 1423.8485919995583,
+        "answer_ms": 2845.777643000474,
         "drafts": 2,
         "check_calls": 0
       }
@@ -597,14 +597,14 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 5.981927999528125,
-        "rewrite_ms": 0.0017629936337471008,
-        "retrieval_ms": 194.18592999863904,
-        "vector_ms": 161.05883300042478,
-        "keyword_ms": 13.354719994822517,
-        "fusion_ms": 0.3887999992002733,
-        "ambiguity_ms": 12.863301999459509,
-        "context_ms": 0.0033309988793917,
+        "index_ms": 6.232956999156158,
+        "rewrite_ms": 0.001410000550094992,
+        "retrieval_ms": 364.25794700335246,
+        "vector_ms": 313.04048300080467,
+        "keyword_ms": 21.29527899523964,
+        "fusion_ms": 0.10138599463971332,
+        "ambiguity_ms": 22.20155800023349,
+        "context_ms": 0.002405999111942947,
         "draft_ms": 0.0,
         "check_ms": 0.0,
         "conflict_ms": 0.0,

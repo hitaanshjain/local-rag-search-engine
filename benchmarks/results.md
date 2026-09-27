@@ -1,22 +1,22 @@
 # Retrieval accuracy benchmark
 
-Run at: 2026-09-27T05:14:09.273078+00:00
-Git HEAD at run: `ce0bd071fe78e310c49169035b0a7d7bd960fe99` (worktree changes may have been present).
+Run at: 2026-09-27T06:23:43.002275+00:00
+Git HEAD at run: `e38fc9aff5db132d7d181a163495cbb24ebe94ba` (worktree changes may have been present).
 Models: `nomic-embed-text` embeddings; `llama3.2:3b` configured for answers (not used in retrieval scoring).
-Corpus: 1070 PDF pages, 4536 indexed chunks, 5 files.
+Corpus: 1070 PDF pages, 4854 indexed chunks, 5 files.
 Queries: 28 excerpt-verified questions.
 
 ## Results
 
 | Method | Source hit@3 | Source hit@5 | Source MRR | Page hit@3 | Page hit@5 | Page MRR |
 |---|---:|---:|---:|---:|---:|---:|
-| vector_only | 100.0% | 100.0% | 0.911 | 75.0% | 85.7% | 0.656 |
-| substring_keyword | 78.6% | 85.7% | 0.744 | 67.9% | 75.0% | 0.613 |
-| bm25_keyword | 100.0% | 100.0% | 1.000 | 89.3% | 92.9% | 0.866 |
-| hybrid_substring | 89.3% | 89.3% | 0.851 | 78.6% | 78.6% | 0.696 |
-| hybrid_bm25 | 100.0% | 100.0% | 1.000 | 92.9% | 92.9% | 0.869 |
-| hybrid_bm25_50 | 100.0% | 100.0% | 1.000 | 92.9% | 92.9% | 0.821 |
-| hybrid_bm25_75 | 100.0% | 100.0% | 1.000 | 89.3% | 92.9% | 0.812 |
+| vector_only | 96.4% | 96.4% | 0.851 | 67.9% | 75.0% | 0.593 |
+| substring_keyword | 67.9% | 75.0% | 0.637 | 57.1% | 64.3% | 0.506 |
+| bm25_keyword | 100.0% | 100.0% | 1.000 | 82.1% | 89.3% | 0.780 |
+| hybrid_substring | 78.6% | 78.6% | 0.762 | 71.4% | 71.4% | 0.643 |
+| hybrid_bm25 | 100.0% | 100.0% | 1.000 | 89.3% | 92.9% | 0.817 |
+| hybrid_bm25_50 | 100.0% | 100.0% | 1.000 | 89.3% | 92.9% | 0.811 |
+| hybrid_bm25_75 | 96.4% | 96.4% | 0.964 | 75.0% | 82.1% | 0.744 |
 
 Hit@k and reciprocal rank inspect the top k *chunks*. Source metrics match their file name; page metrics match file name and physical PDF page. MRR is the mean reciprocal rank of the first match. Each method returns at most five chunks. Hybrid candidate pools contain ten vector and ten keyword chunks. `hybrid_bm25` is the production 0.25 vector / 0.75 BM25 blend; the `_50` and `_75` variants use 0.50 and 0.75 vector weights. `hybrid_substring` retains the old 0.50/0.50 comparison.
 

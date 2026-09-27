@@ -48,10 +48,43 @@ def acceptable_rewrite(rewritten: str, query: str, history: list[dict[str, str]]
     return bool(words) and content_words(query) <= words and len(words - known) <= 1
 
 
-async def contextualize_query(query: str, history: list[dict[str, str]], llm) -> str:
-    """Rewrite a follow-up as a standalone search query, rejecting rewrites that drift."""
+DISTRICT_CODE = re.compile(r"\b[A-Za-z][A-Za-z0-9]*-\d+[A-Za-z]?\b")
+
+
+def mentions(text: str, place: str) -> bool:
+    return re.search(rf"(?<!\w){re.escape(place)}(?!\w)", text, re.I) is not None
+
+
+def retarget_places(search_query: str, query: str, history: list[dict[str, str]], places) -> str:
+    """When a follow-up moves to a new place, drop earlier places and their district codes.
+
+    District codes belong to one jurisdiction: after a Union City R-2 question, "And in
+    Charleston?" should not search for a Charleston R-2 district.
+    """
+    named = [place for place in places if mentions(query, place)]
+    previous = next((turn["text"] for turn in reversed(history) if turn["role"] == "user"), "")
+    if not named or all(mentions(previous, place) for place in named):
+        return search_query
+    result = search_query
+    for place in places:
+        if place not in named:
+            result = re.sub(rf"(?<!\w){re.escape(place)}(?:['’]s)?(?!\w)", " ", result, flags=re.I)
+    kept = {code.casefold() for code in DISTRICT_CODE.findall(query)}
+    result = DISTRICT_CODE.sub(lambda match: match.group(0) if match.group(0).casefold() in kept else " ", result)
+    return re.sub(r"\s+", " ", result).strip()
+
+
+async def contextualize_query(query: str, history: list[dict[str, str]], llm, places=()) -> str:
+    """Rewrite a follow-up as a standalone search query, rejecting rewrites that drift.
+
+    `places` are the corpus's jurisdiction names, used to retarget a follow-up that names a new one.
+    """
     if not history:
         return query
+    return retarget_places(await rewrite_follow_up(query, history, llm), query, history, places)
+
+
+async def rewrite_follow_up(query: str, history: list[dict[str, str]], llm) -> str:
     prompt = (
         "Rewrite the latest question as one standalone search query. Use the conversation only to fill in "
         "what the latest question leaves out: the subject being asked about, and the place, district, or "

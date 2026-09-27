@@ -21,17 +21,56 @@ def text_is_usable(text: str) -> bool:
     return meaningful_chars(text) >= MIN_TEXT_CHARS and len(words) >= 5 and "\ufffd" not in text
 
 
-def table_markdown(rows: list[list[str | None]]) -> str:
+def is_subheader(row: list[str]) -> bool:
+    """A second header row: first cell empty and only short, number-free labels."""
+    cells = [cell for cell in row if cell]
+    return not row[0] and len(cells) >= 2 and all(
+        len(cell.split()) <= 4 and not any(character.isdigit() for character in cell) for cell in cells
+    )
+
+
+def table_rows_text(rows: list[list[str | None]]) -> str:
+    """Write each table row as 'Column: value; ...' so it stays readable in any chunk.
+
+    Markdown rows lose their column names once a table is split across chunks. Leading
+    single-cell rows are titles; a header cell spanning several columns labels each of them,
+    and a second header row (e.g. Front / Side / Rear under Required yards) extends the labels.
+    """
+    rows = [[" ".join((cell or "").split()) for cell in row] for row in rows]
     lines = []
+    while rows and sum(bool(cell) for cell in rows[0]) <= 1:
+        title = next((cell for cell in rows[0] if cell), "")
+        if title and title not in lines:
+            lines.append(title)
+        rows = rows[1:]
+    if not rows:
+        return "\n".join(lines)
+    header, rows = rows[0], rows[1:]
+    labels, group = [], ""
+    for cell in header:
+        group = cell or group
+        labels.append(cell or group)
+    while rows and is_subheader(rows[0]):
+        labels = [f"{label} {sub}".strip() if sub else label for label, sub in zip(labels, rows[0])]
+        rows = rows[1:]
     for row in rows:
-        cells = [" ".join((cell or "").split()).replace("|", "\\|") for cell in row]
-        if any(cells):
-            lines.append("| " + " | ".join(cells) + " |")
+        parts = [
+            f"{label}: {cell}" if label and label != cell else cell
+            for label, cell in zip(labels, row) if cell
+        ]
+        if parts:
+            lines.append("; ".join(parts))
     return "\n".join(lines)
 
 
-def useful_table(table) -> bool:
-    """Reject sparse whole-page grids inferred from ordinary paragraph spacing."""
+def useful_table(table, ruled: bool = False) -> bool:
+    """Reject sparse whole-page grids inferred from ordinary paragraph spacing.
+
+    A ruled table (cells drawn with lines) is kept however many cells are empty: zoning
+    tables leave cells blank, and flattening them loses which column a value belongs to.
+    """
+    if ruled:
+        return table.row_count >= 2 and table.col_count >= 2
     rows = table.extract()
     filled = sum(bool((cell or "").strip()) for row in rows for cell in row)
     density = filled / max(1, table.row_count * table.col_count)
@@ -71,7 +110,7 @@ def extract_text_layout(page: pymupdf.Page) -> str:
     tables = []
     text_tables = False
     try:
-        tables = [table for table in page.find_tables().tables if useful_table(table)]
+        tables = [table for table in page.find_tables().tables if useful_table(table, ruled=True)]
         if not tables:
             # Text alignment can reveal tables that have no drawn cell borders.
             tables = [
@@ -91,7 +130,7 @@ def extract_text_layout(page: pymupdf.Page) -> str:
         if content:
             items.append((rect.y0, rect.x0, content))
     for table in tables:
-        content = table_markdown(text_table_rows(page, table) if text_tables else table.extract())
+        content = table_rows_text(text_table_rows(page, table) if text_tables else table.extract())
         if content:
             items.append((table.bbox[1], table.bbox[0], content))
     # Place detected tables by position. Without one, keep the PDF's drawing order: sorting

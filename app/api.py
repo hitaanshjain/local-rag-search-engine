@@ -91,6 +91,15 @@ def document(filename: str):
     return FileResponse(path, media_type="application/pdf", content_disposition_type="inline")
 
 
+def known_places(index) -> set[str]:
+    """Place names from ingested jurisdictions: "Charleston, South Carolina" -> "Charleston"."""
+    return {
+        jurisdiction.split(",")[0].strip()
+        for jurisdiction in {doc.metadata.get("jurisdiction") for doc in index.documents}
+        if jurisdiction
+    }
+
+
 def read_page_report() -> dict:
     try:
         return json.loads(PAGE_REPORT_PATH.read_text(encoding="utf-8"))
@@ -151,7 +160,7 @@ async def chat(request: QueryRequest):
             # Report progress before the follow-up rewrite and retrieval, which take the first second.
             yield status_event("searching")
             started = perf_counter()
-            search_query = await contextualize_query(request.query, history, llm) if history else request.query
+            search_query = await contextualize_query(request.query, history, llm, known_places(index)) if history else request.query
             timing["rewrite_ms"] = (perf_counter() - started) * 1000
 
             retrieval_started = perf_counter()

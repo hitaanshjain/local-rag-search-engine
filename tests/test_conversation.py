@@ -51,6 +51,41 @@ class ConversationTests(unittest.TestCase):
         good = FixedLLM("How large may a guest house be in Charleston?")
         self.assertEqual(asyncio.run(contextualize_query("And in Charleston?", history, good)), "How large may a guest house be in Charleston?")
 
+    def test_new_place_drops_district_codes_and_places_from_earlier_turns(self):
+        history = [
+            {"role": "user", "text": "In Union City's R-2 district, how large may a guest house be?"},
+            {"role": "assistant", "text": "A guest house is limited to 900 square feet [1]."},
+        ]
+        places = ["Union City", "Charleston", "Urbana"]
+
+        class FixedLLM:
+            def __init__(self, reply):
+                self.reply = reply
+
+            async def ainvoke(self, prompt):
+                return SimpleNamespace(content=self.reply)
+
+        carried = FixedLLM("In Charleston's R-2 district, how large may a guest house be?")
+        self.assertEqual(
+            asyncio.run(contextualize_query("And in Charleston?", history, carried, places)),
+            "In Charleston's district, how large may a guest house be?",
+        )
+        both = FixedLLM("How large may a guest house be in Union City's R-2 district and in Charleston?")
+        self.assertEqual(
+            asyncio.run(contextualize_query("And in Charleston?", history, both, places)),
+            "How large may a guest house be in district and in Charleston?",
+        )
+        same_place = FixedLLM("How large may a guest house be in Union City's R-3 district?")
+        self.assertEqual(
+            asyncio.run(contextualize_query("What about Union City's R-3 district?", history, same_place, places)),
+            "How large may a guest house be in Union City's R-3 district?",
+        )
+        no_place = FixedLLM("How large may a guest house be in Union City's R-3 district?")
+        self.assertEqual(
+            asyncio.run(contextualize_query("What about the R-3 district?", history, no_place, places)),
+            "How large may a guest house be in Union City's R-3 district?",
+        )
+
     def test_rewrite_failure_falls_back_instead_of_raising(self):
         class BrokenLLM:
             async def ainvoke(self, prompt):
