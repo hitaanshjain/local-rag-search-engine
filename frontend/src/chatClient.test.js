@@ -34,7 +34,8 @@ test("streamChat passes the abort signal to fetch", async () => {
 });
 
 test("streamChat sends selected documents and prior turns", async () => {
-  const fetchImpl = async (_url, options) => {
+  const fetchImpl = async (url, options) => {
+    assert.equal(url, "/api/chat");
     assert.deepEqual(JSON.parse(options.body), {
       query: "How large?",
       history: [{ role: "user", text: "R-2 guest house?" }],

@@ -1,0 +1,9 @@
+# Attach Ollama to an external network only while pulling models on staging.
+services:
+  ollama:
+    networks:
+      - app
+      - setup
+
+networks:
+  setup:

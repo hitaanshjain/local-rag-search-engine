@@ -1,6 +1,6 @@
 import { createSSEParser } from "./sse.js";
 
-export async function streamChat(query, onEvent, { fetchImpl = fetch, signal, apiBase = "http://localhost:8000", history = [], documents = null } = {}) {
+export async function streamChat(query, onEvent, { fetchImpl = fetch, signal, apiBase = "/api", history = [], documents = null } = {}) {
   const response = await fetchImpl(`${apiBase}/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

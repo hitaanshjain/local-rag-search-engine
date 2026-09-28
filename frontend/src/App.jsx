@@ -5,7 +5,7 @@ import { DOCUMENT_KEY, MESSAGE_KEY, browserStorage, historyForRequest, readStore
 
 const storage = browserStorage();
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "/api";
 
 export default function App() {
   const [messages, setMessages] = useState(() => {

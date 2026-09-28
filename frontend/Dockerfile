@@ -20,6 +20,8 @@ FROM nginx:alpine
 
 # Copy ONLY the built assets from the builder stage into Nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
+COPY gateway.conf /etc/nginx/gateway.conf
+COPY gateway-entrypoint.sh /usr/local/bin/gateway-entrypoint.sh
 
 # Expose port 80 inside the container
 EXPOSE 80

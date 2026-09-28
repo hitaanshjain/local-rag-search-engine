@@ -1,28 +1,33 @@
+name: local-rag-search-engine
+
 services:
   frontend:
+    image: local-rag-search-engine-frontend:latest
     build: ./frontend
-    ports:
-      - "127.0.0.1:3000:80"
-    depends_on:
-      - backend
+    networks:
+      - app
 
   backend:
+    image: local-rag-search-engine-backend:latest
     build: .
-    ports:
-      - "127.0.0.1:8000:8000"
+    networks:
+      - app
     volumes:
       - ./chroma_db:/app/chroma_db
       - ./data:/app/data:ro
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
       - LLM_MODEL=${LLM_MODEL:-llama3.2:3b}
+      - ANONYMIZED_TELEMETRY=false
     depends_on:
       - ollama
 
   ollama:
     image: ollama/ollama
-    ports:
-      - "127.0.0.1:11434:11434"
+    environment:
+      - OLLAMA_NO_CLOUD=1
+    networks:
+      - app
     volumes:
       - ./ollama_data:/root/.ollama
     deploy:
@@ -32,3 +37,33 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+
+  gateway:
+    image: local-rag-search-engine-frontend:latest
+    entrypoint: ["/bin/sh", "/usr/local/bin/gateway-entrypoint.sh"]
+    dns:
+      - 127.0.0.1
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "127.0.0.1:3000:80"
+      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:11434:11434"
+    networks:
+      - app
+      - ingress
+    depends_on:
+      frontend:
+        condition: service_started
+        restart: true
+      backend:
+        condition: service_started
+        restart: true
+      ollama:
+        condition: service_started
+        restart: true
+
+networks:
+  app:
+    internal: true
+  ingress:
