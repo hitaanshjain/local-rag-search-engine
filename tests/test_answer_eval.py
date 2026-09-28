@@ -140,7 +140,7 @@ class AnswerEvalExtensionTests(unittest.TestCase):
 
         with patch("benchmarks.answer_eval.load_queries", return_value=rows), \
              patch("benchmarks.answer_eval.read_chat", side_effect=fake_read_chat), \
-             patch("benchmarks.answer_eval.write_results"):
+             patch("benchmarks.answer_eval.corpus_size", return_value={"files": {"a.pdf": 1}, "pages": 1, "chunks": 2}),              patch("benchmarks.answer_eval.write_results"):
             result = run_answer_benchmark("development_queries.json", "x", judge=Judge(),
                                           page_text=lambda source, page: "The front yard is 10 feet.")
         self.assertEqual(result["passed"], 2)

@@ -9,7 +9,6 @@ import codecs
 import json
 import os
 import re
-import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -20,6 +19,7 @@ from pypdf import PdfReader
 from app.engine import EMBEDDING_MODEL
 from app.pdf_extraction import extract_text_layout
 from benchmarks.citation_support import LABELS, OllamaJudge, PageTexts, score_support, summarize_support
+from benchmarks.run_info import corpus_size, describe_git, git_state
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -144,9 +144,10 @@ def write_results(result, output_prefix="answer_results"):
     lines = [
         f"# {result['evaluation_set']} answer evaluation", "",
         f"Run at: {result['run_at_utc']}",
-        f"Git HEAD at run: `{result['git_head_at_run']}` (worktree changes may have been present).",
+        describe_git(result),
         f"Dataset: `{result['dataset_file']}`.",
         f"Models: `{result['models']['llm']}` and `{result['models']['embedding']}`.",
+        *([f"Corpus: {result['corpus']['pages']} PDF pages, {result['corpus']['chunks']} indexed chunks, {len(result['corpus']['files'])} files."] if "corpus" in result else []),
         f"Queries: {len(result['queries'])} ({count_text}).", "",
         f"Automated checks passed: {result['passed']}/{len(result['queries'])}.", "",
         "Answerable items pass when the answer contains an accepted phrase and cites the labeled physical PDF page. Unanswerable items require the exact abstention. The ambiguous item requires a clarification question. These are screening checks, not proof that every sentence is factually supported. The no-answer and ambiguity labels are task expectations, not exhaustive corpus proofs.",
@@ -218,8 +219,9 @@ def run_answer_benchmark(dataset_filename="development_queries.json", output_pre
         bucket["passed"] += row["score"]["pass"]
     result = {
         "run_at_utc": datetime.now(timezone.utc).isoformat(),
-        "git_head_at_run": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        **git_state(),
         "models": {"embedding": EMBEDDING_MODEL, "llm": served_llm},
+        "corpus": corpus_size(),
         "dataset_file": dataset_filename,
         "evaluation_set": EVALUATION_SETS.get(dataset_filename, "Development"),
         "counts": counts,

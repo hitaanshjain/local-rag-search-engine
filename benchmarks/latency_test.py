@@ -4,18 +4,16 @@ import json
 import math
 import os
 import statistics
-import subprocess
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
-from pypdf import PdfReader
 
 from app.engine import EMBEDDING_MODEL, LLM_MODEL, OLLAMA_BASE_URL
+from benchmarks.run_info import corpus_size, describe_git, git_state, host_hardware
 
 
-ROOT = Path(__file__).resolve().parents[1]
 BENCHMARK_DIR = Path(__file__).resolve().parent
 API_URL = os.getenv("RAG_API_URL", "http://127.0.0.1:8000/chat")
 QUERY_IDS = ("iss_03", "sum_04", "urb_03", "uni_02", "cha_02")
@@ -120,10 +118,12 @@ def write_results(result):
         "# Streaming chat latency benchmark",
         "",
         f"Run at: {result['run_at_utc']}",
-        f"Git HEAD at run: `{result['git_head_at_run']}` (worktree changes may have been present).",
+        describe_git(result),
         f"Models: `{result['models']['llm']}` LLM and `{result['models']['embedding']}` embeddings.",
-        f"Hardware: {result['hardware']['mode']} for the loaded LLM (Ollama reports {result['hardware']['llm_size_vram_bytes']} bytes in VRAM).",
-        f"Corpus: {result['corpus_pages']} checked-in PDF pages.",
+        f"Hardware: {result['hardware']['mode']} for the loaded LLM (Ollama reports {result['hardware']['llm_size_vram_bytes']} bytes in VRAM)"
+        + (f"; host GPU {result['host']['gpu']}, CPU {result['host']['cpu']}, {result['host']['os']}." if "host" in result else "."),
+        f"Corpus: {result['corpus']['pages']} PDF pages, {result['corpus']['chunks']} indexed chunks, {len(result['corpus']['files'])} files."
+        if "corpus" in result else f"Corpus: {result['corpus_pages']} checked-in PDF pages.",
         f"Queries: {result['query_count']} fixed queries, {result['iterations']} measured requests each, plus one warmup request.",
         "",
         "## Results",
@@ -155,7 +155,7 @@ def run_latency_benchmark(iterations=2):
     all_queries = json.loads((BENCHMARK_DIR / "eval_queries.json").read_text(encoding="utf-8"))
     by_id = {item["id"]: item["query"] for item in all_queries}
     queries = [(query_id, by_id[query_id]) for query_id in QUERY_IDS]
-    corpus_pages = sum(len(PdfReader(str(path)).pages) for path in (ROOT / "data").glob("*.pdf"))
+    corpus = corpus_size()
 
     samples = []
     with requests.Session() as session:
@@ -167,15 +167,13 @@ def run_latency_benchmark(iterations=2):
                 samples.append({"query_id": query_id, "iteration": iteration, **measurement})
                 print(f"{query_id} run {iteration}: {measurement}", flush=True)
 
-    git_head = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
-    ).strip()
     result = {
         "run_at_utc": datetime.now(timezone.utc).isoformat(),
-        "git_head_at_run": git_head,
+        **git_state(),
         "models": {"embedding": EMBEDDING_MODEL, "llm": LLM_MODEL},
         "hardware": hardware,
-        "corpus_pages": corpus_pages,
+        "host": host_hardware(),
+        "corpus": corpus,
         "query_count": len(queries),
         "query_ids": list(QUERY_IDS),
         "iterations": iterations,

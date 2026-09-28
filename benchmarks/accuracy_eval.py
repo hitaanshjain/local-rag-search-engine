@@ -1,7 +1,6 @@
 """Evaluate source and page retrieval against excerpt-verified PDF labels."""
 
 import json
-import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -17,6 +16,7 @@ from app.engine import (
     get_vector_db,
     hybrid_search,
 )
+from benchmarks.run_info import describe_git, git_state
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -189,7 +189,7 @@ def write_results(result, old_queries):
         "# Retrieval accuracy benchmark",
         "",
         f"Run at: {result['run_at_utc']}",
-        f"Git HEAD at run: `{result['git_head_at_run']}` (worktree changes may have been present).",
+        describe_git(result),
         f"Models: `{result['models']['embedding']}` embeddings; `{result['models']['llm']}` configured for answers (not used in retrieval scoring).",
         f"Corpus: {result['corpus']['pages']} PDF pages, {result['corpus']['chunks']} indexed chunks, {len(result['corpus']['files'])} files.",
         f"Queries: {result['query_count']} excerpt-verified questions.",
@@ -238,12 +238,9 @@ def run_accuracy_benchmark():
         {**query, "results": evaluate_query(query, db, index)}
         for query in queries
     ]
-    git_head = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
-    ).strip()
     result = {
         "run_at_utc": datetime.now(timezone.utc).isoformat(),
-        "git_head_at_run": git_head,
+        **git_state(),
         "models": {"embedding": EMBEDDING_MODEL, "llm": LLM_MODEL},
         "corpus": {
             "files": page_counts,
