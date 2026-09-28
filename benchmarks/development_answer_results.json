@@ -1,9 +1,21 @@
 {
-  "run_at_utc": "2026-09-27T06:25:36.531528+00:00",
-  "git_head_at_run": "e38fc9aff5db132d7d181a163495cbb24ebe94ba",
+  "run_at_utc": "2026-09-28T20:46:09.792184+00:00",
+  "git_head_at_run": "69a339c7e5d8f191bf038bc9803dd8ac8346ea13",
+  "worktree_clean": true,
   "models": {
     "embedding": "nomic-embed-text",
     "llm": "llama3.2:3b"
+  },
+  "corpus": {
+    "files": {
+      "article_v_-_use_regulations.pdf": 16,
+      "Charleston, SC Zoning.pdf": 776,
+      "E Generalized Summary of Zoning Regulations.pdf": 7,
+      "zoning-ordinance-082024-rev.pdf": 253,
+      "zoning.pdf": 18
+    },
+    "pages": 1070,
+    "chunks": 4854
   },
   "dataset_file": "development_queries.json",
   "evaluation_set": "Development",
@@ -13,6 +25,12 @@
     "ambiguous": 1
   },
   "passed": 10,
+  "category_pass": {
+    "general": {
+      "passed": 10,
+      "total": 12
+    }
+  },
   "queries": [
     {
       "id": "held_iss_01",
@@ -25,7 +43,7 @@
         "Level 2 Review",
         "Level two review"
       ],
-      "answer": "Jurisdiction: Issaquah | District: not specified | Document version: Updated 2-5-20 | Source: zoning.pdf\nP2 indicates that a use is Permitted with Level 2 Review. [1]",
+      "answer": "Jurisdiction: Issaquah | District: not specified | Document version: Updated 2-5-20 | Source: zoning.pdf\nP2 indicates that an applicant is permitted to use the land with Level 2 Review. [1]",
       "sources": [
         {
           "source": "zoning.pdf",
@@ -35,14 +53,14 @@
         },
         {
           "source": "zoning.pdf",
-          "page": 11,
-          "excerpt": "in Central Issaquah. The District Standards Table found in IMC 18.07.360 does not apply in the \nCentral Issaquah zoning districts. Each structure, development, or activity in a Central Issaquah \nzoning district shall comply with these requirements except as otherwise provided in this \nSection. \n \nB. Floor Area Ratio.  The relationship between the amount of Gross Floor Area in a Building (or\n\nBuildings) and the Developable Site Area on which the Building(s) stands.  It is obtained by \ndividing th",
+          "page": 4,
+          "excerpt": "Table 4.2B Intent of Overlays\nCentral Plan: District(s)\nOverlay: Vertical Mixed Use; Intent: The intent is to establish an overlay within the Urban Core where viable mixed use development is required. Where parcels shown to have Required Ground Floor Frontages as indicated in Figure 4B Central Issaquah Vertical Mixed Use Overlay map, buildings are required to be a minimum of two floors with the ground floor of buildings comprised of active uses that ensure a dense, vibrant, pedestrian friendly u",
           "extraction_method": "text"
         },
         {
           "source": "zoning.pdf",
-          "page": 4,
-          "excerpt": "Table 4.2B Intent of Overlays\nCentral Plan: District(s)\nOverlay: Vertical Mixed Use; Intent: The intent is to establish an overlay within the Urban Core where viable mixed use development is required. Where parcels shown to have Required Ground Floor Frontages as indicated in Figure 4B Central Issaquah Vertical Mixed Use Overlay map, buildings are required to be a minimum of two floors with the ground floor of buildings comprised of active uses that ensure a dense, vibrant, pedestrian friendly u",
+          "page": 11,
+          "excerpt": "in Central Issaquah. The District Standards Table found in IMC 18.07.360 does not apply in the \nCentral Issaquah zoning districts. Each structure, development, or activity in a Central Issaquah \nzoning district shall comply with these requirements except as otherwise provided in this \nSection. \n \nB. Floor Area Ratio.  The relationship between the amount of Gross Floor Area in a Building (or\n\nBuildings) and the Developable Site Area on which the Building(s) stands.  It is obtained by \ndividing th",
           "extraction_method": "text"
         }
       ],
@@ -53,20 +71,43 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 6.85914699715795,
-        "rewrite_ms": 0.0023519969545304775,
-        "retrieval_ms": 357.0478799956618,
-        "vector_ms": 237.1973980043549,
-        "keyword_ms": 37.93421199952718,
-        "fusion_ms": 0.2061240011244081,
-        "ambiguity_ms": 36.88974000397138,
-        "context_ms": 37.37596800056053,
-        "draft_ms": 2394.3087919979007,
-        "check_ms": 2917.6145190067473,
-        "conflict_ms": 1803.0816030004644,
-        "answer_ms": 7115.497525999672,
+        "index_ms": 10.22327199962092,
+        "rewrite_ms": 0.001309999788645655,
+        "retrieval_ms": 6934.352660999593,
+        "vector_ms": 6879.214603000037,
+        "keyword_ms": 17.531546000100207,
+        "fusion_ms": 0.10482599964234396,
+        "ambiguity_ms": 14.449350000177219,
+        "context_ms": 12.39234500008024,
+        "draft_ms": 31099.623384000097,
+        "check_ms": 900.9586420002051,
+        "conflict_ms": 605.8805330003452,
+        "answer_ms": 32606.908948000182,
         "drafts": 1,
         "check_calls": 3
+      },
+      "citation_support": {
+        "sentences": [
+          {
+            "sentence": "P2 indicates that an applicant is permitted to use the land with Level 2 Review. [1]",
+            "citations": [
+              1
+            ],
+            "label": "partial",
+            "quote": "P(Number) = PERMITTED with Level of Review (0, 1, 2, 3) [i.e. P2 = Permitted with Level 2 Review];",
+            "pages": [
+              [
+                "zoning.pdf",
+                5
+              ]
+            ]
+          }
+        ],
+        "counts": {
+          "partial": 1
+        },
+        "scored": 1,
+        "supported": 0
       }
     },
     {
@@ -81,7 +122,7 @@
         "10 feet",
         "ten feet"
       ],
-      "answer": "Jurisdiction: Los Angeles | District: not specified | Document version: Adopted December 3, 2013 | Source: E Generalized Summary of Zoning Regulations.pdf\nAccording to the context, a surface parking zone combined with an A or R zone requires a front yard of 10 ft. [1].",
+      "answer": "Jurisdiction: Los Angeles | District: not specified | Document version: Adopted December 3, 2013 | Source: E Generalized Summary of Zoning Regulations.pdf\nAccording to the context, a surface parking zone combined with an agricultural or residential zone requires a front yard of 10 ft. [1].",
       "sources": [
         {
           "source": "E Generalized Summary of Zoning Regulations.pdf",
@@ -109,20 +150,43 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 7.221433996164706,
-        "rewrite_ms": 0.0006890040822327137,
-        "retrieval_ms": 487.1762149996357,
-        "vector_ms": 231.50023100606631,
-        "keyword_ms": 74.97082599729765,
-        "fusion_ms": 0.10786899656523019,
-        "ambiguity_ms": 91.45597099995939,
-        "context_ms": 81.36094500514446,
-        "draft_ms": 2765.1422579947393,
-        "check_ms": 2066.8456579951453,
-        "conflict_ms": 1685.1411370007554,
-        "answer_ms": 6517.451555999287,
+        "index_ms": 5.174142000214488,
+        "rewrite_ms": 0.0025740000637597404,
+        "retrieval_ms": 4139.376757000264,
+        "vector_ms": 4071.0717009997097,
+        "keyword_ms": 23.965612000210967,
+        "fusion_ms": 0.07520300005126046,
+        "ambiguity_ms": 20.502821000263793,
+        "context_ms": 18.04908600024646,
+        "draft_ms": 42323.68701699989,
+        "check_ms": 625.0916399999369,
+        "conflict_ms": 525.7685790002142,
+        "answer_ms": 43474.88584700022,
         "drafts": 1,
         "check_calls": 2
+      },
+      "citation_support": {
+        "sentences": [
+          {
+            "sentence": "According to the context, a surface parking zone combined with an agricultural or residential zone requires a front yard of 10 ft. [1].",
+            "citations": [
+              1
+            ],
+            "label": "supported",
+            "quote": "Maximum Height Stories: unlimited (8); Required yards Front: 10 ft. in combination with an A or R Zone; otherwise none",
+            "pages": [
+              [
+                "E Generalized Summary of Zoning Regulations.pdf",
+                6
+              ]
+            ]
+          }
+        ],
+        "counts": {
+          "supported": 1
+        },
+        "scored": 1,
+        "supported": 1
       }
     },
     {
@@ -136,7 +200,7 @@
         "500 feet",
         "five hundred feet"
       ],
-      "answer": "Jurisdiction: Urbana | District: not specified | Document version: not identified | Source: article_v_-_use_regulations.pdf\nA proposed gaming hall in Urbana must be at least 500 feet from another licensed gaming hall. [1]",
+      "answer": "Jurisdiction: Urbana | District: not specified | Document version: not identified | Source: article_v_-_use_regulations.pdf\nIn Urbana, a proposed gaming hall must be at least 500 feet from any other licensed gaming hall. [1]",
       "sources": [
         {
           "source": "article_v_-_use_regulations.pdf",
@@ -152,20 +216,43 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 6.340703999740072,
-        "rewrite_ms": 0.021159998141229153,
-        "retrieval_ms": 382.72344099823385,
-        "vector_ms": 221.86116100056097,
-        "keyword_ms": 54.70303899346618,
-        "fusion_ms": 0.1852309942478314,
-        "ambiguity_ms": 45.923944999231026,
-        "context_ms": 53.111481000087224,
-        "draft_ms": 4239.785612997366,
-        "check_ms": 24950.86346899916,
-        "conflict_ms": 1086.6864830022678,
-        "answer_ms": 30277.757768999436,
-        "drafts": 2,
-        "check_calls": 7
+        "index_ms": 7.548139000391529,
+        "rewrite_ms": 0.0004899998202745337,
+        "retrieval_ms": 2771.8629670002883,
+        "vector_ms": 2722.3044920001485,
+        "keyword_ms": 16.680599999745027,
+        "fusion_ms": 0.12487599997257348,
+        "ambiguity_ms": 12.918012000227463,
+        "context_ms": 11.92992400001458,
+        "draft_ms": 34530.18111699975,
+        "check_ms": 2035.2495640004236,
+        "conflict_ms": 404.7057610000593,
+        "answer_ms": 36970.37257199963,
+        "drafts": 1,
+        "check_calls": 3
+      },
+      "citation_support": {
+        "sentences": [
+          {
+            "sentence": "In Urbana, a proposed gaming hall must be at least 500 feet from any other licensed gaming hall. [1]",
+            "citations": [
+              1
+            ],
+            "label": "supported",
+            "quote": "The establishment requesting a license for a principal use gaming hall shall be a minimum of five hundred feet from any other licensed gaming hall or pre-existing Day Care Facility, Day Care Home, School, or Place of Worship, as defined under the Religious Corporation Act (805 ILCS 110/0.01 et seq.).",
+            "pages": [
+              [
+                "article_v_-_use_regulations.pdf",
+                16
+              ]
+            ]
+          }
+        ],
+        "counts": {
+          "supported": 1
+        },
+        "scored": 1,
+        "supported": 1
       }
     },
     {
@@ -208,20 +295,43 @@
         "pass": false
       },
       "timing": {
-        "index_ms": 6.566545998794027,
-        "rewrite_ms": 0.0009089999366551638,
-        "retrieval_ms": 329.4293229992036,
-        "vector_ms": 196.97895599529147,
-        "keyword_ms": 33.31477199390065,
-        "fusion_ms": 0.13272499927552417,
-        "ambiguity_ms": 43.21205599990208,
-        "context_ms": 48.68521200114628,
-        "draft_ms": 1731.1576010033605,
-        "check_ms": 4322.830730998248,
-        "conflict_ms": 2083.532163997006,
-        "answer_ms": 8137.932773002831,
+        "index_ms": 4.676241999732156,
+        "rewrite_ms": 0.00044499984142021276,
+        "retrieval_ms": 4052.008926999406,
+        "vector_ms": 4008.1469130000187,
+        "keyword_ms": 15.53739700011647,
+        "fusion_ms": 0.0691000000188069,
+        "ambiguity_ms": 11.159756999859383,
+        "context_ms": 12.017937000109669,
+        "draft_ms": 27299.18267899984,
+        "check_ms": 1395.705406000161,
+        "conflict_ms": 582.7245550003681,
+        "answer_ms": 29277.896485999918,
         "drafts": 1,
         "check_calls": 4
+      },
+      "citation_support": {
+        "sentences": [
+          {
+            "sentence": "The minimum lot area for a cemetery in Union City is ten (10) acres [1].",
+            "citations": [
+              1
+            ],
+            "label": "supported",
+            "quote": "a. Minimum lot area shall be ten (10) acres;",
+            "pages": [
+              [
+                "zoning-ordinance-082024-rev.pdf",
+                100
+              ]
+            ]
+          }
+        ],
+        "counts": {
+          "supported": 1
+        },
+        "scored": 1,
+        "supported": 1
       }
     },
     {
@@ -255,20 +365,43 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 7.714398001553491,
-        "rewrite_ms": 0.001124004484154284,
-        "retrieval_ms": 352.7306550022331,
-        "vector_ms": 217.3012720013503,
-        "keyword_ms": 36.80296799575444,
-        "fusion_ms": 0.23608699848409742,
-        "ambiguity_ms": 49.69352199987043,
-        "context_ms": 40.409419998468366,
-        "draft_ms": 1605.539823998697,
-        "check_ms": 1182.6419080025516,
-        "conflict_ms": 2030.9903500019573,
-        "answer_ms": 4819.491228001425,
+        "index_ms": 6.776349000119808,
+        "rewrite_ms": 0.0010960002327919938,
+        "retrieval_ms": 4132.959775000472,
+        "vector_ms": 4076.033531000121,
+        "keyword_ms": 21.64758000026268,
+        "fusion_ms": 0.09365899995827931,
+        "ambiguity_ms": 14.819268999872293,
+        "context_ms": 12.990719999834255,
+        "draft_ms": 31792.0796530002,
+        "check_ms": 446.7107800001031,
+        "conflict_ms": 589.691356000003,
+        "answer_ms": 32828.821005000005,
         "drafts": 1,
         "check_calls": 2
+      },
+      "citation_support": {
+        "sentences": [
+          {
+            "sentence": "Yes, non-commercial agriculture is listed as a permitted use in Union City's R-2 district. [1]",
+            "citations": [
+              1
+            ],
+            "label": "supported",
+            "quote": "4. Non-commercial agriculture;",
+            "pages": [
+              [
+                "zoning-ordinance-082024-rev.pdf",
+                53
+              ]
+            ]
+          }
+        ],
+        "counts": {
+          "supported": 1
+        },
+        "scored": 1,
+        "supported": 1
       }
     },
     {
@@ -314,20 +447,43 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 7.05690400354797,
-        "rewrite_ms": 0.0014040051610209048,
-        "retrieval_ms": 321.07787700078916,
-        "vector_ms": 187.0477190022939,
-        "keyword_ms": 41.552203001629096,
-        "fusion_ms": 0.13237999519333243,
-        "ambiguity_ms": 44.67689199373126,
-        "context_ms": 40.07890899811173,
-        "draft_ms": 2611.3874510047026,
-        "check_ms": 13263.95247400069,
-        "conflict_ms": 2397.3787580034696,
-        "answer_ms": 18272.98449099908,
+        "index_ms": 4.727561999970931,
+        "rewrite_ms": 0.0006189998202899005,
+        "retrieval_ms": 2979.132687999936,
+        "vector_ms": 2922.0925669997087,
+        "keyword_ms": 20.289109999794164,
+        "fusion_ms": 0.08744000024307752,
+        "ambiguity_ms": 16.847301999860065,
+        "context_ms": 14.604659999804426,
+        "draft_ms": 40024.189062000005,
+        "check_ms": 3327.8426080000827,
+        "conflict_ms": 631.9895740002721,
+        "answer_ms": 43984.275470000284,
         "drafts": 1,
         "check_calls": 5
+      },
+      "citation_support": {
+        "sentences": [
+          {
+            "sentence": "The minimum height for a principal structure in Charleston's 55/30 height district is 30 feet [2].",
+            "citations": [
+              2
+            ],
+            "label": "supported",
+            "quote": "No part of a structure shall exceed the height of fifty-five (55) feet, nor shall the principal structure be lower than thirty (30) feet.",
+            "pages": [
+              [
+                "Charleston, SC Zoning.pdf",
+                405
+              ]
+            ]
+          }
+        ],
+        "counts": {
+          "supported": 1
+        },
+        "scored": 1,
+        "supported": 1
       }
     },
     {
@@ -370,20 +526,43 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 5.981795002298895,
-        "rewrite_ms": 0.0006440022843889892,
-        "retrieval_ms": 351.7722620017594,
-        "vector_ms": 188.25090899917996,
-        "keyword_ms": 47.91300500073703,
-        "fusion_ms": 0.10078999912366271,
-        "ambiguity_ms": 59.22766600269824,
-        "context_ms": 49.764297997171525,
-        "draft_ms": 3407.7876240044134,
-        "check_ms": 2477.455749998626,
-        "conflict_ms": 1999.0998420034884,
-        "answer_ms": 7884.651894994022,
+        "index_ms": 4.638408000118943,
+        "rewrite_ms": 0.0006650002433161717,
+        "retrieval_ms": 4403.245603000414,
+        "vector_ms": 4331.549398000334,
+        "keyword_ms": 24.262360999728116,
+        "fusion_ms": 0.10780399998111534,
+        "ambiguity_ms": 23.298657999930583,
+        "context_ms": 18.891240000357357,
+        "draft_ms": 29065.85863600003,
+        "check_ms": 657.0048620001216,
+        "conflict_ms": 607.509435999873,
+        "answer_ms": 30330.64162599976,
         "drafts": 1,
         "check_calls": 2
+      },
+      "citation_support": {
+        "sentences": [
+          {
+            "sentence": "For a Charleston development with at least twenty business units, the per-face area limit for its monument sign is one hundred (100) square feet. [2]",
+            "citations": [
+              2
+            ],
+            "label": "supported",
+            "quote": "3.\nFor a development containing twenty (20) or more business units, or 150,000 square feet or more of floor area, one (1) monument sign shall be permitted as follows:\n\n(a)\nNo sign shall exceed one hundred (100) square feet per face or two hundred (200) square feet of total sign face area.",
+            "pages": [
+              [
+                "Charleston, SC Zoning.pdf",
+                505
+              ]
+            ]
+          }
+        ],
+        "counts": {
+          "supported": 1
+        },
+        "scored": 1,
+        "supported": 1
       }
     },
     {
@@ -396,7 +575,7 @@
       "accepted_answers": [
         "Board of Zoning Appeals Site Design"
       ],
-      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nTo appeal an administrative decision about a sidewalk cafe permit in Charleston, you must file the appeal within ten (10) business days after actual notice of the decision, and the appeal form and fee must be delivered to the Zoning Division office [1].",
+      "answer": "Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf\nTo appeal an administrative decision about a sidewalk cafe permit in Charleston, you must file the appeal within ten (10) business days after actual notice of the decision, and the appeal must be filed on a form approved by the Board, which can be obtained from the City of Charleston Department of Planning and Preservation, 75 Calhoun Street, Charleston, South Carolina [1].",
       "sources": [
         {
           "source": "Charleston, SC Zoning.pdf",
@@ -424,20 +603,43 @@
         "pass": false
       },
       "timing": {
-        "index_ms": 7.299372999113984,
-        "rewrite_ms": 0.0007910057320259511,
-        "retrieval_ms": 327.3686680040555,
-        "vector_ms": 200.51704100478673,
-        "keyword_ms": 35.97313100181054,
-        "fusion_ms": 0.12760599929606542,
-        "ambiguity_ms": 43.47656900063157,
-        "context_ms": 39.360153998131864,
-        "draft_ms": 3800.14630399819,
-        "check_ms": 3385.326208997867,
-        "conflict_ms": 2474.3995370008633,
-        "answer_ms": 9660.181020000891,
+        "index_ms": 5.122021000261157,
+        "rewrite_ms": 0.0006880000000819564,
+        "retrieval_ms": 5635.68096400013,
+        "vector_ms": 5573.6662920003255,
+        "keyword_ms": 20.40886499980843,
+        "fusion_ms": 0.10862099998121266,
+        "ambiguity_ms": 19.863289000113582,
+        "context_ms": 15.926321999813808,
+        "draft_ms": 30579.24905000027,
+        "check_ms": 5277.965021999989,
+        "conflict_ms": 610.584664000271,
+        "answer_ms": 36468.06628600007,
         "drafts": 1,
-        "check_calls": 2
+        "check_calls": 8
+      },
+      "citation_support": {
+        "sentences": [
+          {
+            "sentence": "To appeal an administrative decision about a sidewalk cafe permit in Charleston, you must file the appeal within ten (10) business days after actual notice of the decision, and the appeal must be filed on a form approved by the Board, which can be obtained from the City of Charleston Department of Planning and Preservation, 75 Calhoun Street, Charleston, South Carolina [1].",
+            "citations": [
+              1
+            ],
+            "label": "partial",
+            "quote": "An appeal from an administrative decision must be filed within ten (10) business days after actual notice of the decision by delivery of the approved appeal form and fee to the Zoning Division office.",
+            "pages": [
+              [
+                "Charleston, SC Zoning.pdf",
+                681
+              ]
+            ]
+          }
+        ],
+        "counts": {
+          "partial": 1
+        },
+        "scored": 1,
+        "supported": 0
       }
     },
     {
@@ -472,18 +674,18 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 6.716625000990462,
-        "rewrite_ms": 0.0013079989003017545,
-        "retrieval_ms": 266.0941180001828,
-        "vector_ms": 175.34262299886905,
-        "keyword_ms": 23.720621997199487,
-        "fusion_ms": 0.08358899503946304,
-        "ambiguity_ms": 28.640373006055597,
-        "context_ms": 30.901169004209805,
-        "draft_ms": 3057.8990559952217,
-        "check_ms": 0.0016839985619299114,
+        "index_ms": 5.8584559997143515,
+        "rewrite_ms": 0.00037500012695090845,
+        "retrieval_ms": 3922.7865059997384,
+        "vector_ms": 3857.8677040000002,
+        "keyword_ms": 15.136819000417745,
+        "fusion_ms": 0.09475899969402235,
+        "ambiguity_ms": 18.831386000329076,
+        "context_ms": 24.588997999671847,
+        "draft_ms": 33363.62997000015,
+        "check_ms": 0.0014050001482246444,
         "conflict_ms": 0.0,
-        "answer_ms": 3058.194104996801,
+        "answer_ms": 33363.857449000076,
         "drafts": 2,
         "check_calls": 0
       }
@@ -520,18 +722,18 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 8.292691003589425,
-        "rewrite_ms": 0.0011689990060403943,
-        "retrieval_ms": 402.39584800292505,
-        "vector_ms": 295.35391299577896,
-        "keyword_ms": 27.78753299935488,
-        "fusion_ms": 0.1016020032693632,
-        "ambiguity_ms": 35.02462400501827,
-        "context_ms": 35.229089997301344,
-        "draft_ms": 3360.384483996313,
-        "check_ms": 0.0018300052033737302,
+        "index_ms": 5.93440600005124,
+        "rewrite_ms": 0.00052699988373206,
+        "retrieval_ms": 194.77703899974586,
+        "vector_ms": 149.21630700018795,
+        "keyword_ms": 14.915024999936577,
+        "fusion_ms": 0.1482789998590306,
+        "ambiguity_ms": 11.401400000067952,
+        "context_ms": 12.534156999663537,
+        "draft_ms": 845.709867000096,
+        "check_ms": 0.0016890003280423116,
         "conflict_ms": 0.0,
-        "answer_ms": 3360.7025540040922,
+        "answer_ms": 846.1001020000367,
         "drafts": 2,
         "check_calls": 0
       }
@@ -568,18 +770,18 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 9.093583001231309,
-        "rewrite_ms": 0.0015069963410496712,
-        "retrieval_ms": 367.8398440024466,
-        "vector_ms": 257.2171029969468,
-        "keyword_ms": 29.190852997999173,
-        "fusion_ms": 0.11599000572459772,
-        "ambiguity_ms": 40.475531000993215,
-        "context_ms": 31.04530599375721,
-        "draft_ms": 2845.435515002464,
-        "check_ms": 0.0019700019038282335,
+        "index_ms": 7.578738000120211,
+        "rewrite_ms": 0.0002629999471537303,
+        "retrieval_ms": 241.48310700002185,
+        "vector_ms": 199.66211500013742,
+        "keyword_ms": 12.00878500003455,
+        "fusion_ms": 0.0691019999976561,
+        "ambiguity_ms": 11.083954999776324,
+        "context_ms": 10.6674749999911,
+        "draft_ms": 868.6474559999624,
+        "check_ms": 0.001624000560696004,
         "conflict_ms": 0.0,
-        "answer_ms": 2845.777643000474,
+        "answer_ms": 868.8617020002312,
         "drafts": 2,
         "check_calls": 0
       }
@@ -597,14 +799,14 @@
         "pass": true
       },
       "timing": {
-        "index_ms": 6.232956999156158,
-        "rewrite_ms": 0.001410000550094992,
-        "retrieval_ms": 364.25794700335246,
-        "vector_ms": 313.04048300080467,
-        "keyword_ms": 21.29527899523964,
-        "fusion_ms": 0.10138599463971332,
-        "ambiguity_ms": 22.20155800023349,
-        "context_ms": 0.002405999111942947,
+        "index_ms": 8.392321999963315,
+        "rewrite_ms": 0.00045400020098895766,
+        "retrieval_ms": 208.45970400023361,
+        "vector_ms": 180.37539299984928,
+        "keyword_ms": 10.783548999825143,
+        "fusion_ms": 0.07465700036846101,
+        "ambiguity_ms": 8.481329999995069,
+        "context_ms": 0.0012870000318798702,
         "draft_ms": 0.0,
         "check_ms": 0.0,
         "conflict_ms": 0.0,
@@ -613,5 +815,28 @@
         "check_calls": 0
       }
     }
-  ]
+  ],
+  "citation_support": {
+    "judge_model": "qwen2.5:7b",
+    "overall": {
+      "scored": 8,
+      "supported": 6,
+      "counts": {
+        "partial": 2,
+        "supported": 6
+      },
+      "support_rate": 0.75
+    },
+    "by_category": {
+      "general": {
+        "scored": 8,
+        "supported": 6,
+        "counts": {
+          "partial": 2,
+          "supported": 6
+        },
+        "support_rate": 0.75
+      }
+    }
+  }
 }

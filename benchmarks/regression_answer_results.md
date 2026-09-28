@@ -1,9 +1,10 @@
 # Regression (former holdout) answer evaluation
 
-Run at: 2026-09-27T06:26:32.607867+00:00
-Git HEAD at run: `e38fc9aff5db132d7d181a163495cbb24ebe94ba` (worktree changes may have been present).
+Run at: 2026-09-28T20:50:30.314337+00:00
+Git HEAD at run: `69a339c7e5d8f191bf038bc9803dd8ac8346ea13` (clean worktree).
 Dataset: `regression_queries.json`.
 Models: `llama3.2:3b` and `nomic-embed-text`.
+Corpus: 1070 PDF pages, 4854 indexed chunks, 5 files.
 Queries: 10 (7 answerable, 2 unanswerable, 1 ambiguous).
 
 Automated checks passed: 9/10.
@@ -24,6 +25,23 @@ Answerable items pass when the answer contains an accepted phrase and cites the 
 | final_absent_01 | unanswerable | True | True | True | True |
 | final_absent_02 | unanswerable | True | True | True | True |
 | final_ambiguous_01 | ambiguous | True | True | True | True |
+
+## Citation support
+
+Judge: `qwen2.5:7b`. Each answer sentence is judged against the full physical PDF pages it cites; a supported verdict counts only when the judge's quote appears on a cited page. Page-level judging is more lenient than chunk-level judging. Reported separately from pass/fail.
+
+Supported sentences: 7/9 (78%).
+
+| Category | Scored | supported | partial | unsupported | uncited | unverified | Support rate |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| general | 9 | 7 | 1 | 1 | 0 | 0 | 78% |
+
+### Sentences not supported
+
+| ID | Label | Sentence | Judge quote |
+|---|---|---|---|
+| final_uni_01 | partial | Conflicting provisions: 6-2 R-2 Single-Family Residential. states "Said guesthouse shall be limited to 900 square feet." [1]; 5-11 Guest houses. states "A freestanding guest house shall not exceed 700 square feet of heated and finished floor area." [2]. | A freestanding guest house shall not exceed 700 square feet of heated and finished floor area. |
+| final_uni_01 | unsupported | The named 6-2 R-2 Single-Family Residential. provision applies to this question [1]. |  |
 
 ## Answers for review
 
@@ -59,7 +77,7 @@ Sources: [{"source": "article_v_-_use_regulations.pdf", "page": 4, "excerpt": "G
 Question: In Union City's R-2 district, how large may a guest house be?
 
 Answer: Jurisdiction: Union City, Georgia | District: R-2 | Document version: August 20, 2024, Rev. | Source: zoning-ordinance-082024-rev.pdf
-According to the context, a guest house in Union City's R-2 district may be limited to 900 square feet. [1]
+According to the zoning ordinance, a guest house in the R-2 district may be limited to 900 square feet. [1]
 Conflicting provisions: 6-2 R-2 Single-Family Residential. states "Said guesthouse shall be limited to 900 square feet." [1]; 5-11 Guest houses. states "A freestanding guest house shall not exceed 700 square feet of heated and finished floor area." [2]. The named 6-2 R-2 Single-Family Residential. provision applies to this question [1].
 
 Sources: [{"source": "zoning-ordinance-082024-rev.pdf", "page": 54, "excerpt": "August 20, 2024, Rev. \nPage 45\n\na. Any building or structure established in connection with such use must be set\n\nback no less than 100 feet from any property line; and\n\nb. Lighting shall be established in such a way that no direct light shall cast over any\n\nproperty line nor adversely affect neighboring properties.\n\n3. Guest house, provided: \n \na. The main dwelling is located on a lot containing at least one (1) acre;\n\nb. No more than one (1) shall be permitted on a lot with another dwelling;\n\n", "extraction_method": "text"}, {"source": "zoning-ordinance-082024-rev.pdf", "page": 38, "excerpt": "residential zoning districts. Only one (1) guesthouse is allowed per parcel lot. Any \nliving area included in a detached garage or swimming pool cabana is a guest \nhouse. \n \nB. Size. \nA freestanding guest house shall not exceed 700 square feet of heated \nand finished floor area. When a guest house is combined with a detached garage or \ncabana, said total structure shall not exceed 1,200 square feet with a maximum of \n700 square feet of heated and finished living space contained in the guest hous", "extraction_method": "text"}]

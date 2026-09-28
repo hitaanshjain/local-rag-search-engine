@@ -1,9 +1,10 @@
 # Development answer evaluation
 
-Run at: 2026-09-27T06:25:36.531528+00:00
-Git HEAD at run: `e38fc9aff5db132d7d181a163495cbb24ebe94ba` (worktree changes may have been present).
+Run at: 2026-09-28T20:46:09.792184+00:00
+Git HEAD at run: `69a339c7e5d8f191bf038bc9803dd8ac8346ea13` (clean worktree).
 Dataset: `development_queries.json`.
 Models: `llama3.2:3b` and `nomic-embed-text`.
+Corpus: 1070 PDF pages, 4854 indexed chunks, 5 files.
 Queries: 12 (8 answerable, 3 unanswerable, 1 ambiguous).
 
 Automated checks passed: 10/12.
@@ -27,6 +28,23 @@ Answerable items pass when the answer contains an accepted phrase and cites the 
 | held_absent_03 | unanswerable | True | True | True | True |
 | held_ambiguous_01 | ambiguous | True | True | True | True |
 
+## Citation support
+
+Judge: `qwen2.5:7b`. Each answer sentence is judged against the full physical PDF pages it cites; a supported verdict counts only when the judge's quote appears on a cited page. Page-level judging is more lenient than chunk-level judging. Reported separately from pass/fail.
+
+Supported sentences: 6/8 (75%).
+
+| Category | Scored | supported | partial | unsupported | uncited | unverified | Support rate |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| general | 8 | 6 | 2 | 0 | 0 | 0 | 75% |
+
+### Sentences not supported
+
+| ID | Label | Sentence | Judge quote |
+|---|---|---|---|
+| held_iss_01 | partial | P2 indicates that an applicant is permitted to use the land with Level 2 Review. [1] | P(Number) = PERMITTED with Level of Review (0, 1, 2, 3) [i.e. P2 = Permitted with Level 2 Review]; |
+| held_cha_03 | partial | To appeal an administrative decision about a sidewalk cafe permit in Charleston, you must file the appeal within ten (10) business days after actual notice of the decision, and the appeal must be filed on a form approved by the Board, which can be obtained from the City of Charleston Department of Planning and Preservation, 75 Calhoun Street, Charleston, South Carolina [1]. | An appeal from an administrative decision must be filed within ten (10) business days after actual notice of the decision by delivery of the approved appeal form and fee to the Zoning Division office. |
+
 ## Answers for review
 
 ### held_iss_01
@@ -34,16 +52,16 @@ Answerable items pass when the answer contains an accepted phrase and cites the 
 Question: In Issaquah's land use table, what does P2 tell an applicant about review?
 
 Answer: Jurisdiction: Issaquah | District: not specified | Document version: Updated 2-5-20 | Source: zoning.pdf
-P2 indicates that a use is Permitted with Level 2 Review. [1]
+P2 indicates that an applicant is permitted to use the land with Level 2 Review. [1]
 
-Sources: [{"source": "zoning.pdf", "page": 5, "excerpt": "1. Permitted Uses:  P = PERMITTED; P(Number) = PERMITTED with Level of Review \n(0, 1, 2, 3) [i.e. P2 = Permitted with Level 2 Review]; Empty box = NOT PERMITTED. \n2. Unclassified Uses. Those uses which are not listed on the table below but are listed in IMC \n18.06.130, Table of Permitted Land Uses, are Not Permitted in any Central Issaquah zone.  \nThose remaining uses which are not listed on the table below and are also not listed in IMC \n18.06.130, Table of Permitted Land Uses, shall be determi", "extraction_method": "text"}, {"source": "zoning.pdf", "page": 11, "excerpt": "in Central Issaquah. The District Standards Table found in IMC 18.07.360 does not apply in the \nCentral Issaquah zoning districts. Each structure, development, or activity in a Central Issaquah \nzoning district shall comply with these requirements except as otherwise provided in this \nSection. \n \nB. Floor Area Ratio.  The relationship between the amount of Gross Floor Area in a Building (or\n\nBuildings) and the Developable Site Area on which the Building(s) stands.  It is obtained by \ndividing th", "extraction_method": "text"}, {"source": "zoning.pdf", "page": 4, "excerpt": "Table 4.2B Intent of Overlays\nCentral Plan: District(s)\nOverlay: Vertical Mixed Use; Intent: The intent is to establish an overlay within the Urban Core where viable mixed use development is required. Where parcels shown to have Required Ground Floor Frontages as indicated in Figure 4B Central Issaquah Vertical Mixed Use Overlay map, buildings are required to be a minimum of two floors with the ground floor of buildings comprised of active uses that ensure a dense, vibrant, pedestrian friendly u", "extraction_method": "text"}]
+Sources: [{"source": "zoning.pdf", "page": 5, "excerpt": "1. Permitted Uses:  P = PERMITTED; P(Number) = PERMITTED with Level of Review \n(0, 1, 2, 3) [i.e. P2 = Permitted with Level 2 Review]; Empty box = NOT PERMITTED. \n2. Unclassified Uses. Those uses which are not listed on the table below but are listed in IMC \n18.06.130, Table of Permitted Land Uses, are Not Permitted in any Central Issaquah zone.  \nThose remaining uses which are not listed on the table below and are also not listed in IMC \n18.06.130, Table of Permitted Land Uses, shall be determi", "extraction_method": "text"}, {"source": "zoning.pdf", "page": 4, "excerpt": "Table 4.2B Intent of Overlays\nCentral Plan: District(s)\nOverlay: Vertical Mixed Use; Intent: The intent is to establish an overlay within the Urban Core where viable mixed use development is required. Where parcels shown to have Required Ground Floor Frontages as indicated in Figure 4B Central Issaquah Vertical Mixed Use Overlay map, buildings are required to be a minimum of two floors with the ground floor of buildings comprised of active uses that ensure a dense, vibrant, pedestrian friendly u", "extraction_method": "text"}, {"source": "zoning.pdf", "page": 11, "excerpt": "in Central Issaquah. The District Standards Table found in IMC 18.07.360 does not apply in the \nCentral Issaquah zoning districts. Each structure, development, or activity in a Central Issaquah \nzoning district shall comply with these requirements except as otherwise provided in this \nSection. \n \nB. Floor Area Ratio.  The relationship between the amount of Gross Floor Area in a Building (or\n\nBuildings) and the Developable Site Area on which the Building(s) stands.  It is obtained by \ndividing th", "extraction_method": "text"}]
 
 ### held_sum_01
 
 Question: How much front yard does a surface parking zone need when it is combined with an agricultural or residential zone in the generalized summary?
 
 Answer: Jurisdiction: Los Angeles | District: not specified | Document version: Adopted December 3, 2013 | Source: E Generalized Summary of Zoning Regulations.pdf
-According to the context, a surface parking zone combined with an A or R zone requires a front yard of 10 ft. [1].
+According to the context, a surface parking zone combined with an agricultural or residential zone requires a front yard of 10 ft. [1].
 
 Sources: [{"source": "E Generalized Summary of Zoning Regulations.pdf", "page": 6, "excerpt": "Zone: Parking\nZone: P; Use: Automobile Parking–Surface and Underground Surface Parking; Land in a P Zone may also be Classified in A or R Zone; Maximum Height Stories: unlimited (8); Required yards Front: 10 ft. in combination with an A or R Zone; otherwise none; Required yards Side: none; Minimum Area Per Lot/ Unit: none, unless also in an A or R Zone\nZone: PB; Use: Parking Building P Zone Uses, Automobile Parking Within aBuilding; Required yards Front: 0 ft., 5 ft., or 10 ft., depending on zon", "extraction_method": "text"}, {"source": "E Generalized Summary of Zoning Regulations.pdf", "page": 7, "excerpt": "Housing Element 2013–2021 - Appendices\b\nAppendix E Generalized Summary of Zoning Regulations\n\nTransitional Height: \nPortions of buildings in C or M zones within certain distances of RW1 or more restrictive zones shall not exceed the \nfollowing height limits, in accordance with Section 12.21.1 A 10 of the Zoning Code:\n\nDistance (ft)\nHeight (ft)\n\n0–49\n25\n50–99\n33\n100–199\n61\n\nZone Prefixes \n(Section 12.32 of the Zoning Code)\n\n(T), [T], T\nTentative Zone Classification\nCity Council requirements for p", "extraction_method": "text"}, {"source": "E Generalized Summary of Zoning Regulations.pdf", "page": 5, "excerpt": "Housing Element 2013–2021 - Appendices\b\nAppendix E Generalized Summary of Zoning Regulations\n\nZone: Manufacturing", "extraction_method": "text"}]
 
@@ -52,7 +70,7 @@ Sources: [{"source": "E Generalized Summary of Zoning Regulations.pdf", "page": 
 Question: In Urbana, how far must a proposed gaming hall be from another licensed gaming hall?
 
 Answer: Jurisdiction: Urbana | District: not specified | Document version: not identified | Source: article_v_-_use_regulations.pdf
-A proposed gaming hall in Urbana must be at least 500 feet from another licensed gaming hall. [1]
+In Urbana, a proposed gaming hall must be at least 500 feet from any other licensed gaming hall. [1]
 
 Sources: [{"source": "article_v_-_use_regulations.pdf", "page": 16, "excerpt": "****See Table VII-1 for Standards for Specific Conditional Uses\n\n***** The establishment requesting a license for a principal use gaming hall shall be a minimum of five hundred feet from any other licensed \ngaming hall or pre-existing Day Care Facility, Day Care Home, School, or Place of Worship, as defined under the Religious Corporation Act \n(805 ILCS 110/0.01 et seq.). The establishment requesting a license for a principal use gaming hall shall also be a minimum of two \nhundred and fifty feet", "extraction_method": "text"}]
 
@@ -97,7 +115,7 @@ Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 504, "excerpt": "2.\nF
 Question: In Charleston, where does someone appeal an administrative decision about a sidewalk cafe permit?
 
 Answer: Jurisdiction: Charleston, South Carolina | District: not specified | Document version: Supplement No. 25, November 2025 | Source: Charleston, SC Zoning.pdf
-To appeal an administrative decision about a sidewalk cafe permit in Charleston, you must file the appeal within ten (10) business days after actual notice of the decision, and the appeal form and fee must be delivered to the Zoning Division office [1].
+To appeal an administrative decision about a sidewalk cafe permit in Charleston, you must file the appeal within ten (10) business days after actual notice of the decision, and the appeal must be filed on a form approved by the Board, which can be obtained from the City of Charleston Department of Planning and Preservation, 75 Calhoun Street, Charleston, South Carolina [1].
 
 Sources: [{"source": "Charleston, SC Zoning.pdf", "page": 681, "excerpt": "Section 2. Time Limit for Appeal of an Administrative Decision.\n\nAn appeal from an administrative decision must be filed within ten (10) business days after \nactual notice of the decision by delivery of the approved appeal form and fee to the Zoning \nDivision office.\n\nSection 3. Time Limit and Procedure for Appeal for Reconsideration of a Board\n\nDecision to the Board.", "extraction_method": "text"}, {"source": "Charleston, SC Zoning.pdf", "page": 721, "excerpt": "Section 2. Time of Appeal.\n\nAn appeal from a Board decision or an administrative decision must be filed within fifteen \n(15) days from the making of such decision, order, requirement or determination.\n\nArt. II, § 3 \n Art. III, § 2", "extraction_method": "text"}, {"source": "Charleston, SC Zoning.pdf", "page": 721, "excerpt": "Article III.\nAppeals Procedure\n\nSection 1. Form of Appeal—Administrative Decision.\n\nAppeals to the Board from an administrative decision may be taken by any person aggrieved \nby a determination of the administrative officer. Appeals shall be filed on forms approved by \nthe Board and provided by the Secretary of the Board. Appeal forms shall be made available \nin the City of Charleston Department of Planning and Preservation, 75 Calhoun Street, \nCharleston, South Carolina. A detailed narrative mu", "extraction_method": "text"}]
 

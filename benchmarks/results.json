@@ -1,6 +1,7 @@
 {
-  "run_at_utc": "2026-09-27T06:23:43.002275+00:00",
-  "git_head_at_run": "e38fc9aff5db132d7d181a163495cbb24ebe94ba",
+  "run_at_utc": "2026-09-28T20:11:38.117598+00:00",
+  "git_head_at_run": "69a339c7e5d8f191bf038bc9803dd8ac8346ea13",
+  "worktree_clean": true,
   "models": {
     "embedding": "nomic-embed-text",
     "llm": "llama3.2:3b"
@@ -22,12 +23,12 @@
       "source": {
         "hit@3": 0.9642857142857143,
         "hit@5": 0.9642857142857143,
-        "mrr": 0.8511904761904762
+        "mrr": 0.869047619047619
       },
       "page": {
-        "hit@3": 0.6785714285714286,
+        "hit@3": 0.6428571428571429,
         "hit@5": 0.75,
-        "mrr": 0.593452380952381
+        "mrr": 0.5904761904761905
       }
     },
     "substring_keyword": {
@@ -653,15 +654,19 @@
               "mrr": 1.0
             },
             "page": {
-              "hit@3": 1,
+              "hit@3": 0,
               "hit@5": 1,
-              "mrr": 0.3333333333333333
+              "mrr": 0.25
             }
           },
           "top5": [
             {
               "source": "zoning.pdf",
               "page": 11
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 302
             },
             {
               "source": "zoning.pdf",
@@ -674,10 +679,6 @@
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 99
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 309
             }
           ]
         },
@@ -773,15 +774,15 @@
             },
             {
               "source": "zoning.pdf",
-              "page": 13
-            },
-            {
-              "source": "zoning.pdf",
               "page": 11
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 99
+            },
+            {
+              "source": "zoning.pdf",
+              "page": 13
             },
             {
               "source": "zoning.pdf",
@@ -845,10 +846,6 @@
             },
             {
               "source": "zoning.pdf",
-              "page": 13
-            },
-            {
-              "source": "zoning.pdf",
               "page": 11
             },
             {
@@ -858,6 +855,10 @@
             {
               "source": "zoning.pdf",
               "page": 15
+            },
+            {
+              "source": "zoning.pdf",
+              "page": 13
             }
           ]
         },
@@ -881,10 +882,6 @@
             },
             {
               "source": "zoning.pdf",
-              "page": 13
-            },
-            {
-              "source": "zoning.pdf",
               "page": 11
             },
             {
@@ -894,6 +891,10 @@
             {
               "source": "zoning.pdf",
               "page": 15
+            },
+            {
+              "source": "zoning.pdf",
+              "page": 11
             }
           ]
         }
@@ -3300,7 +3301,7 @@
             "source": {
               "hit@3": 1,
               "hit@5": 1,
-              "mrr": 0.5
+              "mrr": 1.0
             },
             "page": {
               "hit@3": 0,
@@ -3309,10 +3310,6 @@
             }
           },
           "top5": [
-            {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 3
-            },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 74
@@ -3328,6 +3325,10 @@
             {
               "source": "article_v_-_use_regulations.pdf",
               "page": 5
+            },
+            {
+              "source": "zoning-ordinance-082024-rev.pdf",
+              "page": 92
             }
           ]
         },
@@ -3534,16 +3535,16 @@
               "page": 92
             },
             {
-              "source": "E Generalized Summary of Zoning Regulations.pdf",
-              "page": 3
-            },
-            {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 74
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
               "page": 219
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 392
             }
           ]
         }
@@ -5446,8 +5447,8 @@
               "page": 371
             },
             {
-              "source": "zoning.pdf",
-              "page": 11
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 698
             }
           ]
         },
@@ -5579,11 +5580,11 @@
             },
             {
               "source": "zoning.pdf",
-              "page": 11
+              "page": 4
             },
             {
               "source": "zoning.pdf",
-              "page": 4
+              "page": 11
             },
             {
               "source": "zoning.pdf",
@@ -5615,15 +5616,15 @@
             },
             {
               "source": "zoning.pdf",
+              "page": 4
+            },
+            {
+              "source": "zoning.pdf",
+              "page": 4
+            },
+            {
+              "source": "zoning.pdf",
               "page": 11
-            },
-            {
-              "source": "zoning.pdf",
-              "page": 4
-            },
-            {
-              "source": "zoning.pdf",
-              "page": 4
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
@@ -5654,16 +5655,16 @@
               "page": 4
             },
             {
-              "source": "zoning.pdf",
-              "page": 11
-            },
-            {
               "source": "Charleston, SC Zoning.pdf",
               "page": 648
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 371
+            },
+            {
+              "source": "Charleston, SC Zoning.pdf",
+              "page": 698
             }
           ]
         }

@@ -1,7 +1,7 @@
 # Retrieval accuracy benchmark
 
-Run at: 2026-09-27T06:23:43.002275+00:00
-Git HEAD at run: `e38fc9aff5db132d7d181a163495cbb24ebe94ba` (worktree changes may have been present).
+Run at: 2026-09-28T20:11:38.117598+00:00
+Git HEAD at run: `69a339c7e5d8f191bf038bc9803dd8ac8346ea13` (clean worktree).
 Models: `nomic-embed-text` embeddings; `llama3.2:3b` configured for answers (not used in retrieval scoring).
 Corpus: 1070 PDF pages, 4854 indexed chunks, 5 files.
 Queries: 28 excerpt-verified questions.
@@ -10,7 +10,7 @@ Queries: 28 excerpt-verified questions.
 
 | Method | Source hit@3 | Source hit@5 | Source MRR | Page hit@3 | Page hit@5 | Page MRR |
 |---|---:|---:|---:|---:|---:|---:|
-| vector_only | 96.4% | 96.4% | 0.851 | 67.9% | 75.0% | 0.593 |
+| vector_only | 96.4% | 96.4% | 0.869 | 64.3% | 75.0% | 0.590 |
 | substring_keyword | 67.9% | 75.0% | 0.637 | 57.1% | 64.3% | 0.506 |
 | bm25_keyword | 100.0% | 100.0% | 1.000 | 82.1% | 89.3% | 0.780 |
 | hybrid_substring | 78.6% | 78.6% | 0.762 | 71.4% | 71.4% | 0.643 |
