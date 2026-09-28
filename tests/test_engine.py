@@ -2,12 +2,23 @@ import unittest
 import tempfile
 from pathlib import Path
 from uuid import uuid4
+from unittest.mock import patch
 
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_core.embeddings import FakeEmbeddings
 
-from app.engine import SearchIndex, SearchIndexCache, bm25_search, build_search_index, needs_clarification, select_context, fuse_results, hybrid_search
+from app.engine import (
+    SearchIndex, SearchIndexCache, bm25_search, build_search_index, fuse_results,
+    get_vector_db, hybrid_search, needs_clarification, select_context,
+)
+
+
+class OfflineConfigurationTests(unittest.TestCase):
+    def test_production_chroma_client_disables_telemetry(self):
+        with patch("app.engine.Chroma") as chroma:
+            get_vector_db()
+        self.assertFalse(chroma.call_args.kwargs["client_settings"].anonymized_telemetry)
 
 
 class StoredDB:

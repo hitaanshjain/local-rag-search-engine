@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pymupdf
 from langchain_core.documents import Document
+import rapidocr
 from rapidocr import RapidOCR
 
 MIN_TEXT_CHARS = 40
@@ -146,6 +147,21 @@ def extract_text_layout(page: pymupdf.Page) -> str:
     )
 
 
+def local_ocr_engine() -> RapidOCR:
+    """Load bundled OCR models without entering RapidOCR's download path."""
+    model_dir = Path(rapidocr.__file__).resolve().parent / "models"
+    model_files = {
+        "Det.model_path": "PP-OCRv6_det_small.onnx",
+        "Cls.model_path": "ch_ppocr_mobile_v2.0_cls_mobile.onnx",
+        "Rec.model_path": "PP-OCRv6_rec_small.onnx",
+    }
+    paths = {key: model_dir / filename for key, filename in model_files.items()}
+    missing = [str(path) for path in paths.values() if not path.is_file()]
+    if missing:
+        raise FileNotFoundError(f"Bundled OCR models are missing: {', '.join(missing)}")
+    return RapidOCR(params={key: str(path) for key, path in paths.items()})
+
+
 def extract_pdf(path: str | Path, ocr=None) -> list[Document]:
     """Use native text on good pages and OCR on scanned or weak pages."""
     path = Path(path)
@@ -162,7 +178,7 @@ def extract_pdf(path: str | Path, ocr=None) -> list[Document]:
             blank = not native.strip() and not page.get_images() and not page.get_drawings()
             if not text_is_usable(native) and not blank:
                 if engine is None:
-                    engine = RapidOCR()
+                    engine = local_ocr_engine()
                 pixmap = page.get_pixmap(matrix=pymupdf.Matrix(2, 2), alpha=False)
                 recognized = engine(pixmap.tobytes("png"))
                 ocr_text = recognized.to_markdown().strip() if recognized and len(recognized) else ""

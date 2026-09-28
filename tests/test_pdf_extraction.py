@@ -1,6 +1,7 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import pymupdf
 
@@ -48,7 +49,11 @@ class PdfExtractionTests(unittest.TestCase):
             pdf.save(path)
             pdf.close()
 
-            pages = extract_pdf(path)
+            with patch(
+                "rapidocr.inference_engine.onnxruntime.main.DownloadFile.run",
+                side_effect=AssertionError("OCR tried to download a model"),
+            ):
+                pages = extract_pdf(path)
 
         self.assertEqual(pages[0].metadata["extraction_method"], "ocr")
         self.assertIn("900 square feet", pages[0].page_content)

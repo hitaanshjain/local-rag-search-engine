@@ -2,6 +2,7 @@ venv/
 .venv/
 chroma_db/
 ollama_data/
+data/
 frontend/
 __pycache__/
 .git/

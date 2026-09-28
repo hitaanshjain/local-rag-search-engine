@@ -6,6 +6,7 @@ from threading import Lock
 from time import perf_counter
 from typing import Any
 
+from chromadb.config import Settings
 from langchain_chroma import Chroma
 from langchain_ollama import OllamaEmbeddings, ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
@@ -26,7 +27,11 @@ def get_vector_db() -> Chroma:
     embedding_function = OllamaEmbeddings(
         model=EMBEDDING_MODEL, base_url=OLLAMA_BASE_URL
     )
-    return Chroma(persist_directory=DB_PATH, embedding_function=embedding_function)
+    return Chroma(
+        persist_directory=DB_PATH,
+        embedding_function=embedding_function,
+        client_settings=Settings(anonymized_telemetry=False),
+    )
 
 
 def get_llm() -> ChatOllama:
