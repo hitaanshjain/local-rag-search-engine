@@ -1,6 +1,6 @@
 {
-  "run_at_utc": "2026-09-28T20:11:38.117598+00:00",
-  "git_head_at_run": "69a339c7e5d8f191bf038bc9803dd8ac8346ea13",
+  "run_at_utc": "2026-10-02T22:28:03.708781+00:00",
+  "git_head_at_run": "0d832d14e4f3a7efc34268f358003d15ebd3d8d1",
   "worktree_clean": true,
   "models": {
     "embedding": "nomic-embed-text",
@@ -5447,8 +5447,8 @@
               "page": 371
             },
             {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 698
+              "source": "zoning.pdf",
+              "page": 11
             }
           ]
         },
@@ -5580,11 +5580,11 @@
             },
             {
               "source": "zoning.pdf",
-              "page": 4
+              "page": 11
             },
             {
               "source": "zoning.pdf",
-              "page": 11
+              "page": 4
             },
             {
               "source": "zoning.pdf",
@@ -5616,15 +5616,15 @@
             },
             {
               "source": "zoning.pdf",
-              "page": 4
-            },
-            {
-              "source": "zoning.pdf",
-              "page": 4
-            },
-            {
-              "source": "zoning.pdf",
               "page": 11
+            },
+            {
+              "source": "zoning.pdf",
+              "page": 4
+            },
+            {
+              "source": "zoning.pdf",
+              "page": 4
             },
             {
               "source": "zoning-ordinance-082024-rev.pdf",
@@ -5655,16 +5655,16 @@
               "page": 4
             },
             {
+              "source": "zoning.pdf",
+              "page": 11
+            },
+            {
               "source": "Charleston, SC Zoning.pdf",
               "page": 648
             },
             {
               "source": "Charleston, SC Zoning.pdf",
               "page": 371
-            },
-            {
-              "source": "Charleston, SC Zoning.pdf",
-              "page": 698
             }
           ]
         }

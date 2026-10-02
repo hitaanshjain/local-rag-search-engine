@@ -1,7 +1,7 @@
 # Retrieval accuracy benchmark
 
-Run at: 2026-09-28T20:11:38.117598+00:00
-Git HEAD at run: `69a339c7e5d8f191bf038bc9803dd8ac8346ea13` (clean worktree).
+Run at: 2026-10-02T22:28:03.708781+00:00
+Git HEAD at run: `0d832d14e4f3a7efc34268f358003d15ebd3d8d1` (clean worktree).
 Models: `nomic-embed-text` embeddings; `llama3.2:3b` configured for answers (not used in retrieval scoring).
 Corpus: 1070 PDF pages, 4854 indexed chunks, 5 files.
 Queries: 28 excerpt-verified questions.
