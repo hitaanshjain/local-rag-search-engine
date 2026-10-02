@@ -4,6 +4,8 @@ This project answers questions about PDFs using local Ollama models. FastAPI ret
 
 PDF extraction, OCR, embeddings, retrieval, and answer generation run locally. The application disables Chroma telemetry and loads bundled OCR models without a download fallback; the supplied Compose configuration disables Ollama cloud features. Its normal app network is internal, and the localhost-facing gateway removes its external route and sends external DNS to local loopback before serving requests. A claim that nothing leaves the machine also requires the host and browser to be disconnected from external networks.
 
+![Asking a question in the chat UI and getting a cited answer](demo.gif)
+
 ## How it works
 
 ```mermaid
