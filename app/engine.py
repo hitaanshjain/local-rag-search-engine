@@ -137,8 +137,31 @@ def bm25_search(
     return [hit for _, hit in zip(range(k), hits)]
 
 
+def known_places(index: SearchIndex) -> set[str]:
+    """Place names from ingested jurisdictions: "Charleston, South Carolina" -> "Charleston"."""
+    return {
+        jurisdiction.split(",")[0].strip()
+        for jurisdiction in {doc.metadata.get("jurisdiction") for doc in index.documents}
+        if jurisdiction
+    }
+
+
 def needs_clarification(query: str, index: SearchIndex, sources: set[str] | None = None) -> bool:
-    """Ask for a jurisdiction when two sources score nearly alike on the query."""
+    """Ask for a jurisdiction when two sources score nearly alike on the query.
+
+    A query naming exactly one indexed place is compared only across that place's PDFs,
+    since file names need not mention it.
+    """
+    named = [
+        place for place in known_places(index)
+        if re.search(rf"\b{re.escape(place.lower())}\b", query.lower())
+    ]
+    if len(named) == 1:
+        place_sources = {
+            doc.metadata.get("source") for doc in index.documents
+            if (doc.metadata.get("jurisdiction") or "").split(",")[0].strip() == named[0]
+        }
+        sources = place_sources if sources is None else sources & place_sources
     stopwords = {
         "a", "an", "are", "at", "do", "does", "for", "how", "in", "is",
         "many", "of", "the", "to", "what", "which", "who",

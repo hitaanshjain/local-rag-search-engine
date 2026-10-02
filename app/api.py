@@ -14,7 +14,7 @@ from app.answering import ABSTAIN, cited_claims, collect_conflict_candidates, de
 from app.conversation import contextualize_query, format_history
 from app.engine import (
     LLM_MODEL, SearchIndexCache, bm25_search, get_vector_db, get_llm, get_rag_prompt,
-    PAGE_REPORT_PATH, hybrid_search, needs_clarification, select_context,
+    PAGE_REPORT_PATH, hybrid_search, known_places, needs_clarification, select_context,
 )
 
 app = FastAPI(title="Local RAG API", version="1.0")
@@ -89,15 +89,6 @@ def document(filename: str):
     if not path.is_relative_to(root) or not path.is_file():
         raise HTTPException(status_code=404)
     return FileResponse(path, media_type="application/pdf", content_disposition_type="inline")
-
-
-def known_places(index) -> set[str]:
-    """Place names from ingested jurisdictions: "Charleston, South Carolina" -> "Charleston"."""
-    return {
-        jurisdiction.split(",")[0].strip()
-        for jurisdiction in {doc.metadata.get("jurisdiction") for doc in index.documents}
-        if jurisdiction
-    }
 
 
 def read_page_report() -> dict:

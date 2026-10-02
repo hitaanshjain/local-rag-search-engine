@@ -188,6 +188,19 @@ class RetrievalTests(unittest.TestCase):
         )
         self.assertFalse(needs_clarification("What is the Union City maximum fence height?", named))
 
+        # Neither file name nor text names Union City; only chunk metadata does.
+        metadata_only = SearchIndex(
+            documents=[
+                Document(page_content="city maximum fence height applies",
+                         metadata={"source": "ordinance-rev.pdf", "jurisdiction": "Union City, Georgia"}),
+                Document(page_content="city maximum fence height applies",
+                         metadata={"source": "zoning.pdf", "jurisdiction": "Charleston, South Carolina"}),
+            ],
+            bm25=ModeratelyCloseScores(),
+        )
+        self.assertFalse(needs_clarification("What maximum fence height applies in Union City?", metadata_only))
+        self.assertTrue(needs_clarification("What is the maximum fence height?", metadata_only))
+
     def test_hybrid_search_reports_vector_keyword_and_fusion_times(self):
         db = Chroma(
             collection_name=f"retrieval_test_{uuid4().hex}",
